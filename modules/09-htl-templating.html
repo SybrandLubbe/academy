@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>06 HTL (Sightly) Templating — AEM Backend Training</title>
+<title>09 HTL (Sightly) Templating — AEM Backend Training</title>
 <meta name="description" content="AEM's secure-by-default templating language for the presentation layer.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
 
 <header class="topbar">
-  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </button>
   <span class="brand"><span class="node-icon">◆</span> /content/training</span>
@@ -30,25 +31,22 @@
       <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models" href="05-sling-models.html">05-sling-models<span class="check"></span></a></li>
-      <li><a class="tree-node active" data-module-id="htl-templating" href="06-htl-templating.html">06-htl-templating<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="servlets-apis" href="07-servlets-apis.html">07-servlets-apis<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dialogs-components" href="08-dialogs-components.html">08-dialogs-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflows-events" href="09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
-    </ul>
-    <p class="tree-divider">Advanced practices</p>
-    <ul class="tree-list">
-      <li><a class="tree-node" data-module-id="custom-components" href="11-custom-components.html">11-custom-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="java-pitfalls" href="12-java-pitfalls.html">12-java-pitfalls<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models-advanced" href="13-sling-models-advanced.html">13-sling-models-advanced<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="osgi-services-config" href="14-osgi-services-config.html">14-osgi-services-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="model-composition" href="15-model-composition.html">15-model-composition<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="unit-testing" href="16-unit-testing.html">16-unit-testing<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="context-aware-config" href="17-context-aware-config.html">17-context-aware-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="groovy-console" href="18-groovy-console.html">18-groovy-console<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflow-design" href="19-workflow-design.html">19-workflow-design<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-jobs" href="20-sling-jobs.html">20-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
     </ul>
     <p class="legend">Filled circle = module marked complete.</p>
@@ -56,10 +54,10 @@
 
   <main class="main">
     <div class="content">
-      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">06-htl-templating</span></p>
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">09-htl-templating</span></p>
 
       <div class="module-meta">
-        <span class="tag">Presentation</span>
+        <span class="tag badge text-bg-secondary">Presentation</span>
         <span>30 min read</span>
       </div>
 
@@ -103,7 +101,7 @@
       <p>You can override the inferred context explicitly when needed, for example forcing URI escaping on a value HTL can't otherwise classify:</p>
       <pre data-code><span class="filename">explicit context</span><code>&lt;a href="${teaser.linkPath @ context='uri'}"&gt;Read more&lt;/a&gt;</code></pre>
 
-      <div class="callout pitfall">
+      <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>
         HTL supports <code class="inline">context='unsafe'</code>, which disables escaping entirely. It exists for rare cases where you're deliberately outputting pre-sanitized markup — never reach for it just to make a value "work." It removes the exact protection HTL was built to provide.
       </div>
@@ -117,19 +115,19 @@
       <p>A normal HTML comment (<code class="inline">&lt;!-- --&gt;</code>) is sent to the browser like any other markup. An HTL comment is stripped server-side and never leaves AEM:</p>
       <pre data-code><span class="filename">server-side comment</span><code>&lt;!--/* TODO: replace with a real empty-state once design has one */--&gt;</code></pre>
 
-      <div class="try-it">
+      <div class="try-it alert alert-success">
         <span class="label">Try it</span>
-        Build <code class="inline">teaser.html</code> against the <code class="inline">TeaserModel</code> from module 5, using <code class="inline">data-sly-test</code> so the whole component renders nothing when <code class="inline">title</code> is empty — confirm by emptying the title on your test content node and reloading the page.
+        Build <code class="inline">teaser.html</code> against the <code class="inline">TeaserModel</code> from module 6, using <code class="inline">data-sly-test</code> so the whole component renders nothing when <code class="inline">title</code> is empty — confirm by emptying the title on your test content node and reloading the page.
       </div>
 
-      <div class="complete-row">
-        <input type="checkbox" id="complete" data-complete-checkbox="htl-templating">
-        <label for="complete">Mark this module as complete</label>
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="htl-templating">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
       </div>
 
       <nav class="pager">
-        <a class="prev" href="05-sling-models.html"><span class="dir">← Previous</span>Sling Models</a>
-        <a class="next" href="07-servlets-apis.html"><span class="dir">Next →</span>Servlets &amp; Backend APIs</a>
+        <a class="prev" href="08-model-composition.html"><span class="dir">← Previous</span>Extending Core Component Models</a>
+        <a class="next" href="10-servlets-apis.html"><span class="dir">Next →</span>Servlets &amp; Backend APIs</a>
       </nav>
     </div>
 

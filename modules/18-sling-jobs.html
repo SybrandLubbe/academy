@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>20 Sling Jobs — AEM Backend Training</title>
+<title>18 Sling Jobs — AEM Backend Training</title>
 <meta name="description" content="Running asynchronous and scheduled work in the background with the Sling Jobs API.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
 
 <header class="topbar">
-  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </button>
   <span class="brand"><span class="node-icon">◆</span> /content/training</span>
@@ -30,25 +31,22 @@
       <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models" href="05-sling-models.html">05-sling-models<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="htl-templating" href="06-htl-templating.html">06-htl-templating<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="servlets-apis" href="07-servlets-apis.html">07-servlets-apis<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dialogs-components" href="08-dialogs-components.html">08-dialogs-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflows-events" href="09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
-    </ul>
-    <p class="tree-divider">Advanced practices</p>
-    <ul class="tree-list">
-      <li><a class="tree-node" data-module-id="custom-components" href="11-custom-components.html">11-custom-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="java-pitfalls" href="12-java-pitfalls.html">12-java-pitfalls<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models-advanced" href="13-sling-models-advanced.html">13-sling-models-advanced<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="osgi-services-config" href="14-osgi-services-config.html">14-osgi-services-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="model-composition" href="15-model-composition.html">15-model-composition<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="unit-testing" href="16-unit-testing.html">16-unit-testing<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="context-aware-config" href="17-context-aware-config.html">17-context-aware-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="groovy-console" href="18-groovy-console.html">18-groovy-console<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflow-design" href="19-workflow-design.html">19-workflow-design<span class="check"></span></a></li>
-      <li><a class="tree-node active" data-module-id="sling-jobs" href="20-sling-jobs.html">20-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
     </ul>
     <p class="legend">Filled circle = module marked complete.</p>
@@ -56,20 +54,20 @@
 
   <main class="main">
     <div class="content">
-      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">20-sling-jobs</span></p>
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">18-sling-jobs</span></p>
 
       <div class="module-meta">
-        <span class="tag">Runtime · Advanced</span>
+        <span class="tag badge text-bg-secondary">Runtime · Advanced</span>
         <span>30 min read</span>
       </div>
 
       <h1 class="page-title">Sling Jobs</h1>
-      <p class="lede">Module 11's <code class="inline">WeatherModel</code> made a synchronous outbound HTTP call inside a Sling Model and flagged it as something to fix later. This is later — the Sling Jobs API is the production-correct way to do that work in the background instead.</p>
+      <p class="lede">Module 12's <code class="inline">WeatherModel</code> made a synchronous outbound HTTP call inside a Sling Model and flagged it as something to fix later. This is later — the Sling Jobs API is the production-correct way to do that work in the background instead.</p>
 
       <div class="learn-box">
         <h3>What you'll learn</h3>
         <ul>
-          <li>What a Sling Job is, and how it differs from the listeners and schedulers in module 9</li>
+          <li>What a Sling Job is, and how it differs from the listeners and schedulers in module 16</li>
           <li>Registering a job — immediate vs. scheduled</li>
           <li>Writing a job consumer that does the actual work</li>
           <li>Configuring a job queue's behavior</li>
@@ -77,10 +75,10 @@
       </div>
 
       <h2>What a Sling Job is</h2>
-      <p>A Sling Job is a unit of work, identified by a <strong>topic</strong> string and a set of properties, placed into a persistent queue and picked up by whichever component registered to handle that topic. The "persistent" part is what separates it from the scheduler in module 9: if the instance restarts mid-job, the job isn't lost — it's retried according to the queue's configuration, which makes it the right tool for anything that genuinely must complete eventually, not just "run when convenient."</p>
+      <p>A Sling Job is a unit of work, identified by a <strong>topic</strong> string and a set of properties, placed into a persistent queue and picked up by whichever component registered to handle that topic. The "persistent" part is what separates it from the scheduler in module 16: if the instance restarts mid-job, the job isn't lost — it's retried according to the queue's configuration, which makes it the right tool for anything that genuinely must complete eventually, not just "run when convenient."</p>
 
       <h2>Writing a job consumer</h2>
-      <p>This component does the actual weather fetch — the logic module 11 ran inline, moved here so it runs off the request thread entirely:</p>
+      <p>This component does the actual weather fetch — the logic module 12 ran inline, moved here so it runs off the request thread entirely:</p>
       <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/jobs/WeatherRefreshJobExecutor.java</span><code>package biz.netcentric.academy.jobs;
 
 import org.apache.sling.api.resource.LoginException;
@@ -115,7 +113,7 @@ public class WeatherRefreshJobExecutor implements JobExecutor {
                 .getServiceResourceResolver(Collections.singletonMap(
                         ResourceResolverFactory.SUBSERVICE, "academy-weather-writer"))) {
 
-            // re-use the geocode/fetch logic from module 11's WeatherModel here
+            // re-use the geocode/fetch logic from module 12's WeatherModel here
             double temperature = fetchTemperatureFor(city);
 
             Resource cacheResource = resolver.getResource(cachePath);
@@ -134,10 +132,10 @@ public class WeatherRefreshJobExecutor implements JobExecutor {
     }
 
     private double fetchTemperatureFor(String city) {
-        return 0; // delegate to the geocode/fetch helpers from module 11
+        return 0; // delegate to the geocode/fetch helpers from module 12
     }
 }</code></pre>
-      <div class="callout pitfall">
+      <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>
         <code class="inline">getServiceResourceResolver(...)</code> requires a <strong>service user mapping</strong> to be configured first (an OSGi config that grants the named subservice — <code class="inline">academy-weather-writer</code> here — permission to log in as a service user with appropriate ACLs). It's a separate piece of setup from the job itself, and forgetting it is the most common reason a background job fails with a login exception that looks unrelated to the actual business logic.
       </div>
@@ -166,7 +164,7 @@ protected void activate() {
             .cron("0 */15 * * * ?")  // every 15 minutes
             .add();
 }</code></pre>
-      <p>With this in place, <code class="inline">WeatherModel</code> from module 11 could be rewritten to simply read <code class="inline">temperature</code> off the cache resource — no outbound HTTP call on the render path at all, and a page that loads instantly regardless of whether Open-Meteo is having a slow day.</p>
+      <p>With this in place, <code class="inline">WeatherModel</code> from module 12 could be rewritten to simply read <code class="inline">temperature</code> off the cache resource — no outbound HTTP call on the render path at all, and a page that loads instantly regardless of whether Open-Meteo is having a slow day.</p>
 
       <h2>Queue configuration</h2>
       <p>A job's queue controls how it's actually processed — how many run in parallel, what happens on failure, and whether order matters. Configure it as an OSGi factory configuration:</p>
@@ -178,21 +176,21 @@ protected void activate() {
     "queue.retries": 3,
     "queue.retrydelay": 2000
 }</code></pre>
-      <p><code class="inline">queue.type</code> matters most: <code class="inline">UNORDERED</code> processes jobs in parallel with no guaranteed order (fine here — one city's refresh doesn't depend on another's), while <code class="inline">ORDERED</code> processes jobs on the same topic strictly one at a time, which you'd want if later jobs depend on earlier ones having finished. <code class="inline">queue.retries</code> and <code class="inline">queue.retrydelay</code> control what happens when <code class="inline">process()</code> returns a failed result — exactly the safety net that makes jobs more durable than the plain scheduler from module 9.</p>
+      <p><code class="inline">queue.type</code> matters most: <code class="inline">UNORDERED</code> processes jobs in parallel with no guaranteed order (fine here — one city's refresh doesn't depend on another's), while <code class="inline">ORDERED</code> processes jobs on the same topic strictly one at a time, which you'd want if later jobs depend on earlier ones having finished. <code class="inline">queue.retries</code> and <code class="inline">queue.retrydelay</code> control what happens when <code class="inline">process()</code> returns a failed result — exactly the safety net that makes jobs more durable than the plain scheduler from module 16.</p>
 
-      <div class="try-it">
+      <div class="try-it alert alert-success">
         <span class="label">Try it</span>
         Wire up the scheduled job above for two or three cities, confirm the cache resources update on their own every 15 minutes by watching their <code class="inline">temperature</code> property in CRXDE Lite, then rewrite <code class="inline">WeatherModel</code> to read from the cache instead of calling Open-Meteo directly.
       </div>
 
-      <div class="complete-row">
-        <input type="checkbox" id="complete" data-complete-checkbox="sling-jobs">
-        <label for="complete">Mark this module as complete</label>
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="sling-jobs">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
       </div>
 
       <nav class="pager">
-        <a class="prev" href="19-workflow-design.html"><span class="dir">← Previous</span>Workflow Design &amp; Custom Steps</a>
-        <a class="next" href="21-acs-commons.html"><span class="dir">Next →</span>ACS Commons</a>
+        <a class="prev" href="17-workflow-design.html"><span class="dir">← Previous</span>Workflow Design &amp; Custom Steps</a>
+        <a class="next" href="19-dispatcher-deployment.html"><span class="dir">Next →</span>Dispatcher, Caching &amp; Deployment</a>
       </nav>
     </div>
 

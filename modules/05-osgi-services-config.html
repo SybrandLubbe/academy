@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>14 OSGi Services & Configuration — AEM Backend Training</title>
+<title>05 OSGi Services & Configuration — AEM Backend Training</title>
 <meta name="description" content="Reference cardinality, immediate components, and deploying OSGi configuration as JSON across run modes.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
 
 <header class="topbar">
-  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </button>
   <span class="brand"><span class="node-icon">◆</span> /content/training</span>
@@ -30,25 +31,22 @@
       <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models" href="05-sling-models.html">05-sling-models<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="htl-templating" href="06-htl-templating.html">06-htl-templating<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="servlets-apis" href="07-servlets-apis.html">07-servlets-apis<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dialogs-components" href="08-dialogs-components.html">08-dialogs-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflows-events" href="09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
-    </ul>
-    <p class="tree-divider">Advanced practices</p>
-    <ul class="tree-list">
-      <li><a class="tree-node" data-module-id="custom-components" href="11-custom-components.html">11-custom-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="java-pitfalls" href="12-java-pitfalls.html">12-java-pitfalls<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models-advanced" href="13-sling-models-advanced.html">13-sling-models-advanced<span class="check"></span></a></li>
-      <li><a class="tree-node active" data-module-id="osgi-services-config" href="14-osgi-services-config.html">14-osgi-services-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="model-composition" href="15-model-composition.html">15-model-composition<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="unit-testing" href="16-unit-testing.html">16-unit-testing<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="context-aware-config" href="17-context-aware-config.html">17-context-aware-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="groovy-console" href="18-groovy-console.html">18-groovy-console<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflow-design" href="19-workflow-design.html">19-workflow-design<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-jobs" href="20-sling-jobs.html">20-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
     </ul>
     <p class="legend">Filled circle = module marked complete.</p>
@@ -56,10 +54,10 @@
 
   <main class="main">
     <div class="content">
-      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">14-osgi-services-config</span></p>
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">05-osgi-services-config</span></p>
 
       <div class="module-meta">
-        <span class="tag">Runtime · Advanced</span>
+        <span class="tag badge text-bg-secondary">Runtime · Advanced</span>
         <span>30 min read</span>
       </div>
 
@@ -93,7 +91,7 @@ private volatile List&lt;GreetingService&gt; greetingServices;</code></pre>
       <p>Optional and multiple references need <code class="inline">volatile</code> because the set of available services can change at runtime — a dependency can appear or disappear as bundles start and stop, and the field needs to reflect that safely across threads. <code class="inline">MANDATORY</code> (the default) is right for something your component genuinely cannot function without; <code class="inline">OPTIONAL</code> suits a nice-to-have that degrades gracefully if it's missing.</p>
 
       <h2>Immediate components</h2>
-      <p>By default, an OSGi component activates lazily — the first time something actually needs it. That's wrong for a component that has to be running proactively, like the <code class="inline">ResourceChangeListener</code> or scheduled job from module 9: nothing ever "calls" a listener to trigger its activation, so without help it might never start at all.</p>
+      <p>By default, an OSGi component activates lazily — the first time something actually needs it. That's wrong for a component that has to be running proactively, like a <code class="inline">ResourceChangeListener</code> or a scheduled job: nothing ever "calls" a listener to trigger its activation, so without help it might never start at all.</p>
       <pre data-code><span class="filename">forcing eager activation</span><code>@Component(
         service = ResourceChangeListener.class,
         immediate = true,
@@ -105,13 +103,13 @@ private volatile List&lt;GreetingService&gt; greetingServices;</code></pre>
 public class AcademyChangeListener implements ResourceChangeListener {
     // ...
 }</code></pre>
-      <div class="callout">
+      <div class="callout alert alert-primary">
         <span class="label">Mental model</span>
         If nothing in your code ever calls <code class="inline">@Reference</code> to pull a component in, mark it <code class="inline">immediate = true</code> — otherwise it may simply never start. Listeners, schedulers, and anything purely reactive almost always need this.
       </div>
 
       <h2>Interfaces and implementation classes</h2>
-      <p>Every service in this curriculum so far has followed the same shape: a plain interface, and a separate <code class="inline">@Component</code>-annotated implementation. That's not boilerplate for its own sake — consumers depend on the interface and never reference the implementation class directly, which means the implementation can be swapped (a different provider, a mock for testing in module 16) without touching a single line of consuming code. Skipping the interface and putting <code class="inline">@Component</code> straight on a concrete class still works mechanically, but it locks every consumer to that one implementation.</p>
+      <p>Every service in this curriculum so far has followed the same shape: a plain interface, and a separate <code class="inline">@Component</code>-annotated implementation. That's not boilerplate for its own sake — consumers depend on the interface and never reference the implementation class directly, which means the implementation can be swapped (a different provider, a mock for testing in module 14) without touching a single line of consuming code. Skipping the interface and putting <code class="inline">@Component</code> straight on a concrete class still works mechanically, but it locks every consumer to that one implementation.</p>
 
       <h2>OSGi configuration: Designate, properly</h2>
       <p>Module 4 introduced <code class="inline">@Designate</code> and <code class="inline">@ObjectClassDefinition</code> for a configurable service. The piece that was missing is how that configuration gets deployed as part of a real project rather than typed into the Felix console by hand — which doesn't survive a redeploy and isn't checked into source control.</p>
@@ -130,24 +128,24 @@ public class AcademyChangeListener implements ResourceChangeListener {
 └── config.author.dev/          applies only on author instances also running the "dev" run mode</code></pre>
       <p>At startup, AEM resolves the most specific folder matching the instance's actual active run modes — a value in <code class="inline">config.author</code> overrides the same PID's value in <code class="inline">config</code> on an author instance, while publish instances never see it at all. This is the standard way to point at a different external API endpoint, log level, or feature flag per environment without branching any code.</p>
 
-      <div class="callout pitfall">
+      <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>
         Editing a configuration by hand in <code class="inline">/system/console/configMgr</code> to "just fix it quickly" on an environment. It works until the next deployment silently overwrites it with whatever's checked into <code class="inline">ui.config</code> — if a value needs to be different, it belongs in a run-mode-scoped <code class="inline">.cfg.json</code> file, not a manual console edit.
       </div>
 
-      <div class="try-it">
+      <div class="try-it alert alert-success">
         <span class="label">Try it</span>
-        Give <code class="inline">WeatherModel</code> from module 11 an OSGi-configurable default country (so the dialog's country field can stay optional with a sensible fallback) using <code class="inline">@Designate</code>, then deploy two different values for it via <code class="inline">config.author</code> and <code class="inline">config.publish</code>.
+        Give one of your own OSGi services an extra configurable property using <code class="inline">@Designate</code> — a sensible default, plus a way to override it — then deploy two different values for it via <code class="inline">config.author</code> and <code class="inline">config.publish</code> and confirm each instance picks up its own value.
       </div>
 
-      <div class="complete-row">
-        <input type="checkbox" id="complete" data-complete-checkbox="osgi-services-config">
-        <label for="complete">Mark this module as complete</label>
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="osgi-services-config">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
       </div>
 
       <nav class="pager">
-        <a class="prev" href="13-sling-models-advanced.html"><span class="dir">← Previous</span>Sling Models In Depth</a>
-        <a class="next" href="15-model-composition.html"><span class="dir">Next →</span>Extending Core Component Models</a>
+        <a class="prev" href="04-osgi-services.html"><span class="dir">← Previous</span>OSGi: Bundles, Services &amp; Components</a>
+        <a class="next" href="06-sling-models.html"><span class="dir">Next →</span>Sling Models</a>
       </nav>
     </div>
 

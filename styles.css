@@ -1,29 +1,33 @@
 /* ============================================
    AEM Backend Training — Design Tokens
-   Signature: nav rendered as a real JCR node tree
+   Bootstrap 5 visual language, layered on top of
+   the Bootstrap 5.3 CDN stylesheet loaded in <head>.
+   Signature: nav rendered as a real JCR node tree.
    ============================================ */
 
 :root {
-  --bg: #F6F5F1;
+  --bg: #F8F9FA;
   --surface: #FFFFFF;
-  --ink: #1C2521;
-  --ink-soft: #5B6B63;
-  --ink-faint: #8C988F;
-  --accent: #2F6F4E;
-  --accent-dark: #1F4D36;
-  --accent-soft: #E4EEE7;
-  --warn: #B5651D;
-  --warn-soft: #F6E9DC;
-  --code-bg: #1C2521;
-  --code-ink: #E7EFE9;
-  --line: #DEDAD0;
-  --line-soft: #EAE7DF;
-  --radius: 3px;
+  --ink: #212529;
+  --ink-soft: #495057;
+  --ink-faint: #6C757D;
+  --accent: #0D6EFD;
+  --accent-dark: #0A58CA;
+  --accent-soft: #CFE2FF;
+  --warn: #997404;
+  --warn-soft: #FFF3CD;
+  --code-bg: #212529;
+  --code-ink: #F8F9FA;
+  --line: #DEE2E6;
+  --line-soft: #E9ECEF;
+  --radius: 0.375rem;
   --sidebar-w: 290px;
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.06);
+  --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
 
-  --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --font-display: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
 * { box-sizing: border-box; }
@@ -43,7 +47,7 @@ body {
 }
 
 a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a:hover { text-decoration: underline; color: var(--accent-dark); }
 a:focus-visible,
 button:focus-visible,
 summary:focus-visible,
@@ -83,8 +87,8 @@ img, svg { max-width: 100%; }
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
+  background: #212529;
+  border-bottom: 1px solid #32383E;
   z-index: 40;
 }
 
@@ -94,32 +98,37 @@ img, svg { max-width: 100%; }
   gap: 8px;
   font-family: var(--font-mono);
   font-size: 14px;
-  color: var(--ink);
+  color: #F8F9FA;
 }
 
-.topbar .brand .node-icon { color: var(--accent); }
+.topbar .brand .node-icon { color: #6EA8FE; }
 
 .topbar .progress-pill {
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--ink-soft);
-  background: var(--accent-soft);
+  color: #CFE2FF;
+  background: rgba(13, 110, 253, 0.25);
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: 50rem;
   white-space: nowrap;
 }
 
 .menu-toggle {
   display: none;
-  background: none;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
   width: 36px;
   height: 36px;
+  padding: 0;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  color: var(--ink);
+  line-height: 1;
+  color: #F8F9FA;
+  border-color: #495057;
+}
+
+.menu-toggle:hover {
+  color: #fff;
+  background-color: #343A40;
+  border-color: #6c757d;
 }
 
 /* ---------- Sidebar: the JCR tree ---------- */
@@ -181,8 +190,8 @@ a.tree-node:hover {
 }
 
 a.tree-node.active {
-  background: var(--accent-soft);
-  color: var(--accent-dark);
+  background: var(--accent);
+  color: #fff;
   font-weight: 600;
 }
 
@@ -196,7 +205,7 @@ a.tree-node.active {
   font-size: 11.5px;
 }
 
-.tree-node.active .prop { color: var(--accent); }
+.tree-node.active .prop { color: #E7F0FF; }
 
 .tree-node .check {
   width: 14px;
@@ -209,9 +218,11 @@ a.tree-node.active {
   justify-content: center;
 }
 
+a.tree-node.active .check { border-color: #fff; }
+
 .tree-node.complete .check {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: #198754;
+  border-color: #198754;
 }
 
 .tree-node.complete .check::after {
@@ -222,28 +233,6 @@ a.tree-node.active {
   border-bottom: 1.5px solid #fff;
   transform: rotate(45deg) translate(-1px, -1px);
 }
-
-details.tree-group > summary {
-  list-style: none;
-  cursor: pointer;
-  padding: 6px 8px;
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--ink);
-  font-weight: 600;
-}
-
-details.tree-group > summary::-webkit-details-marker { display: none; }
-
-details.tree-group > summary .caret {
-  transition: transform 0.15s ease;
-  color: var(--ink-faint);
-  flex: none;
-}
-
-details.tree-group[open] > summary .caret { transform: rotate(90deg); }
 
 .sidebar .legend {
   margin-top: 22px;
@@ -277,7 +266,7 @@ details.tree-group[open] > summary .caret { transform: rotate(90deg); }
 }
 
 .breadcrumb .seg { color: var(--ink-soft); }
-.breadcrumb .seg.current { color: var(--accent); }
+.breadcrumb .seg.current { color: var(--accent-dark); font-weight: 600; }
 
 .module-meta {
   display: flex;
@@ -290,11 +279,9 @@ details.tree-group[open] > summary .caret { transform: rotate(90deg); }
 
 .module-meta .tag {
   font-family: var(--font-mono);
-  background: var(--accent-soft);
-  color: var(--accent-dark);
-  padding: 3px 9px;
-  border-radius: 999px;
-  font-size: 12px;
+  font-weight: 500;
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
 }
 
 h1.page-title {
@@ -335,6 +322,7 @@ h1.page-title {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
   padding: 18px 20px;
   margin: 24px 0 8px;
 }
@@ -365,7 +353,7 @@ pre .filename {
   display: block;
   font-family: var(--font-mono);
   font-size: 11px;
-  color: #93A89C;
+  color: #ADB5BD;
   margin-bottom: 10px;
   text-transform: none;
 }
@@ -383,20 +371,26 @@ code.inline {
   top: 12px;
   right: 12px;
   background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.22);
   color: var(--code-ink);
   font-family: var(--font-mono);
   font-size: 11px;
   padding: 4px 9px;
+  line-height: 1.4;
   border-radius: var(--radius);
-  cursor: pointer;
 }
 
-.copy-btn:hover { background: rgba(255,255,255,0.16); }
+.copy-btn:hover { background: rgba(255,255,255,0.16); color: var(--code-ink); }
+
+/* Bootstrap alert classes are layered onto these for the visual language;
+   these rules keep the original accent-stripe treatment and override
+   anything Bootstrap's .alert would otherwise impose. */
 
 .callout {
+  border: 1px solid transparent;
   border-left: 3px solid var(--accent);
   background: var(--accent-soft);
+  color: var(--ink);
   padding: 14px 18px;
   border-radius: 0 var(--radius) var(--radius) 0;
   margin: 1.6em 0;
@@ -426,6 +420,7 @@ code.inline {
   padding: 16px 18px;
   margin: 1.8em 0;
   background: var(--surface);
+  color: var(--ink);
 }
 
 .try-it .label {
@@ -439,7 +434,7 @@ code.inline {
 }
 
 .complete-row {
-  display: flex;
+  display: flex !important;
   align-items: center;
   gap: 10px;
   margin: 3em 0 1em;
@@ -450,7 +445,14 @@ code.inline {
   font-size: 14px;
 }
 
-.complete-row input { width: 16px; height: 16px; accent-color: var(--accent); }
+.complete-row .form-check-input {
+  margin-top: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+.complete-row .form-check-label { font-size: 14px; color: var(--ink); }
 
 .pager {
   display: flex;
@@ -468,9 +470,10 @@ code.inline {
   padding: 12px 16px;
   color: var(--ink);
   font-size: 13.5px;
+  background: var(--surface);
 }
 
-.pager a:hover { border-color: var(--accent); text-decoration: none; background: var(--accent-soft); }
+.pager a:hover { border-color: var(--accent); text-decoration: none; background: var(--accent-soft); color: var(--accent-dark); }
 .pager a.next { text-align: right; }
 .pager .dir { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); margin-bottom: 3px; }
 
@@ -519,7 +522,7 @@ footer.site-footer {
 .progress-bar {
   height: 6px;
   background: var(--line-soft);
-  border-radius: 999px;
+  border-radius: 50rem;
   overflow: hidden;
 }
 
@@ -527,7 +530,7 @@ footer.site-footer {
   display: block;
   height: 100%;
   background: var(--accent);
-  border-radius: 999px;
+  border-radius: 50rem;
   transition: width 0.3s ease;
 }
 
@@ -548,6 +551,7 @@ footer.site-footer {
 
 .module-card {
   display: flex;
+  flex-direction: row;
   gap: 16px;
   align-items: flex-start;
   padding: 18px 18px;
@@ -555,6 +559,12 @@ footer.site-footer {
   border-radius: var(--radius);
   background: var(--surface);
   margin-bottom: 10px;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.module-card:hover {
+  border-color: #C6D8FF;
+  box-shadow: var(--shadow);
 }
 
 .module-card.locked { opacity: 0.55; }
@@ -562,8 +572,9 @@ footer.site-footer {
 .module-card .idx {
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--ink-faint);
-  width: 22px;
+  font-weight: 600;
+  color: var(--accent);
+  width: 24px;
   flex: none;
   padding-top: 3px;
 }
@@ -593,14 +604,13 @@ footer.site-footer {
 .module-card .status {
   flex: none;
   font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 3px 9px;
-  border-radius: 999px;
+  font-weight: 500;
+  font-size: 10.5px;
 }
 
-.status.available { background: var(--accent-soft); color: var(--accent-dark); }
-.status.soon { background: var(--line-soft); color: var(--ink-faint); }
-.status.done { background: var(--accent); color: #fff; }
+.status.available { background: var(--accent-soft) !important; color: var(--accent-dark) !important; }
+.status.soon { background: var(--line-soft) !important; color: var(--ink-faint) !important; }
+.status.done { background: #198754 !important; color: #fff !important; }
 
 .tree-divider {
   margin: 18px 0 6px;

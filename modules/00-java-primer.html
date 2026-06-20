@@ -7,13 +7,14 @@
 <meta name="description" content="A condensed Java refresher with five exercises that build and run against a real AEM instance.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
 
 <header class="topbar">
-  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </button>
   <span class="brand"><span class="node-icon">◆</span> /content/training</span>
@@ -30,25 +31,22 @@
       <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models" href="05-sling-models.html">05-sling-models<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="htl-templating" href="06-htl-templating.html">06-htl-templating<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="servlets-apis" href="07-servlets-apis.html">07-servlets-apis<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dialogs-components" href="08-dialogs-components.html">08-dialogs-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflows-events" href="09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
-    </ul>
-    <p class="tree-divider">Advanced practices</p>
-    <ul class="tree-list">
-      <li><a class="tree-node" data-module-id="custom-components" href="11-custom-components.html">11-custom-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="java-pitfalls" href="12-java-pitfalls.html">12-java-pitfalls<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models-advanced" href="13-sling-models-advanced.html">13-sling-models-advanced<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="osgi-services-config" href="14-osgi-services-config.html">14-osgi-services-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="model-composition" href="15-model-composition.html">15-model-composition<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="unit-testing" href="16-unit-testing.html">16-unit-testing<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="context-aware-config" href="17-context-aware-config.html">17-context-aware-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="groovy-console" href="18-groovy-console.html">18-groovy-console<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflow-design" href="19-workflow-design.html">19-workflow-design<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-jobs" href="20-sling-jobs.html">20-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
     </ul>
     <p class="legend">Filled circle = module marked complete.</p>
@@ -59,12 +57,12 @@
       <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">00-java-primer</span></p>
 
       <div class="module-meta">
-        <span class="tag">Prerequisite</span>
+        <span class="tag badge text-bg-secondary">Prerequisite</span>
         <span>45 min · hands-on</span>
       </div>
 
       <h1 class="page-title">Java Primer for AEM</h1>
-      <p class="lede">A condensed version of the team's Java Academy deck, with the generic exercises swapped for ones that build, deploy, and run against an actual AEM author instance. Use this before module 01 with anyone who needs a Java refresher rather than a first introduction.</p>
+      <p class="lede">A condensed version of the team's Java Academy deck, with the generic exercises swapped for ones that build, deploy, and run against an actual AEM author instance. Use this before module 1 with anyone who needs a Java refresher rather than a first introduction.</p>
 
       <div class="learn-box">
         <h3>What's here</h3>
@@ -86,7 +84,7 @@
         <li>The <code class="inline">mvn clean install -PautoInstallSinglePackage</code> profile working against your local instance, run from the project's <code class="inline">all</code> module</li>
       </ul>
 
-      <div class="callout pitfall">
+      <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>
         All five exercises register servlets or models against custom resource types under a project package. If a build deploys but a curl returns 404, check <code class="inline">/system/console/components</code> for the component first — it's almost always a registration property typo, not a missing deploy.
       </div>
@@ -131,7 +129,7 @@ http://localhost:4502/system/console/bundles
 # test it
 curl http://localhost:4502/bin/academy/hello</code></pre>
 
-      <div class="try-it">
+      <div class="try-it alert alert-success">
         <span class="label">Expected result</span>
         <code class="inline">Hello World!</code> as plain text. If you get a 404, the servlet didn't register — check the bundle is <code class="inline">Active</code> first.
       </div>
@@ -197,7 +195,7 @@ public class GreetingServlet extends SlingSafeMethodsServlet {
 
 curl "http://localhost:4502/bin/academy/greet?name=World"</code></pre>
 
-      <div class="try-it">
+      <div class="try-it alert alert-success">
         <span class="label">Try it with students</span>
         Have them change <code class="inline">GreetingServiceImpl</code> without touching <code class="inline">GreetingServlet</code> at all — redeploy and the servlet picks up the new behavior automatically. That's the point of coding to the interface.
       </div>
@@ -251,7 +249,7 @@ public class StudentModel {
 
 curl http://localhost:4502/content/academy/student.model.json</code></pre>
 
-      <div class="try-it">
+      <div class="try-it alert alert-success">
         <span class="label">Expected result</span>
         A JSON object with <code class="inline">name</code>, <code class="inline">surname</code>, and <code class="inline">subjectsSorted</code> as an alphabetically sorted array — confirming the model adapted the resource and the collection logic ran.
       </div>
@@ -314,7 +312,7 @@ public class ValidationServlet extends SlingSafeMethodsServlet {
 curl -i "http://localhost:4502/bin/academy/validate?username=admin"
 curl -i "http://localhost:4502/bin/academy/validate?username=jdoe"</code></pre>
 
-      <div class="try-it">
+      <div class="try-it alert alert-success">
         <span class="label">Try it with students</span>
         Add a third rule (e.g. usernames under 3 characters) and a matching message. The goal is to see the same <code class="inline">try/catch</code> shape handle a new failure case without restructuring the method.
       </div>
@@ -359,14 +357,14 @@ public class ChildPagesModel {
 
 curl http://localhost:4502/content/academy/page.model.json</code></pre>
 
-      <div class="try-it">
+      <div class="try-it alert alert-success">
         <span class="label">Try it with students</span>
         Swap <code class="inline">.sorted()</code> for a <code class="inline">.filter()</code> that only keeps published pages (check <code class="inline">jcr:content</code> for a <code class="inline">cq:lastReplicationAction</code> property equal to <code class="inline">Activate</code>). It's a small change that shows how naturally another pipeline stage slots in.
       </div>
 
-      <div class="complete-row">
-        <input type="checkbox" id="complete" data-complete-checkbox="java-primer">
-        <label for="complete">Mark this module as complete</label>
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="java-primer">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
       </div>
 
       <nav class="pager">

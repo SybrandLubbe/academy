@@ -9,22 +9,22 @@
     "jcr-repository",
     "sling-framework",
     "osgi-services",
+    "osgi-services-config",
     "sling-models",
+    "sling-models-advanced",
+    "model-composition",
     "htl-templating",
     "servlets-apis",
     "dialogs-components",
-    "workflows-events",
-    "dispatcher-deployment",
     "custom-components",
     "java-pitfalls",
-    "sling-models-advanced",
-    "osgi-services-config",
-    "model-composition",
     "unit-testing",
     "context-aware-config",
-    "groovy-console",
+    "workflows-events",
     "workflow-design",
     "sling-jobs",
+    "dispatcher-deployment",
+    "groovy-console",
     "acs-commons"
   ];
 
@@ -119,7 +119,7 @@
   function initCopyButtons() {
     document.querySelectorAll("pre[data-code]").forEach(function (pre) {
       var btn = document.createElement("button");
-      btn.className = "copy-btn";
+      btn.className = "copy-btn btn btn-sm";
       btn.type = "button";
       btn.textContent = "Copy";
       btn.addEventListener("click", function () {
