@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AEM Backend Training — /content/training</title>
+<meta name="description" content="Onboarding curriculum for junior backend developers learning Adobe Experience Manager.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 10 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node active" href="index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="modules/01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="modules/02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="modules/03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="modules/04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><span class="tree-node disabled">05-sling-models <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">06-htl-templating <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">07-servlets-apis <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">08-dialogs-components <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">09-workflows-events <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">10-dispatcher-deployment <span class="prop">[locked]</span></span></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete. Locked nodes are scaffolded in the curriculum but not yet authored — duplicate <code class="inline">modules/module-template.html</code> to write them.</p>
+  </nav>
+
+  <main class="main">
+    <section class="hero">
+      <p class="eyebrow">Backend onboarding</p>
+      <h1>Adobe Experience Manager, from the repository up</h1>
+      <p class="sub">A short curriculum for junior backend engineers joining an AEM project. It starts where AEM itself starts — the content repository — and builds outward through Sling, OSGi, and the rest of the stack. The navigation on the left is laid out exactly like a real JCR tree, on purpose: you'll be reading paths like this in CRXDE Lite by the end of module two.</p>
+      <div class="progress-track">
+        <div class="progress-bar"><span data-progress-bar style="width:0%"></span></div>
+        <p class="progress-label" data-progress-label>0 of 10 modules complete</p>
+      </div>
+    </section>
+
+    <section class="curriculum">
+      <p class="tree-root">Modules</p>
+
+      <article class="module-card">
+        <span class="idx">01</span>
+        <div class="body">
+          <h3><a href="modules/01-architecture-overview.html">Architecture Overview</a></h3>
+          <p>The three layers every AEM developer needs in their head: the repository, the resource framework, and the runtime that wires it together.</p>
+          <div class="meta-row">
+            <span>25 min</span><span>·</span><span>Foundations</span>
+            <span class="status available" data-status-for="arch-overview">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">02</span>
+        <div class="body">
+          <h3><a href="modules/02-jcr-repository.html">JCR &amp; the Content Repository</a></h3>
+          <p>Nodes, properties, and paths — how content is actually stored, and the conventions (<code class="inline">/content</code>, <code class="inline">/apps</code>, <code class="inline">/libs</code>) you'll see on every project.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Repository</span>
+            <span class="status available" data-status-for="jcr-repository">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">03</span>
+        <div class="body">
+          <h3><a href="modules/03-sling-framework.html">Sling Framework Fundamentals</a></h3>
+          <p>How a URL becomes a rendered page: resource resolution, selectors, extensions, and script resolution.</p>
+          <div class="meta-row">
+            <span>35 min</span><span>·</span><span>Request handling</span>
+            <span class="status available" data-status-for="sling-framework">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">04</span>
+        <div class="body">
+          <h3><a href="modules/04-osgi-services.html">OSGi: Bundles, Services &amp; Components</a></h3>
+          <p>The modular runtime underneath AEM — bundles, service registration, dependency injection, and the Felix console.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Runtime</span>
+            <span class="status available" data-status-for="osgi-services">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card locked">
+        <span class="idx">05</span>
+        <div class="body">
+          <h3>Sling Models</h3>
+          <p>Mapping repository content to typed Java objects for use in templates and services.</p>
+          <div class="meta-row">
+            <span>25 min</span><span>·</span><span>Content models</span>
+            <span class="status soon">Coming soon</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card locked">
+        <span class="idx">06</span>
+        <div class="body">
+          <h3>HTL (Sightly) Templating</h3>
+          <p>AEM's secure-by-default templating language for the presentation layer.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Presentation</span>
+            <span class="status soon">Coming soon</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card locked">
+        <span class="idx">07</span>
+        <div class="body">
+          <h3>Servlets &amp; Backend APIs</h3>
+          <p>Writing and registering servlets to expose backend endpoints under a resource type.</p>
+          <div class="meta-row">
+            <span>25 min</span><span>·</span><span>APIs</span>
+            <span class="status soon">Coming soon</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card locked">
+        <span class="idx">08</span>
+        <div class="body">
+          <h3>Dialogs, Components &amp; the Touch UI</h3>
+          <p>Authoring interfaces: component dialogs, edit/design dialogs, and content policies.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Authoring</span>
+            <span class="status soon">Coming soon</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card locked">
+        <span class="idx">09</span>
+        <div class="body">
+          <h3>Workflows &amp; Event Handling</h3>
+          <p>Automating content lifecycle with workflows, JCR event listeners, and schedulers.</p>
+          <div class="meta-row">
+            <span>25 min</span><span>·</span><span>Automation</span>
+            <span class="status soon">Coming soon</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card locked">
+        <span class="idx">10</span>
+        <div class="body">
+          <h3>Dispatcher, Caching &amp; Deployment</h3>
+          <p>The layer between AEM and the internet — caching rules, invalidation, and the author/publish pipeline.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Operations</span>
+            <span class="status soon">Coming soon</span>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

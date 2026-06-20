@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01 Architecture Overview — AEM Backend Training</title>
+<meta name="description" content="The three layers of AEM: repository, resource framework, and runtime.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 10 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node active" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><span class="tree-node disabled">05-sling-models <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">06-htl-templating <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">07-servlets-apis <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">08-dialogs-components <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">09-workflows-events <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">10-dispatcher-deployment <span class="prop">[locked]</span></span></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">01-architecture-overview</span></p>
+
+      <div class="module-meta">
+        <span class="tag">Foundations</span>
+        <span>25 min read</span>
+      </div>
+
+      <h1 class="page-title">Architecture Overview</h1>
+      <p class="lede">Three layers, stacked: a repository that stores everything as a tree, a framework that turns URLs into rendered resources, and a runtime that wires the code together. Once these click, the rest of AEM is just detail.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>The repository / Sling / OSGi split, and why AEM is built this way</li>
+          <li>The difference between an author instance and a publish instance</li>
+          <li>What replication and the dispatcher each do, in one sentence</li>
+          <li>Where your code will actually live in a real project</li>
+        </ul>
+      </div>
+
+      <h2>The three layers</h2>
+      <p>AEM is not one product — it's three open-source projects stacked on top of each other, plus Adobe's applications (Sites, Assets, Forms) built on top of that stack. As a backend developer, you'll spend most of your time in the middle and bottom layers.</p>
+
+      <h3>1. Apache Jackrabbit Oak — the repository</h3>
+      <p>Everything in AEM — pages, components, assets, user accounts, workflow definitions, your own custom data — is stored as a node in a single hierarchical tree, the <strong>JCR repository</strong>. Each node has a path (like a filesystem path), a set of properties (key/value pairs), and child nodes. There is no separate database for "content" versus "configuration" versus "code metadata" — it's all the same tree. You'll meet this properly in the next module.</p>
+
+      <h3>2. Apache Sling — the resource framework</h3>
+      <p>Sling's job is to turn an incoming HTTP request into a Java object (a <strong>resource</strong>) and then find the right script or servlet to render it. It does this by mapping the URL path directly onto a repository path, then asking "what type of resource is this?" and resolving a renderer for that type. This is the opposite of a typical MVC framework where you define routes — in Sling, the content tree <em>is</em> the routing table.</p>
+
+      <h3>3. Apache Felix (OSGi) — the runtime</h3>
+      <p>Your Java code doesn't run as one big application — it runs as a collection of <strong>bundles</strong>, small modular JARs that declare what they need and what they provide. OSGi is the runtime that loads, wires, and can hot-swap these bundles independently, without restarting the whole server. This is what lets a large AEM instance run code from dozens of teams without it turning into a single tangled deployment.</p>
+
+      <div class="callout">
+        <span class="label">Mental model</span>
+        Repository = what's stored. Sling = how a request finds and renders it. OSGi = how your code is packaged and run. Every AEM concept you'll learn maps onto one of these three.
+      </div>
+
+      <h2>Author and publish</h2>
+      <p>A typical AEM environment runs (at least) two kinds of instances:</p>
+      <ul>
+        <li><strong>Author</strong> — where content authors and developers work. Content is created, edited, and reviewed here. It is never exposed directly to end users.</li>
+        <li><strong>Publish</strong> — serves the live, public-facing site. It holds a copy of the approved content, kept up to date through replication.</li>
+      </ul>
+      <p><strong>Replication</strong> is the process of pushing content (and sometimes code) from author to publish, triggered when a page is activated. As a backend developer, you'll often need to reason about which instance a piece of code runs on — some services only make sense on author (workflow logic, authoring UI backends) and some only on publish (high-traffic read APIs).</p>
+
+      <h2>The dispatcher</h2>
+      <p>Sitting in front of publish instances, the <strong>dispatcher</strong> is an Apache HTTP Server module that does two jobs: it caches rendered pages as static files so publish doesn't have to re-render every request, and it acts as a security gatekeeper, blocking requests that don't match an allow-list of safe URL patterns. You'll cover this properly in module 10, but it's worth knowing it exists from day one — a surprising number of "it works locally but not in production" bugs come from dispatcher rules.</p>
+
+      <div class="callout pitfall">
+        <span class="label">Common pitfall</span>
+        New developers often write code assuming a single running instance. In a real deployment, author and publish are separate JVMs with separate copies of the repository. A service registered or configuration set on author will not exist on publish unless you've explicitly arranged for it.
+      </div>
+
+      <h2>Where your code lives</h2>
+      <p>In a typical project repository (the Git one, not the JCR one), backend code is organized as a Maven multi-module project, commonly using the AEM Project Archetype. The two paths you'll see constantly inside the JCR tree once it's deployed:</p>
+      <pre data-code><span class="filename">JCR paths</span><code>/apps/your-project/      → your code: components, templates, OSGi configs, clientlibs
+/libs/                   → out-of-the-box AEM code — never modify this directly
+/content/your-project/   → the actual authored content (pages, assets)</code></pre>
+
+      <p>The rule that trips up almost everyone at first: <strong>never edit anything under <code class="inline">/libs</code></strong>. It's overwritten on every product upgrade. If you need to change out-of-the-box behavior, you overlay it — recreate the path under <code class="inline">/apps</code> and AEM's resource resolution will prefer your version. You'll see exactly how that resolution works in module 3.</p>
+
+      <div class="try-it">
+        <span class="label">Try it</span>
+        If you have access to a local AEM instance, open <code class="inline">http://localhost:4502/crx/de</code> (CRXDE Lite) and browse to <code class="inline">/apps</code> and <code class="inline">/content</code>. Don't worry about understanding everything you see yet — just get comfortable with the idea that this tree is the entire system.
+      </div>
+
+      <div class="complete-row">
+        <input type="checkbox" id="complete" data-complete-checkbox="arch-overview">
+        <label for="complete">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="../index.html"><span class="dir">← Back to</span>Curriculum overview</a>
+        <a class="next" href="02-jcr-repository.html"><span class="dir">Next →</span>JCR &amp; the Content Repository</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

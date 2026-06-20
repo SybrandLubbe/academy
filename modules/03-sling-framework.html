@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 Sling Framework Fundamentals — AEM Backend Training</title>
+<meta name="description" content="How a URL becomes a rendered page in Apache Sling: resource resolution, selectors, and script resolution.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 10 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><span class="tree-node disabled">05-sling-models <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">06-htl-templating <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">07-servlets-apis <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">08-dialogs-components <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">09-workflows-events <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">10-dispatcher-deployment <span class="prop">[locked]</span></span></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">03-sling-framework</span></p>
+
+      <div class="module-meta">
+        <span class="tag">Request handling</span>
+        <span>35 min read</span>
+      </div>
+
+      <h1 class="page-title">Sling Framework Fundamentals</h1>
+      <p class="lede">In a typical backend framework you define routes. In Sling, the content tree already <em>is</em> the routing table — your job is understanding how a request finds its way to a script.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>How a URL is decomposed into path, selectors, extension, and suffix</li>
+          <li>How Sling turns that path into a Resource</li>
+          <li>How <code class="inline">sling:resourceType</code> decides what renders the resource</li>
+          <li>How script resolution order works, and how overlays use it</li>
+        </ul>
+      </div>
+
+      <h2>Decomposing a request URL</h2>
+      <p>Sling parses every incoming URL into up to four parts before it does anything else:</p>
+      <pre data-code><span class="filename">URL anatomy</span><code>/content/my-site/en/about.teaser.html/jcr:content/par/image
+\__________ path __________/\selectors/\ext/\______ suffix _______/</code></pre>
+      <ul>
+        <li><strong>Path</strong> — matched against the repository tree to find a starting resource. Sling walks the path looking for the longest segment that actually exists as a node; anything left over becomes the suffix.</li>
+        <li><strong>Selectors</strong> — optional dot-separated tokens between the path and the extension (here, <code class="inline">teaser</code>). They let one resource render in different variants — a JSON API view versus an HTML view, for instance — without changing the underlying content.</li>
+        <li><strong>Extension</strong> — usually <code class="inline">html</code>, but could be <code class="inline">json</code>, <code class="inline">xml</code>, or a custom one your code defines. It strongly influences which script or servlet handles the request.</li>
+        <li><strong>Suffix</strong> — anything after the extension, passed through to your code as extra path info.</li>
+      </ul>
+
+      <h2>From path to Resource</h2>
+      <p>Once the path is resolved, Sling produces a <code class="inline">Resource</code> object — a thin wrapper around the underlying JCR node (or, in principle, any other back-end Sling is configured to read from; the repository is the default and by far the most common one). Almost every Sling API you'll touch — in HTL, in a servlet, in a Sling Model — starts from a <code class="inline">Resource</code> or a <code class="inline">ResourceResolver</code> used to look one up.</p>
+
+      <h2>resourceType decides the renderer</h2>
+      <p>Every resource that should be rendered carries a <code class="inline">sling:resourceType</code> property, a path pointing at the component that knows how to render it. Sling takes that resource type, the selectors, and the extension, and searches for a matching script under <code class="inline">/apps</code> first, then <code class="inline">/libs</code>:</p>
+      <pre data-code><span class="filename">resourceType → script lookup</span><code>sling:resourceType = "my-site/components/teaser"
+extension = html, no selectors
+
+Sling looks for, in order:
+  /apps/my-site/components/teaser/teaser.html
+  /apps/my-site/components/teaser/html.jsp
+  /libs/my-site/components/teaser/teaser.html   (only if not found above)</code></pre>
+      <p>This is the mechanism behind the "never edit <code class="inline">/libs</code>" rule from module 1: because <code class="inline">/apps</code> is searched first, recreating the same resource type path under <code class="inline">/apps</code> silently takes priority — that's an <strong>overlay</strong>, and it's the standard, supported way to customize out-of-the-box behavior.</p>
+
+      <div class="callout">
+        <span class="label">Mental model</span>
+        <code class="inline">sling:resourceType</code> answers "what kind of thing is this?" Selectors and extension answer "which variant, in what format?" Together they're enough for Sling to find exactly one script.
+      </div>
+
+      <h2>resourceSuperType: inheritance for components</h2>
+      <p>A component can declare a <code class="inline">sling:resourceSuperType</code> pointing to another component. If Sling can't find a script for the component's own resource type, it walks up to the super type and tries again — and it keeps walking until it finds a match or runs out of ancestors. This is how AEM components share and override rendering logic without copy-pasting markup, similar in spirit to class inheritance.</p>
+
+      <h2>Servlets, briefly</h2>
+      <p>Everything above describes script-based rendering, but the same resourceType-based resolution also applies to Java servlets registered against a resource type instead of a URL pattern — that's how AEM exposes most of its backend APIs. You'll build one yourself in module 7; for now, just know that "servlet" in AEM usually means "registered by resource type," not "registered by URL path" the way a typical Java web framework works.</p>
+
+      <div class="callout pitfall">
+        <span class="label">Common pitfall</span>
+        Forgetting that script resolution checks <code class="inline">/apps</code> before <code class="inline">/libs</code> is a frequent source of "I changed the file but nothing happened" bugs — you may be editing the <code class="inline">/libs</code> copy while an overlay in <code class="inline">/apps</code> is quietly winning.
+      </div>
+
+      <div class="try-it">
+        <span class="label">Try it</span>
+        Pick any component on a page you have access to, find its <code class="inline">sling:resourceType</code> in CRXDE Lite, then locate the matching script under <code class="inline">/apps</code>. Check whether it declares a <code class="inline">sling:resourceSuperType</code> and, if so, follow the chain.
+      </div>
+
+      <div class="complete-row">
+        <input type="checkbox" id="complete" data-complete-checkbox="sling-framework">
+        <label for="complete">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="02-jcr-repository.html"><span class="dir">← Previous</span>JCR &amp; the Content Repository</a>
+        <a class="next" href="04-osgi-services.html"><span class="dir">Next →</span>OSGi: Bundles, Services &amp; Components</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

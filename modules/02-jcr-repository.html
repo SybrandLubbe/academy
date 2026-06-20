@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02 JCR & the Content Repository — AEM Backend Training</title>
+<meta name="description" content="Nodes, properties, paths, and the repository conventions used in every AEM project.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 10 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><span class="tree-node disabled">05-sling-models <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">06-htl-templating <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">07-servlets-apis <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">08-dialogs-components <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">09-workflows-events <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">10-dispatcher-deployment <span class="prop">[locked]</span></span></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">02-jcr-repository</span></p>
+
+      <div class="module-meta">
+        <span class="tag">Repository</span>
+        <span>30 min read</span>
+      </div>
+
+      <h1 class="page-title">JCR &amp; the Content Repository</h1>
+      <p class="lede">Every piece of content in AEM — a page, an image, a component's settings, a user's profile — is a node in one big tree. Learn to read that tree and you can debug almost anything without guessing.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>Nodes, properties, and how paths map to the tree structure</li>
+          <li>The node types you'll see constantly: <code class="inline">cq:Page</code>, <code class="inline">nt:unstructured</code>, <code class="inline">nt:folder</code></li>
+          <li>What the <code class="inline">jcr:</code>, <code class="inline">cq:</code>, and <code class="inline">sling:</code> namespace prefixes mean</li>
+          <li>The standard top-level paths and what belongs in each</li>
+          <li>How to browse and query the repository yourself</li>
+        </ul>
+      </div>
+
+      <h2>Nodes and properties</h2>
+      <p>A JCR repository is a tree of <strong>nodes</strong>. Each node has a name, a path, a <strong>primary type</strong> that determines what properties and child nodes it's allowed to have, and zero or more <strong>properties</strong> — typed key/value pairs (string, boolean, date, binary, long, and reference types are the common ones). A node can hold child nodes, so the tree can go arbitrarily deep.</p>
+
+      <p>A page in AEM is actually two nodes stacked on top of each other:</p>
+      <pre data-code><span class="filename">a page, as nodes</span><code>/content/my-site/en/about            [cq:Page]
+/content/my-site/en/about/jcr:content [cq:PageContent]
+    jcr:title = "About Us"
+    sling:resourceType = "my-site/components/page"
+    jcr:createdBy = "jdoe"</code></pre>
+
+      <p>The outer node (<code class="inline">cq:Page</code>) is mostly a container — it exists so AEM has something stable to version and reference. The actual content — title, components, properties an author sets in a dialog — lives under <code class="inline">jcr:content</code>. This split trips up almost every new developer at least once: if you're looking for a page's title in code and querying the wrong node, you'll get nothing back.</p>
+
+      <div class="callout pitfall">
+        <span class="label">Common pitfall</span>
+        <code class="inline">/content/my-site/en/about</code> and <code class="inline">/content/my-site/en/about/jcr:content</code> are different nodes with different properties. Page-level metadata (title, template, properties set in the page properties dialog) lives under <code class="inline">jcr:content</code>, not on the page node itself.
+      </div>
+
+      <h2>Namespaces, in plain terms</h2>
+      <p>Node and property names are often prefixed, and each prefix tells you where the concept comes from:</p>
+      <ul>
+        <li><code class="inline">jcr:</code> — core JCR spec (<code class="inline">jcr:content</code>, <code class="inline">jcr:title</code>, <code class="inline">jcr:primaryType</code>)</li>
+        <li><code class="inline">nt:</code> — built-in JCR node types (<code class="inline">nt:unstructured</code>, <code class="inline">nt:folder</code>, <code class="inline">nt:file</code>)</li>
+        <li><code class="inline">cq:</code> — AEM-specific concepts inherited from the old "Communiqué" product name (<code class="inline">cq:Page</code>, <code class="inline">cq:dialog</code>, <code class="inline">cq:template</code>)</li>
+        <li><code class="inline">sling:</code> — Sling-specific properties, most importantly <code class="inline">sling:resourceType</code>, which you'll meet properly in the next module</li>
+      </ul>
+
+      <h2>The top-level paths</h2>
+      <p>A handful of root paths show up in every AEM project, and knowing what belongs where will save you a lot of confusion early on:</p>
+      <pre data-code><span class="filename">repository root</span><code>/content    → authored content: pages, assets metadata, experience fragments
+/apps       → your project's code: components, templates, clientlibs, OSGi configs
+/libs       → out-of-the-box AEM code — read-only, never modify
+/conf       → configuration: templates' policies, cloud configs (modern AEM)
+/etc        → legacy location for some configs/design content (older projects)
+/var        → runtime/internal data: audit logs, workflow instances
+/home       → user and group nodes (authentication/authorization)</code></pre>
+
+      <div class="callout">
+        <span class="label">Mental model</span>
+        If you're not sure where something lives, ask: "is this content an author typed in, or code a developer wrote?" Content goes under <code class="inline">/content</code>. Code goes under <code class="inline">/apps</code>. Almost everything else is a variation on that split.
+      </div>
+
+      <h2>Mixins and versioning</h2>
+      <p>Beyond a primary type, a node can have one or more <strong>mixin types</strong> that add optional capabilities — for example <code class="inline">mix:versionable</code> lets a node participate in JCR versioning (used for page version history), and <code class="inline">mix:lockable</code> lets it be locked for exclusive editing. You won't author these by hand often, but you'll see them in node properties and they explain features like "Page History" in the author UI.</p>
+
+      <h2>Exploring the repository yourself</h2>
+      <p>Two tools you'll use constantly as a backend developer:</p>
+      <ul>
+        <li><strong>CRXDE Lite</strong> (<code class="inline">/crx/de</code>) — a browser-based tree explorer and editor. Good for poking around and quick debugging; not where you do real development.</li>
+        <li><strong>Query Builder / JCR-SQL2</strong> — for finding nodes by criteria rather than walking the tree by hand, e.g. "all pages with a given template" or "all assets tagged X."</li>
+      </ul>
+
+      <div class="try-it">
+        <span class="label">Try it</span>
+        In CRXDE Lite, navigate to any existing page's <code class="inline">jcr:content</code> node and look at its properties panel. Find <code class="inline">sling:resourceType</code> and note its value — you'll use exactly this property to understand rendering in the next module.
+      </div>
+
+      <div class="complete-row">
+        <input type="checkbox" id="complete" data-complete-checkbox="jcr-repository">
+        <label for="complete">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="01-architecture-overview.html"><span class="dir">← Previous</span>Architecture Overview</a>
+        <a class="next" href="03-sling-framework.html"><span class="dir">Next →</span>Sling Framework Fundamentals</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

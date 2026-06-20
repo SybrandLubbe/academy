@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04 OSGi: Bundles, Services & Components — AEM Backend Training</title>
+<meta name="description" content="The modular runtime underneath AEM: bundles, services, components, and configuration.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 10 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><span class="tree-node disabled">05-sling-models <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">06-htl-templating <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">07-servlets-apis <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">08-dialogs-components <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">09-workflows-events <span class="prop">[locked]</span></span></li>
+      <li><span class="tree-node disabled">10-dispatcher-deployment <span class="prop">[locked]</span></span></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">04-osgi-services</span></p>
+
+      <div class="module-meta">
+        <span class="tag">Runtime</span>
+        <span>30 min read</span>
+      </div>
+
+      <h1 class="page-title">OSGi: Bundles, Services &amp; Components</h1>
+      <p class="lede">This is the part of AEM that looks most like "normal" Java backend work — until you hit your first wiring problem and need to know what's actually happening underneath the annotations.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>What a bundle is, and its lifecycle states</li>
+          <li>The difference between a service and a component</li>
+          <li>How dependency injection works via <code class="inline">@Reference</code></li>
+          <li>How OSGi configuration works, and where to manage it</li>
+          <li>How to read the Felix Web Console when something won't start</li>
+        </ul>
+      </div>
+
+      <h2>Bundles: deployable units</h2>
+      <p>A <strong>bundle</strong> is a JAR file with extra metadata in its manifest describing what Java packages it exports (makes available to others) and imports (needs from others). OSGi uses this metadata to resolve dependencies between bundles and load them in the right order. Bundles move through a defined lifecycle:</p>
+      <pre data-code><span class="filename">bundle lifecycle</span><code>INSTALLED → RESOLVED → STARTING → ACTIVE
+                                          ↓
+                                      STOPPING → RESOLVED</code></pre>
+      <p>A bundle stuck in <code class="inline">INSTALLED</code> or <code class="inline">RESOLVED</code> instead of <code class="inline">ACTIVE</code> almost always means a missing dependency — some package it imports isn't being exported by anything currently active. That's the single most common first debugging step for "my code isn't running" issues.</p>
+
+      <h2>Services and components</h2>
+      <p>Inside a bundle, you write <strong>components</strong> — plain Java classes annotated to participate in OSGi. A component typically implements a <strong>service</strong> interface, and OSGi maintains a service registry that other components can query or have services injected into them automatically.</p>
+      <pre data-code><span class="filename">GreetingService.java</span><code>public interface GreetingService {
+    String greet(String name);
+}</code></pre>
+      <pre data-code><span class="filename">GreetingServiceImpl.java</span><code>@Component(service = GreetingService.class)
+public class GreetingServiceImpl implements GreetingService {
+
+    @Override
+    public String greet(String name) {
+        return "Hello, " + name;
+    }
+}</code></pre>
+      <p>Declaring <code class="inline">service = GreetingService.class</code> is what publishes this implementation to the registry under that interface. Anything else that needs it can ask for it by interface, never knowing or caring which implementation it gets — that's the whole point: implementations can be swapped without touching the consumers.</p>
+
+      <h2>Dependency injection with @Reference</h2>
+      <p>To consume a service, declare a field annotated <code class="inline">@Reference</code>. OSGi finds a matching implementation in the registry and injects it before the component activates:</p>
+      <pre data-code><span class="filename">GreetingServlet.java</span><code>@Component(service = Servlet.class)
+public class GreetingServlet extends SlingSafeMethodsServlet {
+
+    @Reference
+    private GreetingService greetingService;
+
+    @Override
+    protected void doGet(SlingHttpServletRequest req, SlingHttpServletResponse resp)
+            throws IOException {
+        resp.getWriter().write(greetingService.greet("world"));
+    }
+}</code></pre>
+      <p>If no implementation of <code class="inline">GreetingService</code> is active when this component tries to start, OSGi will hold the component back from activating (unless the reference is explicitly marked optional). This is a deliberate safety mechanism — it prevents you from ever holding a null reference to a required service — but it's also why "bundle won't activate" so often traces back to a missing or misbehaving dependency several layers down.</p>
+
+      <div class="callout">
+        <span class="label">Mental model</span>
+        Interfaces are contracts published to a registry. Implementations register against them with <code class="inline">@Component</code>. Consumers ask for them with <code class="inline">@Reference</code>. Nobody but the registry knows which concrete class is actually wired in.
+      </div>
+
+      <h2>Lifecycle methods</h2>
+      <p>Components can hook into their own lifecycle with <code class="inline">@Activate</code>, <code class="inline">@Modified</code>, and <code class="inline">@Deactivate</code> annotated methods — useful for setup/teardown work like opening a connection pool or scheduling a background task, and for reacting live when a component's configuration changes without a full restart.</p>
+
+      <h2>OSGi configuration</h2>
+      <p>Components often need configurable values — a timeout, an API endpoint, a feature flag — without hardcoding them. The standard pattern pairs an annotation-defined config type with <code class="inline">@Designate</code>:</p>
+      <pre data-code><span class="filename">GreetingConfig.java</span><code>@ObjectClassDefinition(name = "Greeting Service Configuration")
+public @interface GreetingConfig {
+    String prefix() default "Hello";
+}</code></pre>
+      <pre data-code><span class="filename">GreetingServiceImpl.java (configurable)</span><code>@Component(service = GreetingService.class)
+@Designate(ocd = GreetingConfig.class)
+public class GreetingServiceImpl implements GreetingService {
+
+    private String prefix;
+
+    @Activate
+    protected void activate(GreetingConfig config) {
+        this.prefix = config.prefix();
+    }
+
+    @Override
+    public String greet(String name) {
+        return prefix + ", " + name;
+    }
+}</code></pre>
+      <p>Once deployed, this configuration is editable per-environment through the <strong>OSGi Configuration Manager</strong> (Felix Web Console → Configuration, or <code class="inline">/system/console/configMgr</code>) — meaning a value can differ between your local instance, staging, and production without touching code.</p>
+
+      <div class="callout pitfall">
+        <span class="label">Common pitfall</span>
+        Editing a configuration in the Felix console on author does not affect publish, and vice versa — they're separate JVMs with separate configurations (echoing module 1). Configuration changes made by hand in one environment also tend to get lost on the next deployment unless they're captured as a proper config file (a <code class="inline">.cfg.json</code>) checked into your project's repository.
+      </div>
+
+      <h2>Reading the Felix console</h2>
+      <p>When something isn't working, <code class="inline">/system/console/bundles</code> shows every bundle's state and, for anything not <code class="inline">Active</code>, why — usually an unsatisfied import. <code class="inline">/system/console/components</code> shows the same idea one level down, for individual components rather than whole bundles. Getting comfortable reading these two screens will save you far more debugging time than guessing from stack traces alone.</p>
+
+      <div class="try-it">
+        <span class="label">Try it</span>
+        On a local AEM instance, open <code class="inline">/system/console/bundles</code> and find a bundle that is not <code class="inline">Active</code>. Click into it to see which import is unsatisfied, and reason about why that dependency might be missing.
+      </div>
+
+      <div class="complete-row">
+        <input type="checkbox" id="complete" data-complete-checkbox="osgi-services">
+        <label for="complete">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="03-sling-framework.html"><span class="dir">← Previous</span>Sling Framework Fundamentals</a>
+        <a class="next" href="../index.html"><span class="dir">Back to</span>Curriculum overview</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>
