@@ -4,6 +4,7 @@
 
   var STORAGE_KEY = "aem-training-progress";
   var ALL_MODULES = [
+    "java-primer",
     "arch-overview",
     "jcr-repository",
     "sling-framework",

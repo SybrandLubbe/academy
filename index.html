@@ -17,7 +17,7 @@
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </button>
   <span class="brand"><span class="node-icon">◆</span> /content/training</span>
-  <span class="progress-pill" data-progress-pill>0 / 10 modules</span>
+  <span class="progress-pill" data-progress-pill>0 / 11 modules</span>
 </header>
 
 <div class="shell">
@@ -25,6 +25,7 @@
     <p class="tree-root">/content/training</p>
     <ul class="tree-list">
       <li><a class="tree-node active" href="index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="modules/00-java-primer.html">00-java-primer<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="arch-overview" href="modules/01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="jcr-repository" href="modules/02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="sling-framework" href="modules/03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
@@ -46,12 +47,24 @@
       <p class="sub">A short curriculum for junior backend engineers joining an AEM project. It starts where AEM itself starts — the content repository — and builds outward through Sling, OSGi, and the rest of the stack. The navigation on the left is laid out exactly like a real JCR tree, on purpose: you'll be reading paths like this in CRXDE Lite by the end of module two.</p>
       <div class="progress-track">
         <div class="progress-bar"><span data-progress-bar style="width:0%"></span></div>
-        <p class="progress-label" data-progress-label>0 of 10 modules complete</p>
+        <p class="progress-label" data-progress-label>0 of 11 modules complete</p>
       </div>
     </section>
 
     <section class="curriculum">
       <p class="tree-root">Modules</p>
+
+      <article class="module-card">
+        <span class="idx">00</span>
+        <div class="body">
+          <h3><a href="modules/00-java-primer.html">Java Primer for AEM</a></h3>
+          <p>A condensed Java refresher (34 slides, cut from 74) with five exercises that build, deploy, and run against a real AEM instance instead of a standalone Java project.</p>
+          <div class="meta-row">
+            <span>45 min</span><span>·</span><span>Prerequisite</span>
+            <span class="status available" data-status-for="java-primer">Available</span>
+          </div>
+        </div>
+      </article>
 
       <article class="module-card">
         <span class="idx">01</span>

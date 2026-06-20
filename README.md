@@ -9,11 +9,14 @@ index.html                          curriculum overview / homepage
 styles.css                          shared styles (design tokens at the top)
 script.js                           progress tracking, mobile nav, copy buttons
 modules/
+  00-java-primer.html               written — condensed Java refresher + 5 AEM-runnable exercises
   01-architecture-overview.html     written
   02-jcr-repository.html            written
   03-sling-framework.html           written
   04-osgi-services.html             written
   module-template.html              starting point for modules 05-10
+assets/
+  java-primer-slides.pptx           condensed slide deck (34 slides, down from 74), linked from module 00
 ```
 
 Modules 5–10 (Sling Models, HTL, Servlets & APIs, Dialogs & Components, Workflows, Dispatcher) are listed in the curriculum as "coming soon" but not yet written. `modules/module-template.html` has step-by-step comments at the top explaining exactly what to edit to add a new one.
