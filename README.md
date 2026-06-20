@@ -14,12 +14,18 @@ modules/
   02-jcr-repository.html            written
   03-sling-framework.html           written
   04-osgi-services.html             written
-  module-template.html              starting point for modules 05-10
+  05-sling-models.html              written
+  06-htl-templating.html            written
+  07-servlets-apis.html             written
+  08-dialogs-components.html        written
+  09-workflows-events.html          written
+  10-dispatcher-deployment.html     written
+  module-template.html              starting point for module 11 and beyond
 assets/
   java-primer-slides.pptx           condensed slide deck (34 slides, down from 74), linked from module 00
 ```
 
-Modules 5–10 (Sling Models, HTL, Servlets & APIs, Dialogs & Components, Workflows, Dispatcher) are listed in the curriculum as "coming soon" but not yet written. `modules/module-template.html` has step-by-step comments at the top explaining exactly what to edit to add a new one.
+All 11 modules (00 through 10) are written. `modules/module-template.html` has step-by-step comments at the top for adding an 11th-and-beyond module if you extend the curriculum further.
 
 ## Deploy to GitHub Pages
 

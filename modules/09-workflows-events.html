@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>09 Workflows & Event Handling — AEM Backend Training</title>
+<meta name="description" content="Automating content lifecycle with workflows, event listeners, and schedulers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 11 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="05-sling-models.html">05-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="06-htl-templating.html">06-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="07-servlets-apis.html">07-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="08-dialogs-components.html">08-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="workflows-events" href="09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">09-workflows-events</span></p>
+
+      <div class="module-meta">
+        <span class="tag">Automation</span>
+        <span>25 min read</span>
+      </div>
+
+      <h1 class="page-title">Workflows &amp; Event Handling</h1>
+      <p class="lede">Sometimes a single request/response isn't enough — a content change needs to trigger something else, either with a human in the loop or entirely on its own. AEM gives you three different tools for that, and picking the right one matters.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>The difference between a workflow, an event listener, and a scheduled job</li>
+          <li>Writing a custom workflow process step</li>
+          <li>Reacting to repository changes with <code class="inline">ResourceChangeListener</code></li>
+          <li>Running code on a timer with the Sling Scheduler</li>
+          <li>Why long-running work shouldn't run inline inside a listener</li>
+        </ul>
+      </div>
+
+      <h2>Three different automation tools</h2>
+      <p>A <strong>workflow</strong> suits a human-in-the-loop or multi-step process with visible state — "Request for Activation" is the classic example, modeled visually, able to pause for approval. An <strong>event listener</strong> reacts immediately and silently to a repository change, with no visible state at all — auto-tagging a page the moment it's created, for instance. A <strong>scheduled job</strong> runs on a timer, independent of any specific content change — a nightly report being the obvious case.</p>
+
+      <div class="callout">
+        <span class="label">Mental model</span>
+        Ask: does a person need to see and act on this step? Use a workflow. Should it just happen automatically when something changes? Use a listener. Does it need to run on a clock rather than a trigger? Use a scheduler.
+      </div>
+
+      <h2>A custom workflow step</h2>
+      <p>A workflow step is a plain OSGi component implementing <code class="inline">WorkflowProcess</code>, registered with a label that shows up when authors build a workflow model in the UI:</p>
+      <pre data-code><span class="filename">AcademyTaggingStep.java</span><code>package biz.netcentric.academy._09;
+
+import com.adobe.granite.workflow.WorkflowException;
+import com.adobe.granite.workflow.WorkflowSession;
+import com.adobe.granite.workflow.exec.WorkItem;
+import com.adobe.granite.workflow.exec.WorkflowProcess;
+import com.adobe.granite.workflow.metadata.MetaDataMap;
+import org.osgi.service.component.annotations.Component;
+
+@Component(
+        service = WorkflowProcess.class,
+        property = "process.label=Academy: Add Review Tag"
+)
+public class AcademyTaggingStep implements WorkflowProcess {
+
+    @Override
+    public void execute(WorkItem workItem, WorkflowSession workflowSession, MetaDataMap metaDataMap)
+            throws WorkflowException {
+        String payloadPath = workItem.getWorkflowData().getPayload().toString();
+        // resolve payloadPath, add a "needs-review" tag, save
+    }
+}</code></pre>
+
+      <h2>Reacting to changes with ResourceChangeListener</h2>
+      <p>This is the modern replacement for the older JCR <code class="inline">ObservationListener</code> API — a simpler interface scoped to specific paths and change types:</p>
+      <pre data-code><span class="filename">AcademyChangeListener.java</span><code>package biz.netcentric.academy._09;
+
+import org.apache.sling.api.resource.observation.ResourceChange;
+import org.apache.sling.api.resource.observation.ResourceChangeListener;
+import org.osgi.service.component.annotations.Component;
+
+import java.util.List;
+
+@Component(
+        service = ResourceChangeListener.class,
+        property = {
+                ResourceChangeListener.PATHS + "=/content/academy",
+                ResourceChangeListener.CHANGES + "=ADDED",
+                ResourceChangeListener.CHANGES + "=CHANGED"
+        }
+)
+public class AcademyChangeListener implements ResourceChangeListener {
+
+    @Override
+    public void onChange(List&lt;ResourceChange&gt; changes) {
+        changes.forEach(change -&gt;
+                System.out.println(change.getType() + ": " + change.getPath()));
+    }
+}</code></pre>
+
+      <h2>Scheduled jobs</h2>
+      <p>For work that runs on a clock rather than in response to anything, the Sling Scheduler accepts a cron-like expression and calls your code directly:</p>
+      <pre data-code><span class="filename">NightlyReportTask.java (excerpt)</span><code>@Activate
+protected void activate() {
+    scheduler.schedule(this, scheduler.EXPR()
+            .expression("0 0 2 * * ?")  // 2am daily
+            .name("academy-nightly-report")
+            .canRunConcurrently(false));
+}</code></pre>
+
+      <div class="callout pitfall">
+        <span class="label">Common pitfall</span>
+        Code inside <code class="inline">onChange</code> runs synchronously on the thread that triggered the change — a slow listener can visibly delay authoring or replication. Hand off anything heavier than a quick check to a Sling Job (<code class="inline">JobManager.addJob(...)</code>) instead of doing the real work inline.
+      </div>
+
+      <div class="try-it">
+        <span class="label">Try it</span>
+        Deploy <code class="inline">AcademyChangeListener</code> scoped to <code class="inline">/content/academy</code>, then watch the log (<code class="inline">tail -f</code> on the error log, or the Felix console's log viewer) while you author a change under that path in the AEM UI.
+      </div>
+
+      <div class="complete-row">
+        <input type="checkbox" id="complete" data-complete-checkbox="workflows-events">
+        <label for="complete">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="08-dialogs-components.html"><span class="dir">← Previous</span>Dialogs, Components &amp; the Touch UI</a>
+        <a class="next" href="10-dispatcher-deployment.html"><span class="dir">Next →</span>Dispatcher, Caching &amp; Deployment</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

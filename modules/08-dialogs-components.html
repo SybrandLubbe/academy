@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>08 Dialogs, Components & the Touch UI — AEM Backend Training</title>
+<meta name="description" content="Authoring interfaces: component dialogs, edit/design dialogs, and content policies.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 11 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="05-sling-models.html">05-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="06-htl-templating.html">06-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="07-servlets-apis.html">07-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="dialogs-components" href="08-dialogs-components.html">08-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">08-dialogs-components</span></p>
+
+      <div class="module-meta">
+        <span class="tag">Authoring</span>
+        <span>30 min read</span>
+      </div>
+
+      <h1 class="page-title">Dialogs, Components &amp; the Touch UI</h1>
+      <p class="lede">A component is content plus a dialog that lets an author edit that content. The dialog itself is just more Granite UI markup sitting in the repository — no different in spirit from the JCR tree you met in module 2.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>The standard component folder layout</li>
+          <li>How a dialog is itself repository content, resolved the same way as module 3's scripts</li>
+          <li>The Granite UI field types you'll reach for most often</li>
+          <li>Design dialogs and content policies — and which one your project actually uses</li>
+          <li>Organizing a larger dialog with tabs</li>
+        </ul>
+      </div>
+
+      <h2>Component anatomy</h2>
+      <pre data-code><span class="filename">/apps/academy/components/teaser/</span><code>teaser/
+  .content.xml              component definition: title, group, resourceSuperType
+  teaser.html                the HTL render script (module 6)
+  _cq_dialog/.content.xml    the author dialog
+  _cq_template/.content.xml  default content when dragged onto a page (optional)</code></pre>
+
+      <h2>The dialog is just more repository content</h2>
+      <p>A dialog node tree maps directly onto the Granite UI form it renders, using the same resourceType resolution mechanism from module 3 — it's simply running inside the author's editing UI instead of a page:</p>
+      <pre data-code><span class="filename">_cq_dialog/.content.xml</span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="nt:unstructured"
+    sling:resourceType="cq/gui/components/authoring/dialog"&gt;
+    &lt;content jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns"&gt;
+        &lt;items jcr:primaryType="nt:unstructured"&gt;
+            &lt;column jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/container"&gt;
+                &lt;items jcr:primaryType="nt:unstructured"&gt;
+                    &lt;title jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldLabel="Title"
+                        name="./jcr:title"/&gt;
+                    &lt;image jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                        fieldLabel="Image"
+                        rootPath="/content/dam"
+                        name="./image"/&gt;
+                &lt;/items&gt;
+            &lt;/column&gt;
+        &lt;/items&gt;
+    &lt;/content&gt;
+&lt;/jcr:root&gt;</code></pre>
+
+      <div class="callout">
+        <span class="label">Mental model</span>
+        Every field's <code class="inline">name</code> attribute is just a repository property path. A textfield named <code class="inline">./jcr:title</code> writes straight to the <code class="inline">jcr:title</code> property on the component's own node — the dialog isn't a separate data layer, it's an editor for the exact nodes your Sling Model reads in module 5.
+      </div>
+
+      <h2>Common field types</h2>
+      <p>A handful of Granite UI field types cover most dialogs: <code class="inline">textfield</code> for short text like a title, <code class="inline">pathfield</code> for browsing the repository to pick an asset or page, <code class="inline">select</code> for a fixed list of options, <code class="inline">checkbox</code> for a boolean, and <code class="inline">multifield</code> for a repeatable group — a list of link/label pairs, for example. <code class="inline">multifield</code> is the one that trips people up first, since each repetition is itself a small nested form:</p>
+      <pre data-code><span class="filename">multifield excerpt</span><code>&lt;links
+    jcr:primaryType="nt:unstructured"
+    sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
+    fieldLabel="Related links"&gt;
+    &lt;field
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/container"
+        name="./links"&gt;
+        &lt;items jcr:primaryType="nt:unstructured"&gt;
+            &lt;label jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                fieldLabel="Label" name="./label"/&gt;
+            &lt;url jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                fieldLabel="Link" name="./url"/&gt;
+        &lt;/items&gt;
+    &lt;/field&gt;
+&lt;/links&gt;</code></pre>
+
+      <h2>Design dialog vs. content policy</h2>
+      <p>Older, non-editable templates used a <strong>design dialog</strong> (<code class="inline">cq:design_dialog</code>) to capture settings shared across an entire site design under <code class="inline">/etc/designs</code> — one set of values applied everywhere that design was active. Modern editable templates replaced this with <strong>content policies</strong> under <code class="inline">/conf/.../policies</code>: the same idea of author-locked, component-level settings, but scoped to a specific template-and-component pairing rather than a whole site. If your project uses editable templates (almost all new projects do), policies are what control things like which components a paragraph system allows, or a teaser's permitted image ratio.</p>
+
+      <h2>Organizing a bigger dialog with tabs</h2>
+      <p>Once a component grows past a handful of fields, wrap related groups in a tabs container instead of one long scrolling form — authors find a labeled "Advanced" or "SEO" tab far easier to navigate than a wall of fields, and it keeps the most-used settings on the first tab where they're seen immediately.</p>
+
+      <div class="try-it">
+        <span class="label">Try it</span>
+        Add a checkbox field <code class="inline">./openInNewTab</code> to the teaser dialog you sketched above, then add a matching <code class="inline">@ValueMapValue private boolean openInNewTab;</code> field to <code class="inline">TeaserModel</code> and expose it with a getter.
+      </div>
+
+      <div class="complete-row">
+        <input type="checkbox" id="complete" data-complete-checkbox="dialogs-components">
+        <label for="complete">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="07-servlets-apis.html"><span class="dir">← Previous</span>Servlets &amp; Backend APIs</a>
+        <a class="next" href="09-workflows-events.html"><span class="dir">Next →</span>Workflows &amp; Event Handling</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>
