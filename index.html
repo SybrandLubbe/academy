@@ -17,7 +17,7 @@
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </button>
   <span class="brand"><span class="node-icon">◆</span> /content/training</span>
-  <span class="progress-pill" data-progress-pill>0 / 11 modules</span>
+  <span class="progress-pill" data-progress-pill>0 / 22 modules</span>
 </header>
 
 <div class="shell">
@@ -37,6 +37,20 @@
       <li><a class="tree-node" data-module-id="workflows-events" href="modules/09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="dispatcher-deployment" href="modules/10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
     </ul>
+    <p class="tree-divider">Advanced practices</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" data-module-id="custom-components" href="modules/11-custom-components.html">11-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="modules/12-java-pitfalls.html">12-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="modules/13-sling-models-advanced.html">13-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="modules/14-osgi-services-config.html">14-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="modules/15-model-composition.html">15-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="modules/16-unit-testing.html">16-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="modules/17-context-aware-config.html">17-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="modules/18-groovy-console.html">18-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="modules/19-workflow-design.html">19-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="modules/20-sling-jobs.html">20-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="modules/21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+    </ul>
     <p class="legend">Filled circle = module marked complete.</p>
   </nav>
 
@@ -47,7 +61,7 @@
       <p class="sub">A short curriculum for junior backend engineers joining an AEM project. It starts where AEM itself starts — the content repository — and builds outward through Sling, OSGi, and the rest of the stack. The navigation on the left is laid out exactly like a real JCR tree, on purpose: you'll be reading paths like this in CRXDE Lite by the end of module two.</p>
       <div class="progress-track">
         <div class="progress-bar"><span data-progress-bar style="width:0%"></span></div>
-        <p class="progress-label" data-progress-label>0 of 11 modules complete</p>
+        <p class="progress-label" data-progress-label>0 of 22 modules complete</p>
       </div>
     </section>
 
@@ -182,6 +196,140 @@
           <div class="meta-row">
             <span>30 min</span><span>·</span><span>Operations</span>
             <span class="status available" data-status-for="dispatcher-deployment">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <p class="tree-root tree-divider">Advanced Practices</p>
+
+      <article class="module-card">
+        <span class="idx">11</span>
+        <div class="body">
+          <h3><a href="modules/11-custom-components.html">Custom Components Workshop</a></h3>
+          <p>Build an extended Image component that reads asset metadata, and a Weather component backed by a free public API — full code, exact Maven paths included.</p>
+          <div class="meta-row">
+            <span>50 min</span><span>·</span><span>Components workshop</span>
+            <span class="status available" data-status-for="custom-components">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">12</span>
+        <div class="body">
+          <h3><a href="modules/12-java-pitfalls.html">Java Best Practices &amp; Pitfalls</a></h3>
+          <p>Hash vs. Comparable, interfaces vs. abstract classes, stream pitfalls, and how to actually debug a running AEM instance.</p>
+          <div class="meta-row">
+            <span>35 min</span><span>·</span><span>Java deep dive</span>
+            <span class="status available" data-status-for="java-pitfalls">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">13</span>
+        <div class="body">
+          <h3><a href="modules/13-sling-models-advanced.html">Sling Models In Depth</a></h3>
+          <p>Adaptation internals, interface-based models, constructor vs. activation injection, and Resource vs. Request as the adaptable.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Content models · Advanced</span>
+            <span class="status available" data-status-for="sling-models-advanced">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">14</span>
+        <div class="body">
+          <h3><a href="modules/14-osgi-services-config.html">OSGi Services &amp; Configuration</a></h3>
+          <p>Reference cardinality, immediate components, and deploying OSGi configuration as JSON across run modes.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Runtime · Advanced</span>
+            <span class="status available" data-status-for="osgi-services-config">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">15</span>
+        <div class="body">
+          <h3><a href="modules/15-model-composition.html">Extending Core Component Models</a></h3>
+          <p>The full <code class="inline">@Via(type = ResourceSuperType.class)</code> composition pattern, and setting up a project for unit testing.</p>
+          <div class="meta-row">
+            <span>20 min</span><span>·</span><span>Content models · Advanced</span>
+            <span class="status available" data-status-for="model-composition">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">16</span>
+        <div class="body">
+          <h3><a href="modules/16-unit-testing.html">Unit Testing</a></h3>
+          <p>JUnit, Mockito, and AEM Mocks — testing Sling Models, services, and resources without deploying to AEM.</p>
+          <div class="meta-row">
+            <span>40 min</span><span>·</span><span>Testing</span>
+            <span class="status available" data-status-for="unit-testing">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">17</span>
+        <div class="body">
+          <h3><a href="modules/17-context-aware-config.html">Context-Aware Configurations</a></h3>
+          <p>Per-site configuration resolved by content hierarchy, plus the WCM IO editor for managing it without CRXDE Lite.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Configuration</span>
+            <span class="status available" data-status-for="context-aware-config">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">18</span>
+        <div class="body">
+          <h3><a href="modules/18-groovy-console.html">Groovy Console</a></h3>
+          <p>Writing one-off content migration scripts safely, without building and deploying a full OSGi bundle.</p>
+          <div class="meta-row">
+            <span>20 min</span><span>·</span><span>Tooling</span>
+            <span class="status available" data-status-for="groovy-console">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">19</span>
+        <div class="body">
+          <h3><a href="modules/19-workflow-design.html">Workflow Design &amp; Custom Steps</a></h3>
+          <p>Workflow model vs. instance, the visual editor and stages, and writing a custom step that survives a retry.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Automation · Advanced</span>
+            <span class="status available" data-status-for="workflow-design">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">20</span>
+        <div class="body">
+          <h3><a href="modules/20-sling-jobs.html">Sling Jobs</a></h3>
+          <p>Running asynchronous and scheduled work in the background — and finally fixing module 11's Weather component.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Runtime · Advanced</span>
+            <span class="status available" data-status-for="sling-jobs">Available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="module-card">
+        <span class="idx">21</span>
+        <div class="body">
+          <h3><a href="modules/21-acs-commons.html">ACS Commons</a></h3>
+          <p>What it is, how to deploy it, and the tools worth knowing before you build something it already solved.</p>
+          <div class="meta-row">
+            <span>20 min</span><span>·</span><span>Tooling</span>
+            <span class="status available" data-status-for="acs-commons">Available</span>
           </div>
         </div>
       </article>

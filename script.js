@@ -14,7 +14,18 @@
     "servlets-apis",
     "dialogs-components",
     "workflows-events",
-    "dispatcher-deployment"
+    "dispatcher-deployment",
+    "custom-components",
+    "java-pitfalls",
+    "sling-models-advanced",
+    "osgi-services-config",
+    "model-composition",
+    "unit-testing",
+    "context-aware-config",
+    "groovy-console",
+    "workflow-design",
+    "sling-jobs",
+    "acs-commons"
   ];
 
   function getProgress() {

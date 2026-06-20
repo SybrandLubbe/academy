@@ -20,12 +20,23 @@ modules/
   08-dialogs-components.html        written
   09-workflows-events.html          written
   10-dispatcher-deployment.html     written
-  module-template.html              starting point for module 11 and beyond
+  11-custom-components.html         written — Image Metadata + Weather components, full Maven paths
+  12-java-pitfalls.html             written
+  13-sling-models-advanced.html     written
+  14-osgi-services-config.html      written
+  15-model-composition.html         written
+  16-unit-testing.html              written
+  17-context-aware-config.html      written
+  18-groovy-console.html            written
+  19-workflow-design.html           written
+  20-sling-jobs.html                written
+  21-acs-commons.html               written
+  module-template.html              starting point for module 22 and beyond
 assets/
   java-primer-slides.pptx           condensed slide deck (34 slides, down from 74), linked from module 00
 ```
 
-All 11 modules (00 through 10) are written. `modules/module-template.html` has step-by-step comments at the top for adding an 11th-and-beyond module if you extend the curriculum further.
+All 22 modules (00 through 21) are written, split into two tracks: "Modules" (00–10) covers AEM fundamentals, "Advanced Practices" (11–21) covers component composition, testing, configuration, automation, and tooling. `modules/module-template.html` has step-by-step comments at the top for adding a 22nd-and-beyond module if you extend the curriculum further.
 
 ## Deploy to GitHub Pages
 

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17 Context-Aware Configurations — AEM Backend Training</title>
+<meta name="description" content="Per-site configuration resolved by content hierarchy, plus the WCM IO editor for managing it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 22 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="05-sling-models.html">05-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="06-htl-templating.html">06-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="07-servlets-apis.html">07-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="08-dialogs-components.html">08-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
+    </ul>
+    <p class="tree-divider">Advanced practices</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" data-module-id="custom-components" href="11-custom-components.html">11-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="12-java-pitfalls.html">12-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="13-sling-models-advanced.html">13-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="14-osgi-services-config.html">14-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="15-model-composition.html">15-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="16-unit-testing.html">16-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="context-aware-config" href="17-context-aware-config.html">17-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="18-groovy-console.html">18-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="19-workflow-design.html">19-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="20-sling-jobs.html">20-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">17-context-aware-config</span></p>
+
+      <div class="module-meta">
+        <span class="tag">Configuration</span>
+        <span>30 min read</span>
+      </div>
+
+      <h1 class="page-title">Context-Aware Configurations</h1>
+      <p class="lede">Module 14 covered OSGi configuration scoped by run mode — the same value for every site on an instance. Context-Aware Configuration solves a different problem: a value that differs <em>per site</em> on the same instance, resolved by where in the content tree you're asking from.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>What problem Context-Aware Configuration (CA Config) solves that run modes don't</li>
+          <li>Defining a configuration with an OSGi annotation interface</li>
+          <li>Reading it from a resource or request via <code class="inline">ConfigurationBuilder</code></li>
+          <li>Unit testing code that depends on a CA Config</li>
+          <li>Installing and using the WCM IO Context-Aware Configuration Editor</li>
+        </ul>
+      </div>
+
+      <h2>The problem it solves</h2>
+      <p>Imagine an analytics tracking ID, a social media handle, or a third-party API key that needs to be different for every site an AEM instance hosts — run-mode configuration can't help, because run mode describes the <em>environment</em> (author vs. publish), not the <em>content</em> being requested. CA Config resolves a value by walking up the content hierarchy from a given resource (typically a page) until it finds a matching configuration, usually stored under <code class="inline">/conf</code> and linked to a site via <code class="inline">sling:configRef</code>.</p>
+
+      <h2>Defining a configuration</h2>
+      <p>A configuration is just an annotation interface, similar in shape to the <code class="inline">@ObjectClassDefinition</code> pattern from module 4 and 14:</p>
+      <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/config/WeatherConfig.java</span><code>package biz.netcentric.academy.config;
+
+import org.apache.sling.caconfig.annotation.Configuration;
+import org.apache.sling.caconfig.annotation.Property;
+
+@Configuration(label = "Weather Component Settings")
+public @interface WeatherConfig {
+
+    @Property(label = "Default country")
+    String defaultCountry() default "Portugal";
+
+    @Property(label = "Cache duration (minutes)")
+    int cacheDurationMinutes() default 30;
+}</code></pre>
+      <p>No <code class="inline">@Component</code> or <code class="inline">@Designate</code> is needed here — CA Config's own framework discovers <code class="inline">@Configuration</code>-annotated interfaces automatically; there's nothing to register by hand.</p>
+
+      <h2>Reading a configuration</h2>
+      <p>Adapt a resource or request to <code class="inline">ConfigurationBuilder</code>, then ask it for your annotation type:</p>
+      <pre data-code><span class="filename">inside a Sling Model</span><code>import org.apache.sling.caconfig.ConfigurationBuilder;
+import org.apache.sling.models.annotations.injectorspecific.Self;
+
+@Self
+private ConfigurationBuilder configurationBuilder;
+
+private String resolveDefaultCountry() {
+    WeatherConfig config = configurationBuilder.as(WeatherConfig.class);
+    return config.defaultCountry();
+}</code></pre>
+      <p>If module 11's <code class="inline">WeatherModel</code> used this instead of leaving the country blank, every site under a given <code class="inline">/conf</code> configuration could default to its own country without a single line of branching code in the model itself.</p>
+
+      <h2>Context-aware resources, briefly</h2>
+      <p>Under the hood, CA Config resolution walks from the current resource up through its parents, following each page's <code class="inline">sling:configRef</code> property to locate the relevant config tree under <code class="inline">/conf</code> — falling back to a global default if no site-specific value exists. You rarely need to interact with that resolution chain directly; <code class="inline">ConfigurationBuilder</code> handles it, which is precisely the point.</p>
+
+      <h2>Unit testing CA Config</h2>
+      <p><code class="inline">AemContext</code> from module 16 has a plugin for this — enable it when building the context, then write the configuration values directly into the mock <code class="inline">/conf</code> tree:</p>
+      <pre data-code><span class="filename">core/src/test/java/biz/netcentric/academy/config/WeatherConfigTest.java (excerpt)</span><code>private final AemContext context = new AemContext(ContextPlugins.CACONFIG);
+
+@Test
+void resolvesDefaultCountryFromCaConfig() {
+    context.create().resource("/conf/academy/sling:configs/biz.netcentric.academy.config.WeatherConfig",
+            "defaultCountry", "Germany");
+    context.create().resource("/content/academy/page", "sling:configRef", "/conf/academy");
+
+    Resource page = context.resourceResolver().getResource("/content/academy/page");
+    WeatherConfig config = page.adaptTo(ConfigurationBuilder.class).as(WeatherConfig.class);
+
+    assertEquals("Germany", config.defaultCountry());
+}</code></pre>
+
+      <h2>WCM IO Context-Aware Configuration Editor</h2>
+      <p>Out of the box, CA Config values can only be edited as raw repository content under <code class="inline">/conf</code> — fine for a developer in CRXDE Lite, unworkable for the content authors and administrators who actually need to change a tracking ID. The <a href="https://github.com/wcm-io/io.wcm.caconfig.editor" target="_blank" rel="noopener">WCM IO Context-Aware Configuration Editor</a> is a free, open-source tool that adds a proper UI for this.</p>
+
+      <h3>Installation</h3>
+      <p>Add it as a Maven dependency in your <code class="inline">all</code> module's content package (or install the released package directly via Package Manager for a quick local trial), then redeploy. It ships its own UI bundle and content package — no custom code is needed on your side beyond having defined your <code class="inline">@Configuration</code> annotation interfaces.</p>
+
+      <h3>Using the editor</h3>
+      <p>Once installed, a "Configuration" entry appears in the AEM tools console, letting an author or administrator browse configurations by site and edit the fields your <code class="inline">@Property</code> labels describe — without ever opening CRXDE Lite. The form fields are generated directly from your annotation interface, so <code class="inline">WeatherConfig</code> above would show "Default country" and "Cache duration (minutes)" as labeled inputs automatically.</p>
+
+      <div class="callout pitfall">
+        <span class="label">Common pitfall</span>
+        Forgetting that a page needs a <code class="inline">sling:configRef</code> (set automatically by editable templates' site root configuration, or manually for test content) pointing at a <code class="inline">/conf</code> path before CA Config resolution has anywhere to look. Without it, <code class="inline">ConfigurationBuilder</code> silently falls back to your annotation's <code class="inline">default</code> values — which can look identical to "it's working" until you actually need a non-default value.
+      </div>
+
+      <div class="try-it">
+        <span class="label">Try it</span>
+        Add <code class="inline">WeatherConfig</code> from this module to the <code class="inline">WeatherModel</code> from module 11, falling back to <code class="inline">config.defaultCountry()</code> whenever the dialog's country field is left empty.
+      </div>
+
+      <div class="complete-row">
+        <input type="checkbox" id="complete" data-complete-checkbox="context-aware-config">
+        <label for="complete">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="16-unit-testing.html"><span class="dir">← Previous</span>Unit Testing</a>
+        <a class="next" href="18-groovy-console.html"><span class="dir">Next →</span>Groovy Console</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

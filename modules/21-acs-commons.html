@@ -1,29 +1,10 @@
-<!--
-  TEMPLATE — duplicate this file to author a new module beyond the current 00-21.
-
-  Steps to add module 22 (or beyond):
-  1. Copy this file to modules/22-your-slug.html
-  2. Fill in the title, breadcrumb, meta tag, lede, learn-box, and body sections below
-  3. In THIS file's sidebar block, a placeholder <li> for "22-your-slug" is included
-     below (under "Advanced practices") as a disabled <span> — once authored, change
-     it to a real link, matching the pattern used by every module above it, e.g.:
-       <li><a class="tree-node" data-module-id="your-slug" href="22-your-slug.html">22-your-slug<span class="check"></span></a></li>
-  4. Repeat that same sidebar edit in EVERY other HTML file (index.html and all
-     modules/*.html) so the navigation stays in sync. There's no shared include
-     in this plain-HTML setup — search-and-replace across files is the fastest way.
-  5. Add the new module's id to script.js's ALL_MODULES array so progress tracking
-     and the topbar counter include it.
-  6. On index.html, add a new <article class="module-card"> for it (copy an existing
-     one), and update the pager on module 21 to point "next" at it instead of back
-     to the curriculum overview.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>22 Module Title — AEM Backend Training</title>
-<meta name="description" content="One-sentence description of what this module covers.">
+<title>21 ACS Commons — AEM Backend Training</title>
+<meta name="description" content="What ACS Commons is, how to deploy it, and the tools worth knowing first.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -68,61 +49,57 @@
       <li><a class="tree-node" data-module-id="groovy-console" href="18-groovy-console.html">18-groovy-console<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="workflow-design" href="19-workflow-design.html">19-workflow-design<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="sling-jobs" href="20-sling-jobs.html">20-sling-jobs<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
-      <li><span class="tree-node disabled">22-your-slug <span class="prop">[locked]</span></span></li>
+      <li><a class="tree-node active" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
     </ul>
     <p class="legend">Filled circle = module marked complete.</p>
   </nav>
 
   <main class="main">
     <div class="content">
-      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">22-your-slug</span></p>
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">21-acs-commons</span></p>
 
       <div class="module-meta">
-        <span class="tag">Category</span>
-        <span>XX min read</span>
+        <span class="tag">Tooling</span>
+        <span>20 min read</span>
       </div>
 
-      <h1 class="page-title">Module Title</h1>
-      <p class="lede">One or two sentences framing why this module matters and what problem it solves for the reader.</p>
+      <h1 class="page-title">ACS Commons</h1>
+      <p class="lede">By this point you've hand-built a workflow step, a job queue, and a couple of OSGi services. A lot of common variations on exactly that work have already been solved, tested, and packaged — that's what ACS Commons is.</p>
 
       <div class="learn-box">
         <h3>What you'll learn</h3>
         <ul>
-          <li>Learning objective one</li>
-          <li>Learning objective two</li>
-          <li>Learning objective three</li>
+          <li>What ACS Commons is and isn't</li>
+          <li>How to deploy it into a project</li>
+          <li>A handful of its most useful features, and when to reach for each</li>
         </ul>
       </div>
 
-      <h2>First section heading</h2>
-      <p>Body copy. Use <code class="inline">code.inline</code> for short code references, file names, and repository paths.</p>
-
-      <pre data-code><span class="filename">optional filename label</span><code>// code sample
-const example = true;</code></pre>
-
+      <h2>What it is</h2>
+      <p><a href="https://adobe-consulting-services.github.io/acs-aem-commons/" target="_blank" rel="noopener">ACS Commons</a> is a free, open-source collection of AEM utilities, tools, and reusable components maintained by Adobe Consulting Services and the wider AEM community. It isn't a single feature — it's closer to a toolbox of dozens of small, independent additions covering gaps that show up repeatedly across AEM projects: dispatcher cache flushing rules, bulk content workflows, redirect management, and quite a bit more, all of it open source and free to inspect, fork, or read for implementation patterns even if you don't install it directly.</p>
       <div class="callout">
         <span class="label">Mental model</span>
-        A short reframing that helps the concept click — used sparingly, once or twice per module.
+        Before building a custom solution to a problem that feels generic — "I need to bulk-process thousands of pages," "I need a redirect map," "I need to flush the dispatcher cache on a schedule" — check whether ACS Commons already has a maintained, tested answer. It very often does.
       </div>
 
-      <div class="callout pitfall">
-        <span class="label">Common pitfall</span>
-        A specific mistake junior developers make on this topic, and how to avoid it.
-      </div>
+      <h2>Deploying it</h2>
+      <p>Two common approaches, depending on the project. For a quick local trial, download the released content package from the <a href="https://github.com/Adobe-Consulting-Services/acs-aem-commons/releases" target="_blank" rel="noopener">GitHub releases page</a> and install it through Package Manager, the same as the Groovy Console in module 18. For a real project, add it as a proper Maven dependency to your <code class="inline">all</code> module so it deploys alongside your own code as part of the standard build, rather than being installed as a separate manual step that's easy to forget when setting up a new environment.</p>
+
+      <h2>Features worth knowing first</h2>
+      <p>A handful of tools tend to earn their place on almost every project. The <strong>Ensure Oak Index</strong> framework lets you define custom Oak query indexes as content, deployed and verified the same way as any other package — useful the moment a custom query pattern needs an index that doesn't already exist. <strong>Dispatcher Flush Rules</strong> give you fine-grained control over what gets invalidated on replication, building directly on the dispatcher concepts from module 10. The <strong>Bulk Workflow Manager</strong> runs a workflow model (module 19) against thousands of resources matching a query, with throttling and progress tracking built in — exactly the kind of large-scale content operation that's tedious and risky to script by hand. <strong>On-Deploy Scripts</strong> provide a structured way to run one-time migration code automatically as part of a deployment, a safer and more auditable alternative to running an ad-hoc Groovy Console script (module 18) for anything that needs to happen exactly once per environment. And the <strong>Redirect Manager</strong> gives content authors a UI for managing URL redirects without needing a developer to hand-edit dispatcher rules for every change.</p>
 
       <div class="try-it">
         <span class="label">Try it</span>
-        A small, concrete hands-on exercise the reader can do on a local or sandbox AEM instance.
+        Install ACS Commons locally, then use the Bulk Workflow Manager to run a simple, harmless workflow model (even just module 19's exercise model) against every page under <code class="inline">/content/academy</code>, and compare that experience to hand-writing the same loop in the Groovy Console from module 18.
       </div>
 
       <div class="complete-row">
-        <input type="checkbox" id="complete" data-complete-checkbox="your-slug">
+        <input type="checkbox" id="complete" data-complete-checkbox="acs-commons">
         <label for="complete">Mark this module as complete</label>
       </div>
 
       <nav class="pager">
-        <a class="prev" href="21-acs-commons.html"><span class="dir">← Previous</span>ACS Commons</a>
+        <a class="prev" href="20-sling-jobs.html"><span class="dir">← Previous</span>Sling Jobs</a>
         <a class="next" href="../index.html"><span class="dir">Back to</span>Curriculum overview</a>
       </nav>
     </div>

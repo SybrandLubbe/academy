@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>11 Custom Components Workshop — AEM Backend Training</title>
+<meta name="description" content="Build an extended Image component that reads asset metadata, and a Weather component backed by a free public API.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 22 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="05-sling-models.html">05-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="06-htl-templating.html">06-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="07-servlets-apis.html">07-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="08-dialogs-components.html">08-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
+    </ul>
+    <p class="tree-divider">Advanced practices</p>
+    <ul class="tree-list">
+      <li><a class="tree-node active" data-module-id="custom-components" href="11-custom-components.html">11-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="12-java-pitfalls.html">12-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="13-sling-models-advanced.html">13-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="14-osgi-services-config.html">14-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="15-model-composition.html">15-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="16-unit-testing.html">16-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="17-context-aware-config.html">17-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="18-groovy-console.html">18-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="19-workflow-design.html">19-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="20-sling-jobs.html">20-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">11-custom-components</span></p>
+
+      <div class="module-meta">
+        <span class="tag">Components workshop</span>
+        <span>50 min · hands-on</span>
+      </div>
+
+      <h1 class="page-title">Custom Components Workshop</h1>
+      <p class="lede">Two complete components, built from an empty starting point: an extended Image component that reads and displays a DAM asset's metadata, and a Weather component that geocodes an author-entered city and pulls live conditions from a free public API.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>Exactly where in an AEM project's Maven structure new Java, component, and dialog files belong</li>
+          <li>Extending a Core Component by resource type inheritance instead of building from scratch</li>
+          <li>Reading DAM asset metadata from a Sling Model</li>
+          <li>Calling an external REST API from a Sling Model, and why that's a pattern to use carefully</li>
+        </ul>
+      </div>
+
+      <h2>Before you start: where this code lives</h2>
+      <p>Everything below assumes the standard AEM Project Archetype layout — the same multi-module Maven project referenced since the Java Primer. If you're starting from scratch, generate one (or use your training environment's existing project) and confirm it has this shape from the project root:</p>
+      <pre data-code><span class="filename">project root</span><code>my-aem-project/
+├── core/                    your Java code lives here
+│   └── src/main/java/biz/netcentric/academy/...
+├── ui.apps/                 component definitions, dialogs, HTL scripts
+│   └── src/main/content/jcr_root/apps/academy/...
+├── ui.content/               sample/demo content (optional, used for testing)
+│   └── src/main/content/jcr_root/content/academy/...
+├── ui.config/                OSGi configuration files
+│   └── src/main/content/jcr_root/apps/academy/osgiconfig/...
+├── all/                      bundles every module above into one deployable package
+└── pom.xml</code></pre>
+
+      <div class="callout">
+        <span class="label">Mental model</span>
+        Java goes in <code class="inline">core</code>. Anything an author drags onto a page — the component definition, its dialog, its HTL render script — goes in <code class="inline">ui.apps</code>. Running <code class="inline">mvn clean install -PautoInstallSinglePackage</code> from the project root builds every module and deploys the whole thing to <code class="inline">localhost:4502</code> in one command. You won't run <code class="inline">javac</code> or copy files into the repository by hand at any point.
+      </div>
+
+      <p>Both components below assume your project already depends on the AEM Core Components (the project archetype includes this by default as <code class="inline">core.wcm.components.core</code>). If a Core Components class doesn't resolve when you build, add that dependency to <code class="inline">core/pom.xml</code> before continuing.</p>
+
+      <h2>Component 1 — Image with Metadata</h2>
+      <p>Rather than building an image component from scratch, we extend the Core Components Image component the same way module 3 described overlays working: by pointing <code class="inline">resourceSuperType</code> at it. We get the existing image-picking dialog, accessibility markup, and responsive image handling for free, and add one thing on top — a small metadata panel read from the underlying DAM asset.</p>
+
+      <h3>Step 1 — the Java Sling Model</h3>
+      <p>Save this as a brand new file at:</p>
+      <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/components/imagemetadata/ImageMetadataModel.java</span><code>package biz.netcentric.academy.components.imagemetadata;
+
+import com.adobe.cq.wcm.core.components.models.Image;
+import com.day.cq.dam.api.Asset;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.models.annotations.DefaultInjectionStrategy;
+import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.apache.sling.models.annotations.via.ResourceSuperType;
+
+import javax.annotation.PostConstruct;
+
+@Model(
+        adaptables = Resource.class,
+        resourceType = "academy/components/imagemetadata",
+        defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL
+)
+public class ImageMetadataModel {
+
+    @Self
+    @org.apache.sling.models.annotations.via.Via(type = ResourceSuperType.class)
+    private Image coreImage;
+
+    @SlingObject
+    private ResourceResolver resourceResolver;
+
+    private String width;
+    private String height;
+    private String format;
+    private String cameraModel;
+
+    @PostConstruct
+    protected void init() {
+        if (coreImage == null || coreImage.getFileReference() == null) {
+            return;
+        }
+        Resource assetResource = resourceResolver.getResource(coreImage.getFileReference());
+        Asset asset = assetResource != null ? assetResource.adaptTo(Asset.class) : null;
+        if (asset == null) {
+            return;
+        }
+        width = asset.getMetadataValue("tiff:ImageWidth");
+        height = asset.getMetadataValue("tiff:ImageLength");
+        format = asset.getMetadataValue("dc:format");
+        cameraModel = asset.getMetadataValue("tiff:Model");
+    }
+
+    public String getSrc() {
+        return coreImage != null ? coreImage.getSrc() : null;
+    }
+
+    public String getAlt() {
+        return coreImage != null ? coreImage.getAlt() : null;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public String getCameraModel() {
+        return cameraModel;
+    }
+
+    public boolean hasMetadata() {
+        return width != null || format != null;
+    }
+}</code></pre>
+
+      <p><code class="inline">@Self @Via(type = ResourceSuperType.class)</code> is the key line: it adapts the same resource to the core Image component's own model first, then hands you that fully-built object to read from — rather than re-implementing image rendering yourself. Module 15 covers this composition pattern in depth; here, treat it as "borrow the parent's model, add what's missing."</p>
+
+      <h3>Step 2 — the component definition</h3>
+      <p>Create the component folder and its definition file:</p>
+      <pre data-code><span class="filename">ui.apps/src/main/content/jcr_root/apps/academy/components/imagemetadata/.content.xml</span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="cq:Component"
+    jcr:title="Image with Metadata"
+    componentGroup="Academy Training"
+    sling:resourceSuperType="core/wcm/components/image/v3/image"/&gt;</code></pre>
+
+      <h3>Step 3 — the render script</h3>
+      <pre data-code><span class="filename">ui.apps/src/main/content/jcr_root/apps/academy/components/imagemetadata/imagemetadata.html</span><code>&lt;div data-sly-use.metadata="biz.netcentric.academy.components.imagemetadata.ImageMetadataModel"&gt;
+    &lt;img src="${metadata.src}" alt="${metadata.alt}" /&gt;
+    &lt;dl data-sly-test="${metadata.hasMetadata}" class="academy-image-metadata"&gt;
+        &lt;div data-sly-test="${metadata.width}"&gt;
+            &lt;dt&gt;Dimensions&lt;/dt&gt;
+            &lt;dd&gt;${metadata.width} &amp;times; ${metadata.height}px&lt;/dd&gt;
+        &lt;/div&gt;
+        &lt;div data-sly-test="${metadata.format}"&gt;
+            &lt;dt&gt;Format&lt;/dt&gt;
+            &lt;dd&gt;${metadata.format}&lt;/dd&gt;
+        &lt;/div&gt;
+        &lt;div data-sly-test="${metadata.cameraModel}"&gt;
+            &lt;dt&gt;Camera&lt;/dt&gt;
+            &lt;dd&gt;${metadata.cameraModel}&lt;/dd&gt;
+        &lt;/div&gt;
+    &lt;/dl&gt;
+&lt;/div&gt;</code></pre>
+
+      <div class="callout">
+        <span class="label">Mental model</span>
+        There's no <code class="inline">_cq_dialog</code> folder in this component at all — and that's deliberate. Since we didn't provide one, Sling's resourceType resolution from module 3 walks up to <code class="inline">resourceSuperType</code> and uses the core Image component's own dialog instead. The image-picking UI an author sees is the exact same one the standard Image component uses.
+      </div>
+
+      <h3>Step 4 — build, deploy, and try it</h3>
+      <pre data-code><span class="filename">terminal (from the project root)</span><code>mvn clean install -PautoInstallSinglePackage</code></pre>
+      <p>Once it deploys, open any page in the AEM editor, drag the new <strong>Image with Metadata</strong> component from the component browser (it sits in the "Academy Training" group) into a paragraph system, and pick any asset from <code class="inline">/content/dam</code> the same way you would with a normal Image component. If the asset has EXIF/TIFF metadata (most camera photos do; a plain screenshot usually won't), the dimensions, format, and camera model appear underneath it.</p>
+
+      <div class="try-it">
+        <span class="label">Try it with students</span>
+        Upload two assets to <code class="inline">/content/dam/academy</code> — one photo straight from a phone camera, one plain screenshot or graphic — and place both on a page with this component. Compare what renders for each, and ask students to predict which metadata fields will be empty before they look.
+      </div>
+
+      <h2>Component 2 — Weather</h2>
+      <p>An author enters a city (and optionally a country, to disambiguate places that share a name), the component geocodes it through <a href="https://open-meteo.com/en/docs/geocoding-api" target="_blank" rel="noopener">Open-Meteo's free geocoding API</a>, then fetches current conditions from <a href="https://open-meteo.com/en/docs" target="_blank" rel="noopener">Open-Meteo's forecast API</a> for those coordinates. No API key is required for either endpoint.</p>
+
+      <h3>Step 1 — the Java Sling Model</h3>
+      <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/components/weather/WeatherModel.java</span><code>package biz.netcentric.academy.components.weather;
+
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.DefaultInjectionStrategy;
+import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+
+@Model(
+        adaptables = Resource.class,
+        resourceType = "academy/components/weather",
+        defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL
+)
+public class WeatherModel {
+
+    private static final Logger LOG = LoggerFactory.getLogger(WeatherModel.class);
+    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+
+    @ValueMapValue
+    private String city;
+
+    @ValueMapValue
+    private String country;
+
+    private String resolvedLocation;
+    private Double temperature;
+    private Double windspeed;
+    private String error;
+
+    @PostConstruct
+    protected void init() {
+        if (city == null || city.isBlank()) {
+            return;
+        }
+        try {
+            double[] coords = geocode(city, country);
+            fetchCurrentWeather(coords[0], coords[1]);
+        } catch (Exception e) {
+            LOG.warn("Weather lookup failed for city={}, country={}", city, country, e);
+            error = "Could not load weather for this location.";
+        }
+    }
+
+    private double[] geocode(String city, String country) throws IOException, InterruptedException {
+        String query = URLEncoder.encode(city, StandardCharsets.UTF_8);
+        String url = "https://geocoding-api.open-meteo.com/v1/search?name=" + query + "&count=10";
+        JsonObject body = fetchJson(url);
+        JsonArray results = body.getJsonArray("results");
+        if (results == null || results.isEmpty()) {
+            throw new IOException("No geocoding results for " + city);
+        }
+
+        JsonObject match = results.getJsonObject(0);
+        if (country != null && !country.isBlank()) {
+            for (int i = 0; i < results.size(); i++) {
+                JsonObject candidate = results.getJsonObject(i);
+                if (country.equalsIgnoreCase(candidate.getString("country", ""))) {
+                    match = candidate;
+                    break;
+                }
+            }
+        }
+
+        resolvedLocation = match.getString("name") + ", " + match.getString("country", "");
+        return new double[]{
+                match.getJsonNumber("latitude").doubleValue(),
+                match.getJsonNumber("longitude").doubleValue()
+        };
+    }
+
+    private void fetchCurrentWeather(double latitude, double longitude) throws IOException, InterruptedException {
+        String url = String.format(
+                "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&current_weather=true",
+                latitude, longitude);
+        JsonObject body = fetchJson(url);
+        JsonObject current = body.getJsonObject("current_weather");
+        temperature = current.getJsonNumber("temperature").doubleValue();
+        windspeed = current.getJsonNumber("windspeed").doubleValue();
+    }
+
+    private JsonObject fetchJson(String url) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url)).GET().build();
+        HttpResponse&lt;String&gt; response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        return Json.createReader(new StringReader(response.body())).readObject();
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getResolvedLocation() {
+        return resolvedLocation;
+    }
+
+    public Double getTemperature() {
+        return temperature;
+    }
+
+    public Double getWindspeed() {
+        return windspeed;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public boolean isAvailable() {
+        return temperature != null;
+    }
+}</code></pre>
+
+      <div class="callout pitfall">
+        <span class="label">Common pitfall</span>
+        Making a synchronous outbound HTTP call inside a Sling Model means <em>every single page render</em> waits on a third-party API — slow, fragile if that API has an outage, and an easy way to get rate-limited. This is fine for a training exercise; module 20 (Sling Jobs) shows the production-correct version: a scheduled background job fetches and caches the weather periodically, and the model just reads the cached value.
+      </div>
+
+      <h3>Step 2 — the component definition and dialog</h3>
+      <pre data-code><span class="filename">ui.apps/src/main/content/jcr_root/apps/academy/components/weather/.content.xml</span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="cq:Component"
+    jcr:title="Weather"
+    componentGroup="Academy Training"/&gt;</code></pre>
+
+      <pre data-code><span class="filename">ui.apps/src/main/content/jcr_root/apps/academy/components/weather/_cq_dialog/.content.xml</span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="nt:unstructured"
+    sling:resourceType="cq/gui/components/authoring/dialog"&gt;
+    &lt;content jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns"&gt;
+        &lt;items jcr:primaryType="nt:unstructured"&gt;
+            &lt;column jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/container"&gt;
+                &lt;items jcr:primaryType="nt:unstructured"&gt;
+                    &lt;city jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldLabel="City"
+                        required="{Boolean}true"
+                        name="./city"/&gt;
+                    &lt;country jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldLabel="Country (optional, disambiguates same-named cities)"
+                        name="./country"/&gt;
+                &lt;/items&gt;
+            &lt;/column&gt;
+        &lt;/items&gt;
+    &lt;/content&gt;
+&lt;/jcr:root&gt;</code></pre>
+
+      <h3>Step 3 — the render script</h3>
+      <pre data-code><span class="filename">ui.apps/src/main/content/jcr_root/apps/academy/components/weather/weather.html</span><code>&lt;div data-sly-use.weather="biz.netcentric.academy.components.weather.WeatherModel" class="academy-weather"&gt;
+    &lt;p data-sly-test="${weather.error}" class="academy-weather-error"&gt;${weather.error}&lt;/p&gt;
+    &lt;div data-sly-test="${weather.available}"&gt;
+        &lt;h3&gt;${weather.resolvedLocation}&lt;/h3&gt;
+        &lt;p&gt;${weather.temperature}&amp;deg;C &amp;middot; wind ${weather.windspeed} km/h&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+      <h3>Step 4 — build, deploy, and try it</h3>
+      <pre data-code><span class="filename">terminal (from the project root)</span><code>mvn clean install -PautoInstallSinglePackage</code></pre>
+      <p>Drag the <strong>Weather</strong> component onto a page, open its dialog, and enter a city — "Lisbon" with country "Portugal" is a safe first test. Save the dialog and the live conditions should render within a second or two.</p>
+
+      <div class="try-it">
+        <span class="label">Try it with students</span>
+        Enter a city name that exists in multiple countries (Cambridge, Birmingham, and Valencia are all good examples) with the country field left blank, then again with it filled in. Compare <code class="inline">resolvedLocation</code> in both cases to see the disambiguation logic in <code class="inline">geocode()</code> actually doing something.
+      </div>
+
+      <div class="complete-row">
+        <input type="checkbox" id="complete" data-complete-checkbox="custom-components">
+        <label for="complete">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="10-dispatcher-deployment.html"><span class="dir">← Previous</span>Dispatcher, Caching &amp; Deployment</a>
+        <a class="next" href="12-java-pitfalls.html"><span class="dir">Next →</span>Java Best Practices &amp; Pitfalls</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

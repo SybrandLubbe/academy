@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>18 Groovy Console — AEM Backend Training</title>
+<meta name="description" content="Writing one-off content migration scripts safely with the AEM Groovy Console.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 22 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="05-sling-models.html">05-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="06-htl-templating.html">06-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="07-servlets-apis.html">07-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="08-dialogs-components.html">08-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
+    </ul>
+    <p class="tree-divider">Advanced practices</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" data-module-id="custom-components" href="11-custom-components.html">11-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="12-java-pitfalls.html">12-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="13-sling-models-advanced.html">13-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="14-osgi-services-config.html">14-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="15-model-composition.html">15-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="16-unit-testing.html">16-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="17-context-aware-config.html">17-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="groovy-console" href="18-groovy-console.html">18-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="19-workflow-design.html">19-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="20-sling-jobs.html">20-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">18-groovy-console</span></p>
+
+      <div class="module-meta">
+        <span class="tag">Tooling</span>
+        <span>20 min read</span>
+      </div>
+
+      <h1 class="page-title">Groovy Console</h1>
+      <p class="lede">Sometimes you need to fix or migrate content once — relabel a property across a thousand pages, backfill a new field — and writing, building, and deploying a full OSGi bundle for a script you'll run exactly one time is real overkill. The Groovy Console exists for exactly that gap.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>Just enough Groovy syntax to read and write the scripts you'll actually use</li>
+          <li>Installing the AEM Groovy Console</li>
+          <li>Writing a script that walks content and updates it safely</li>
+        </ul>
+      </div>
+
+      <h2>Just enough Groovy</h2>
+      <p>Groovy compiles to the same JVM bytecode as Java and can call any Java API directly — everything you already know about <code class="inline">ResourceResolver</code>, <code class="inline">Resource</code>, and the JCR API from earlier modules still applies. The differences that matter for short scripts: semicolons are optional, types are usually inferred with <code class="inline">def</code> instead of declared explicitly, and string interpolation uses <code class="inline">"${expression}"</code> inside double-quoted strings:</p>
+      <pre data-code><span class="filename">Java vs. Groovy, the same idea</span><code>// Java
+String message = "Hello, " + name + "!";
+
+// Groovy
+def message = "Hello, ${name}!"</code></pre>
+      <p>Closures (Groovy's lambdas) read similarly to Java streams but with looser syntax — <code class="inline">resources.each { resource -&gt; println resource.path }</code> instead of a full stream pipeline. For a one-off script, that's genuinely all the Groovy-specific syntax you need; the actual content logic is the same AEM APIs you've used throughout this curriculum.</p>
+
+      <h2>Installing the Groovy Console</h2>
+      <p>The <a href="https://github.com/icfnext/aem-groovy-console" target="_blank" rel="noopener">AEM Groovy Console</a> is a community-maintained, open-source AEM add-on — not part of the product itself. Download the released content package (a <code class="inline">.zip</code>) matching your AEM version from its GitHub releases page, then install it the same way as any content package: AEM's <strong>Package Manager</strong> (<code class="inline">/crx/packmgr</code>) → Upload Package → select the file → Install.</p>
+      <div class="callout pitfall">
+        <span class="label">Common pitfall</span>
+        Never install the Groovy Console on a production publish instance. It grants whoever has access to it the ability to run arbitrary code with full repository permissions — treat it strictly as an author/development-environment tool, and remove it before going live if it was only needed for a migration.
+      </div>
+
+      <h2>Writing a script</h2>
+      <p>Once installed, the console UI gives you a script editor and a "Run" button. The console pre-binds a few useful variables for you, most importantly a <code class="inline">ResourceResolver</code> — you don't need to obtain one yourself. A typical migration script walks a content subtree and updates a property, with a dry-run flag so you can see what <em>would</em> change before committing it:</p>
+      <pre data-code><span class="filename">Groovy Console script — backfill a missing property</span><code>def dryRun = true
+def rootPath = "/content/academy"
+
+def root = resourceResolver.getResource(rootPath)
+def updated = 0
+
+root.listChildren().each { page ->
+    def content = page.getChild("jcr:content")
+    if (content != null && content.valueMap.get("academyReviewed") == null) {
+        println "Would update: ${content.path}"
+        if (!dryRun) {
+            def props = content.adaptTo(org.apache.sling.api.resource.ModifiableValueMap)
+            props.put("academyReviewed", false)
+            updated++
+        }
+    }
+}
+
+if (!dryRun) {
+    resourceResolver.commit()
+}
+
+println "Done. Dry run: ${dryRun}, updated: ${updated}"</code></pre>
+      <p>Run it once with <code class="inline">dryRun = true</code> and read the output carefully before flipping it to <code class="inline">false</code> — this single habit is what separates a safe content migration from an afternoon spent restoring from backup.</p>
+
+      <div class="try-it">
+        <span class="label">Try it</span>
+        Write a dry-run-first script that lists every page under <code class="inline">/content/academy</code> missing a <code class="inline">jcr:title</code>, without modifying anything — confirm the output looks right before anyone on the team writes a version that actually changes content.
+      </div>
+
+      <div class="complete-row">
+        <input type="checkbox" id="complete" data-complete-checkbox="groovy-console">
+        <label for="complete">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="17-context-aware-config.html"><span class="dir">← Previous</span>Context-Aware Configurations</a>
+        <a class="next" href="19-workflow-design.html"><span class="dir">Next →</span>Workflow Design &amp; Custom Steps</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

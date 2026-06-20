@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>16 Unit Testing — AEM Backend Training</title>
+<meta name="description" content="JUnit, Mockito, and AEM Mocks - testing Sling Models, services, and resources without deploying to AEM.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 22 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="05-sling-models.html">05-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="06-htl-templating.html">06-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="07-servlets-apis.html">07-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="08-dialogs-components.html">08-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="09-workflows-events.html">09-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="10-dispatcher-deployment.html">10-dispatcher-deployment<span class="check"></span></a></li>
+    </ul>
+    <p class="tree-divider">Advanced practices</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" data-module-id="custom-components" href="11-custom-components.html">11-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="12-java-pitfalls.html">12-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="13-sling-models-advanced.html">13-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="14-osgi-services-config.html">14-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="15-model-composition.html">15-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="unit-testing" href="16-unit-testing.html">16-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="17-context-aware-config.html">17-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="18-groovy-console.html">18-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="19-workflow-design.html">19-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="20-sling-jobs.html">20-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">16-unit-testing</span></p>
+
+      <div class="module-meta">
+        <span class="tag">Testing</span>
+        <span>40 min · hands-on</span>
+      </div>
+
+      <h1 class="page-title">Unit Testing</h1>
+      <p class="lede">Every exercise so far has been verified by deploying to <code class="inline">localhost:4502</code> and clicking around or running curl. That's the right way to confirm a feature works end to end — it's the wrong way to confirm a single piece of logic keeps working six months from now. This module covers the actual tools.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>Why a slow, manual AEM redeploy isn't the right feedback loop for testing logic</li>
+          <li>JUnit 5 assertions, and testing multiple cases with parameterized tests</li>
+          <li>Mocking a dependency with Mockito</li>
+          <li>Using <code class="inline">AemContext</code> to test code that touches <code class="inline">Resource</code> or OSGi services, with no running AEM instance at all</li>
+        </ul>
+      </div>
+
+      <h2>Why unit testing, specifically here</h2>
+      <p>A unit test runs in milliseconds, in your IDE or CI pipeline, with no AEM instance required. Build/deploy/curl confirms the whole system works together — valuable, but slow, and it tests far more than the one piece of logic you actually changed. The two aren't competing; a healthy AEM project has both, but most of your fast, everyday feedback should come from unit tests, not redeploys.</p>
+
+      <h2>JUnit 5: assertions and test cases</h2>
+      <p>Take the validation rule from the Java Primer's <code class="inline">ValidationServlet</code> (module 00, exercise 4) and pull it out into its own pure function — extracting logic like this out of a servlet and into a plain class is, on its own, the single biggest thing you can do to make code testable:</p>
+      <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/_04/UsernameValidator.java</span><code>package biz.netcentric.academy._04;
+
+public final class UsernameValidator {
+
+    private UsernameValidator() {
+    }
+
+    public static boolean isValid(String username) {
+        if (username == null || username.isBlank()) {
+            return false;
+        }
+        return !"admin".equalsIgnoreCase(username);
+    }
+}</code></pre>
+      <p>Test classes live in a parallel <code class="inline">src/test/java</code> folder, mirroring the same package:</p>
+      <pre data-code><span class="filename">core/src/test/java/biz/netcentric/academy/_04/UsernameValidatorTest.java</span><code>package biz.netcentric.academy._04;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class UsernameValidatorTest {
+
+    @Test
+    void rejectsNullAndBlank() {
+        assertFalse(UsernameValidator.isValid(null));
+        assertFalse(UsernameValidator.isValid(""));
+        assertFalse(UsernameValidator.isValid("   "));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "jdoe, true",
+            "admin, false",
+            "ADMIN, false"
+    })
+    void validatesAgainstReservedNames(String username, boolean expectedValid) {
+        assertTrue(UsernameValidator.isValid(username) == expectedValid);
+    }
+}</code></pre>
+      <p><code class="inline">@ParameterizedTest</code> with <code class="inline">@CsvSource</code> runs the same test body once per row — covering "a normal name," "the reserved name," and "the reserved name in different casing" without three near-identical test methods. Run these with <code class="inline">mvn test</code> from the <code class="inline">core</code> module, or directly from your IDE's test runner — no AEM instance involved at all.</p>
+
+      <h2>Mockito: testing against a mocked dependency</h2>
+      <p>Mockito creates a fake implementation of an interface you can program and inspect, useful whenever a class depends on a service rather than calling a static method:</p>
+      <pre data-code><span class="filename">core/src/test/java/biz/netcentric/academy/_02/GreetingServiceMockTest.java</span><code>package biz.netcentric.academy._02;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class GreetingServiceMockTest {
+
+    @Mock
+    private GreetingService greetingService;
+
+    @Test
+    void mockReturnsConfiguredValue() {
+        when(greetingService.greet("Maria")).thenReturn("Hello, Maria!");
+
+        String result = greetingService.greet("Maria");
+
+        assertEquals("Hello, Maria!", result);
+        verify(greetingService).greet("Maria");
+    }
+}</code></pre>
+      <p><code class="inline">when(...).thenReturn(...)</code> programs the mock's behavior; <code class="inline">verify(...)</code> confirms a method was actually called, which matters when you're testing that a consumer used a dependency correctly rather than testing the dependency's own return value.</p>
+
+      <h2>AEM Mocks: testing against Resource and OSGi services</h2>
+      <p>Plain Mockito can't help once your code touches a <code class="inline">Resource</code>, a <code class="inline">ResourceResolver</code>, or relies on real OSGi service injection — those need <code class="inline">AemContext</code> from the <code class="inline">io.wcm.testing.aem-mock</code> library, a lightweight in-memory simulation of an AEM repository and OSGi runtime.</p>
+
+      <h3>Mocking resources</h3>
+      <p>Test module 00's <code class="inline">ChildPagesModel</code> (exercise 5) by building a small content tree in memory and adapting straight to the model — no <code class="inline">localhost:4502</code> required:</p>
+      <pre data-code><span class="filename">core/src/test/java/biz/netcentric/academy/_05/ChildPagesModelTest.java</span><code>package biz.netcentric.academy._05;
+
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import org.apache.sling.api.resource.Resource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(AemContextExtension.class)
+class ChildPagesModelTest {
+
+    private final AemContext context = new AemContext();
+    private Resource pageResource;
+
+    @BeforeEach
+    void setUp() {
+        context.addModelsForClasses(ChildPagesModel.class);
+
+        pageResource = context.create().resource("/content/academy/page",
+                "sling:resourceType", "academy/components/page");
+
+        Resource childB = context.create().resource("/content/academy/page/child-b");
+        context.create().resource(childB.getPath() + "/jcr:content", "jcr:title", "Banana Page");
+
+        Resource childA = context.create().resource("/content/academy/page/child-a");
+        context.create().resource(childA.getPath() + "/jcr:content", "jcr:title", "Apple Page");
+    }
+
+    @Test
+    void returnsChildTitlesSortedAlphabetically() {
+        ChildPagesModel model = pageResource.adaptTo(ChildPagesModel.class);
+
+        List&lt;String&gt; titles = model.getChildPageTitles();
+
+        assertEquals(List.of("Apple Page", "Banana Page"), titles);
+    }
+}</code></pre>
+      <p><code class="inline">context.addModelsForClasses(...)</code> is the line easiest to forget — without it, <code class="inline">AemContext</code> has no idea your <code class="inline">@Model</code> class exists, and <code class="inline">adaptTo()</code> silently returns <code class="inline">null</code>, the same failure mode module 5's pitfall callout warned about.</p>
+
+      <h3>Mocking services</h3>
+      <p>The same <code class="inline">AemContext</code> can register fake OSGi services and inject them into a real servlet via <code class="inline">@Reference</code>, letting you test module 00's <code class="inline">GreetingServlet</code> end to end without AEM:</p>
+      <pre data-code><span class="filename">core/src/test/java/biz/netcentric/academy/_02/GreetingServletTest.java</span><code>package biz.netcentric.academy._02;
+
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(AemContextExtension.class)
+class GreetingServletTest {
+
+    private final AemContext context = new AemContext();
+
+    @Test
+    void respondsWithGreeting() throws ServletException, IOException {
+        context.registerService(GreetingService.class, name -> "Hello, " + name + "!");
+
+        GreetingServlet servlet = new GreetingServlet();
+        context.registerInjectActivateService(servlet);
+
+        context.request().addRequestParameter("name", "Maria");
+        servlet.doGet(context.request(), context.response());
+
+        assertEquals("Hello, Maria!", context.response().getOutputAsString());
+    }
+}</code></pre>
+      <p><code class="inline">context.registerService(...)</code> puts a fake implementation in the mock OSGi registry; <code class="inline">context.registerInjectActivateService(servlet)</code> then performs real field injection on the servlet's <code class="inline">@Reference</code> field, exactly as the real OSGi runtime would. This is the same reason module 13 recommended interface-based services and models — without the <code class="inline">GreetingService</code> interface, none of this would be mockable at all.</p>
+
+      <h2>Best practices</h2>
+      <p>Test your own logic, not the framework underneath it — there's no value in a test that only confirms <code class="inline">ValueMap.get()</code> works. Keep each test focused on one behavior, named so the failure message tells you what broke without opening the test body. And prefer the plain Mockito test (fast, no <code class="inline">AemContext</code> setup) whenever your code doesn't actually touch <code class="inline">Resource</code> or OSGi — reach for <code class="inline">AemContext</code> only when you genuinely need it.</p>
+
+      <div class="try-it">
+        <span class="label">Try it</span>
+        Write an <code class="inline">AemContext</code>-based test for module 15's <code class="inline">AcademyTeaserModel</code> that builds a resource with <code class="inline">resourceSuperType</code> pointing at a stand-in core Teaser resource type, and confirms <code class="inline">getBadgeLabel()</code> returns what you set while <code class="inline">getTitle()</code> still delegates correctly.
+      </div>
+
+      <div class="complete-row">
+        <input type="checkbox" id="complete" data-complete-checkbox="unit-testing">
+        <label for="complete">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="15-model-composition.html"><span class="dir">← Previous</span>Extending Core Component Models</a>
+        <a class="next" href="17-context-aware-config.html"><span class="dir">Next →</span>Context-Aware Configurations</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

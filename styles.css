@@ -602,6 +602,26 @@ footer.site-footer {
 .status.soon { background: var(--line-soft); color: var(--ink-faint); }
 .status.done { background: var(--accent); color: #fff; }
 
+.tree-divider {
+  margin: 18px 0 6px;
+  padding: 0 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  border-top: 1px dotted var(--line);
+  padding-top: 12px;
+}
+
+.sidebar .tree-divider:first-of-type { border-top: none; padding-top: 0; margin-top: 4px; }
+
+.curriculum .tree-divider {
+  font-size: 12px;
+  margin: 30px 0 14px;
+  padding: 18px 0 0;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 880px) {
