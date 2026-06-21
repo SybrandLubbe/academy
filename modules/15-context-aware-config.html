@@ -80,7 +80,7 @@
 
       <h2>Defining a configuration</h2>
       <p>A configuration is just an annotation interface, similar in shape to the <code class="inline">@ObjectClassDefinition</code> pattern from modules 4 and 5:</p>
-      <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/config/WeatherConfig.java</span><code>package biz.netcentric.academy.config;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/config/WeatherConfig.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.config;
 
 import org.apache.sling.caconfig.annotation.Configuration;
 import org.apache.sling.caconfig.annotation.Property;
@@ -115,7 +115,7 @@ private String resolveDefaultCountry() {
 
       <h2>Unit testing CA Config</h2>
       <p><code class="inline">AemContext</code> from module 14 has a plugin for this — enable it when building the context, then write the configuration values directly into the mock <code class="inline">/conf</code> tree:</p>
-      <pre data-code><span class="filename">core/src/test/java/biz/netcentric/academy/config/WeatherConfigTest.java (excerpt)</span><code>private final AemContext context = new AemContext(ContextPlugins.CACONFIG);
+      <pre data-code><span class="filename">/aem-academy/core/src/test/java/biz/netcentric/academy/config/WeatherConfigTest.java (excerpt) <em>(academy.core)</em></span><code>private final AemContext context = new AemContext(ContextPlugins.CACONFIG);
 
 @Test
 void resolvesDefaultCountryFromCaConfig() {

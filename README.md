@@ -2,6 +2,23 @@
 
 A self-contained training site for onboarding junior backend developers onto Adobe Experience Manager. No build step, no dependencies — plain HTML/CSS/JS, ready to host on GitHub Pages.
 
+## The project structure used throughout
+
+Every code example in this curriculum gives the exact, full file path a trainee should create it at, assuming an AEM project checked out as `/aem-academy` from the standard Maven Project Archetype:
+
+```
+/aem-academy                    [academy-base-project-component]
+├── all                          [academy.all]
+├── core                         [academy.core]            ← all Java
+├── ui.apps                      [academy.ui.apps]          ← components, dialogs, HTL
+├── ui.apps.structure            [academy.ui.apps.structure] ← template structure/policies (not used in exercises)
+├── ui.config                    [academy.ui.config]        ← OSGi config as .cfg.json
+├── ui.content                   [academy.ui.content]       ← sample/seed content
+└── ui.frontend                  [academy.ui.frontend]      ← webpack clientlib build (not used in exercises)
+```
+
+Module 00 (Java Primer) introduces this in full under "Before you start," and every later module's code blocks carry the complete path (e.g. `/aem-academy/core/src/main/java/biz/netcentric/academy/components/weather/WeatherModel.java`) plus the Maven module it belongs to in brackets, rather than a bare filename or an abbreviated path. If your own checkout uses a different root folder name, mentally substitute it everywhere.
+
 ## What's in here
 
 ```
@@ -20,7 +37,7 @@ modules/
   08-model-composition.html         written — @Via(type = ResourceSuperType.class), extending Core Components
   09-htl-templating.html            written
   10-servlets-apis.html             written
-  11-dialogs-components.html        written
+  11-dialogs-components.html        written — component anatomy, dialogs, and the full author-activation walkthrough
   12-custom-components.html         written — Image Metadata + Weather components, full Maven paths
   13-java-pitfalls.html             written
   14-unit-testing.html              written — JUnit, Mockito, AEM Mocks

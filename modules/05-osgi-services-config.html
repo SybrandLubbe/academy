@@ -114,7 +114,7 @@ public class AcademyChangeListener implements ResourceChangeListener {
       <h2>OSGi configuration: Designate, properly</h2>
       <p>Module 4 introduced <code class="inline">@Designate</code> and <code class="inline">@ObjectClassDefinition</code> for a configurable service. The piece that was missing is how that configuration gets deployed as part of a real project rather than typed into the Felix console by hand — which doesn't survive a redeploy and isn't checked into source control.</p>
       <p>Configuration ships as a <code class="inline">.cfg.json</code> file, named after the component's fully-qualified class name (its OSGi PID), placed under <code class="inline">ui.config</code>:</p>
-      <pre data-code><span class="filename">ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/config/biz.netcentric.academy._02.GreetingServiceImpl.cfg.json</span><code>{
+      <pre data-code><span class="filename">/aem-academy/ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/config/biz.netcentric.academy._02.GreetingServiceImpl.cfg.json <em>(academy.ui.config)</em></span><code>{
     "prefix": "Hello there"
 }</code></pre>
       <p>This is just JSON matching the property names declared on your <code class="inline">@ObjectClassDefinition</code> annotation type — no Java involved, and it deploys as part of the same <code class="inline">mvn clean install -PautoInstallSinglePackage</code> you already run for everything else, since <code class="inline">ui.config</code> is bundled into the <code class="inline">all</code> package alongside <code class="inline">core</code> and <code class="inline">ui.apps</code>.</p>

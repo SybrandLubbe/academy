@@ -132,7 +132,7 @@ public class AcademyTeaserModel {
 
       <h2>Setting up for unit testing</h2>
       <p>Module 14 covers unit testing properly, but composed models like this one are exactly where tests earn their keep — you want confidence that <code class="inline">badgeLabel</code> renders correctly without manually deploying to <code class="inline">localhost:4502</code> every time. Before any test will run, <code class="inline">core/pom.xml</code> needs the testing dependencies on the test classpath:</p>
-      <pre data-code><span class="filename">core/pom.xml (inside &lt;dependencies&gt;)</span><code>&lt;dependency&gt;
+      <pre data-code><span class="filename">/aem-academy/core/pom.xml (inside &lt;dependencies&gt;) <em>(academy.core)</em></span><code>&lt;dependency&gt;
     &lt;groupId&gt;io.wcm&lt;/groupId&gt;
     &lt;artifactId&gt;io.wcm.testing.aem-mock.junit5&lt;/artifactId&gt;
     &lt;scope&gt;test&lt;/scope&gt;
@@ -146,7 +146,7 @@ public class AcademyTeaserModel {
 
       <div class="try-it alert alert-success">
         <span class="label">Try it</span>
-        Build the <code class="inline">AcademyTeaserModel</code> above as a real component (component definition, no dialog needed since it inherits the core Teaser's), deploy it, and confirm <code class="inline">getTitle()</code> and <code class="inline">getLinkURL()</code> behave identically to a plain core Teaser placed on the same page.
+        Build the <code class="inline">AcademyTeaserModel</code> above as a real component (component definition, no dialog needed since it inherits the core Teaser's), deploy it, and confirm <code class="inline">getTitle()</code> and <code class="inline">getLinkURL()</code> behave identically to a plain core Teaser placed on the same page. Remember it needs allowing in the template's policy before it shows up in the editor at all — module 11 has the full activation walkthrough if you need a refresher.
       </div>
 
       <div class="complete-row form-check">

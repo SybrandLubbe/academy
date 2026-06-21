@@ -85,7 +85,7 @@
 
       <h2>A custom workflow step</h2>
       <p>A workflow step is a plain OSGi component implementing <code class="inline">WorkflowProcess</code>, registered with a label that shows up when authors build a workflow model in the UI:</p>
-      <pre data-code><span class="filename">AcademyTaggingStep.java</span><code>package biz.netcentric.academy._09;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_09/AcademyTaggingStep.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._09;
 
 import com.adobe.granite.workflow.WorkflowException;
 import com.adobe.granite.workflow.WorkflowSession;
@@ -110,7 +110,7 @@ public class AcademyTaggingStep implements WorkflowProcess {
 
       <h2>Reacting to changes with ResourceChangeListener</h2>
       <p>This is the modern replacement for the older JCR <code class="inline">ObservationListener</code> API — a simpler interface scoped to specific paths and change types:</p>
-      <pre data-code><span class="filename">AcademyChangeListener.java</span><code>package biz.netcentric.academy._09;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_09/AcademyChangeListener.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._09;
 
 import org.apache.sling.api.resource.observation.ResourceChange;
 import org.apache.sling.api.resource.observation.ResourceChangeListener;
@@ -136,8 +136,8 @@ public class AcademyChangeListener implements ResourceChangeListener {
 }</code></pre>
 
       <h2>Scheduled jobs</h2>
-      <p>For work that runs on a clock rather than in response to anything, the Sling Scheduler accepts a cron-like expression and calls your code directly:</p>
-      <pre data-code><span class="filename">NightlyReportTask.java (excerpt)</span><code>@Activate
+      <p>For work that runs on a clock rather than in response to anything, the Sling Scheduler accepts a cron-like expression and calls your code directly. This is a fragment to add inside an existing <code class="inline">@Component</code> class (with a <code class="inline">@Reference private Scheduler scheduler;</code> field) — not a full file on its own:</p>
+      <pre data-code><span class="filename">excerpt — inside an existing @Component class's activate method</span><code>@Activate
 protected void activate() {
     scheduler.schedule(this, scheduler.EXPR()
             .expression("0 0 2 * * ?")  // 2am daily

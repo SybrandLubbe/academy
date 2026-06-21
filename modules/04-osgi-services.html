@@ -84,10 +84,16 @@
 
       <h2>Services and components</h2>
       <p>Inside a bundle, you write <strong>components</strong> — plain Java classes annotated to participate in OSGi. A component typically implements a <strong>service</strong> interface, and OSGi maintains a service registry that other components can query or have services injected into them automatically.</p>
-      <pre data-code><span class="filename">GreetingService.java</span><code>public interface GreetingService {
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/osgiexample/GreetingService.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.osgiexample;
+
+public interface GreetingService {
     String greet(String name);
 }</code></pre>
-      <pre data-code><span class="filename">GreetingServiceImpl.java</span><code>@Component(service = GreetingService.class)
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/osgiexample/GreetingServiceImpl.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.osgiexample;
+
+import org.osgi.service.component.annotations.Component;
+
+@Component(service = GreetingService.class)
 public class GreetingServiceImpl implements GreetingService {
 
     @Override
@@ -99,7 +105,22 @@ public class GreetingServiceImpl implements GreetingService {
 
       <h2>Dependency injection with @Reference</h2>
       <p>To consume a service, declare a field annotated <code class="inline">@Reference</code>. OSGi finds a matching implementation in the registry and injects it before the component activates:</p>
-      <pre data-code><span class="filename">GreetingServlet.java</span><code>@Component(service = Servlet.class)
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/osgiexample/GreetingServlet.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.osgiexample;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import java.io.IOException;
+
+@Component(
+        service = Servlet.class,
+        property = "sling.servlet.paths=/bin/academy/osgi-greet"
+)
 public class GreetingServlet extends SlingSafeMethodsServlet {
 
     @Reference
@@ -107,10 +128,14 @@ public class GreetingServlet extends SlingSafeMethodsServlet {
 
     @Override
     protected void doGet(SlingHttpServletRequest req, SlingHttpServletResponse resp)
-            throws IOException {
+            throws ServletException, IOException {
+        resp.setContentType("text/plain");
         resp.getWriter().write(greetingService.greet("world"));
     }
 }</code></pre>
+      <p>Build, deploy, and confirm the wiring actually worked:</p>
+      <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage
+curl http://localhost:4502/bin/academy/osgi-greet</code></pre>
       <p>If no implementation of <code class="inline">GreetingService</code> is active when this component tries to start, OSGi will hold the component back from activating (unless the reference is explicitly marked optional). This is a deliberate safety mechanism — it prevents you from ever holding a null reference to a required service — but it's also why "bundle won't activate" so often traces back to a missing or misbehaving dependency several layers down.</p>
 
       <div class="callout alert alert-primary">
@@ -123,11 +148,21 @@ public class GreetingServlet extends SlingSafeMethodsServlet {
 
       <h2>OSGi configuration</h2>
       <p>Components often need configurable values — a timeout, an API endpoint, a feature flag — without hardcoding them. The standard pattern pairs an annotation-defined config type with <code class="inline">@Designate</code>:</p>
-      <pre data-code><span class="filename">GreetingConfig.java</span><code>@ObjectClassDefinition(name = "Greeting Service Configuration")
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/osgiexample/GreetingConfig.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.osgiexample;
+
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+
+@ObjectClassDefinition(name = "Greeting Service Configuration")
 public @interface GreetingConfig {
     String prefix() default "Hello";
 }</code></pre>
-      <pre data-code><span class="filename">GreetingServiceImpl.java (configurable)</span><code>@Component(service = GreetingService.class)
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/osgiexample/GreetingServiceImpl.java <em>(academy.core, replaces the version above)</em></span><code>package biz.netcentric.academy.osgiexample;
+
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Designate;
+
+@Component(service = GreetingService.class)
 @Designate(ocd = GreetingConfig.class)
 public class GreetingServiceImpl implements GreetingService {
 

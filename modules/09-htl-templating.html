@@ -80,14 +80,15 @@
 
       <h2>Bringing in data: data-sly-use</h2>
       <p><code class="inline">data-sly-use</code> instantiates a Sling Model (or a legacy "Use-API" class) and binds it to a name you can reference in expressions:</p>
-      <pre data-code><span class="filename">teaser.html</span><code>&lt;div data-sly-use.teaser="biz.netcentric.academy._05.TeaserModel"&gt;
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/teaser/teaser.html <em>(academy.ui.apps)</em></span><code>&lt;div data-sly-use.teaser="biz.netcentric.academy._05.TeaserModel"&gt;
     &lt;h2&gt;${teaser.title}&lt;/h2&gt;
     &lt;p&gt;${teaser.shortDescription}&lt;/p&gt;
 &lt;/div&gt;</code></pre>
       <p><code class="inline">${ }</code> expressions are deliberately limited: you can read a property (<code class="inline">teaser.title</code>), index into a list or map, and use a handful of operators — but you can't call a method with arguments. Any logic that needs parameters belongs in the model, not the template.</p>
 
       <h2>Conditionals and loops</h2>
-      <pre data-code><span class="filename">teaser-list.html</span><code>&lt;div data-sly-test="${teaser.hasImage}"&gt;
+      <p>The next two snippets are syntax illustrations rather than a continuation of the exact <code class="inline">teaser.html</code> above — <code class="inline">hasImage</code> and <code class="inline">relatedLinks</code> would need adding to <code class="inline">TeaserModel</code> first if you want to build them for real:</p>
+      <pre data-code><span class="filename">HTL syntax — conditionals and loops</span><code>&lt;div data-sly-test="${teaser.hasImage}"&gt;
     &lt;img src="${teaser.image.path}" alt="${teaser.title}" /&gt;
 &lt;/div&gt;
 

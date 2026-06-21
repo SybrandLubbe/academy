@@ -79,7 +79,7 @@
 
       <h2>JUnit 5: assertions and test cases</h2>
       <p>Take the validation rule from the Java Primer's <code class="inline">ValidationServlet</code> (module 00, exercise 4) and pull it out into its own pure function — extracting logic like this out of a servlet and into a plain class is, on its own, the single biggest thing you can do to make code testable:</p>
-      <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/_04/UsernameValidator.java</span><code>package biz.netcentric.academy._04;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_04/UsernameValidator.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._04;
 
 public final class UsernameValidator {
 
@@ -94,7 +94,7 @@ public final class UsernameValidator {
     }
 }</code></pre>
       <p>Test classes live in a parallel <code class="inline">src/test/java</code> folder, mirroring the same package:</p>
-      <pre data-code><span class="filename">core/src/test/java/biz/netcentric/academy/_04/UsernameValidatorTest.java</span><code>package biz.netcentric.academy._04;
+      <pre data-code><span class="filename">/aem-academy/core/src/test/java/biz/netcentric/academy/_04/UsernameValidatorTest.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._04;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -126,7 +126,7 @@ class UsernameValidatorTest {
 
       <h2>Mockito: testing against a mocked dependency</h2>
       <p>Mockito creates a fake implementation of an interface you can program and inspect, useful whenever a class depends on a service rather than calling a static method:</p>
-      <pre data-code><span class="filename">core/src/test/java/biz/netcentric/academy/_02/GreetingServiceMockTest.java</span><code>package biz.netcentric.academy._02;
+      <pre data-code><span class="filename">/aem-academy/core/src/test/java/biz/netcentric/academy/_02/GreetingServiceMockTest.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._02;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -160,7 +160,7 @@ class GreetingServiceMockTest {
 
       <h3>Mocking resources</h3>
       <p>Test module 00's <code class="inline">ChildPagesModel</code> (exercise 5) by building a small content tree in memory and adapting straight to the model — no <code class="inline">localhost:4502</code> required:</p>
-      <pre data-code><span class="filename">core/src/test/java/biz/netcentric/academy/_05/ChildPagesModelTest.java</span><code>package biz.netcentric.academy._05;
+      <pre data-code><span class="filename">/aem-academy/core/src/test/java/biz/netcentric/academy/_05/ChildPagesModelTest.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._05;
 
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -206,7 +206,7 @@ class ChildPagesModelTest {
 
       <h3>Mocking services</h3>
       <p>The same <code class="inline">AemContext</code> can register fake OSGi services and inject them into a real servlet via <code class="inline">@Reference</code>, letting you test module 00's <code class="inline">GreetingServlet</code> end to end without AEM:</p>
-      <pre data-code><span class="filename">core/src/test/java/biz/netcentric/academy/_02/GreetingServletTest.java</span><code>package biz.netcentric.academy._02;
+      <pre data-code><span class="filename">/aem-academy/core/src/test/java/biz/netcentric/academy/_02/GreetingServletTest.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._02;
 
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;

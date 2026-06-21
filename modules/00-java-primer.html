@@ -78,10 +78,49 @@
       <p><a href="../assets/java-primer-slides.pptx" download>Download java-primer-slides.pptx</a></p>
 
       <h2>Before you start</h2>
+      <p>Every exercise in this curriculum assumes you have a local AEM author instance running at <code class="inline">localhost:4502</code>, and an AEM project checked out from the standard Maven Project Archetype. From here on, every file path given anywhere in this curriculum is the <strong>exact, full path from your project's root folder</strong> — no guessing, no "put it somewhere in core." If your checkout is named exactly <code class="inline">aem-academy</code> (the name used throughout this training), your folder structure looks like this:</p>
+
+      <pre data-code><span class="filename">project structure — memorize this, you'll use it constantly</span><code>/aem-academy                    [academy-base-project-component]
+│
+├── all                          [academy.all]
+│   └── the single content package that bundles every module
+│       below into one install — this is what you actually deploy
+│
+├── core                         [academy.core]
+│   └── src/main/java/...        all Java: Sling Models, OSGi
+│       services, servlets, workflow steps, job consumers
+│
+├── ui.apps                      [academy.ui.apps]
+│   └── src/main/content/jcr_root/apps/...
+│       component definitions, dialogs, HTL scripts, clientlibs —
+│       anything an author can drag onto a page
+│
+├── ui.apps.structure            [academy.ui.apps.structure]
+│   └── editable template structure &amp; page policies — not used
+│       directly in these exercises, but this is where a real
+│       project defines which components a template allows
+│
+├── ui.config                    [academy.ui.config]
+│   └── src/main/content/jcr_root/apps/.../osgiconfig/...
+│       OSGi configuration as deployable .cfg.json files
+│
+├── ui.content                   [academy.ui.content]
+│   └── src/main/content/jcr_root/content/...
+│       sample/seed content used to try things out
+│
+└── ui.frontend                  [academy.ui.frontend]
+    └── a separate webpack-based front-end build for clientlib
+        JS/CSS — not used in these exercises, which keep clientlibs
+        simple and authored directly under ui.apps</code></pre>
+
+      <div class="callout alert alert-primary">
+        <span class="label">Mental model</span>
+        The bracketed name next to each folder (<code class="inline">academy.core</code>, <code class="inline">academy.ui.apps</code>, and so on) is that module's Maven <code class="inline">artifactId</code> — you'll see it in each module's own <code class="inline">pom.xml</code> and in build output. These exercises only ever touch four of the seven folders: <code class="inline">core</code>, <code class="inline">ui.apps</code>, <code class="inline">ui.content</code>, and <code class="inline">ui.config</code>. <code class="inline">ui.apps.structure</code> and <code class="inline">ui.frontend</code> exist in every real AEM Archetype project and are described above so you recognize them, but nothing in this curriculum asks you to edit either.
+      </div>
+
       <ul>
-        <li>A local AEM author instance running at <code class="inline">localhost:4502</code></li>
-        <li>An AEM project generated from the standard Maven Project Archetype (any name works — these examples assume the default <code class="inline">core</code> bundle module)</li>
-        <li>The <code class="inline">mvn clean install -PautoInstallSinglePackage</code> profile working against your local instance, run from the project's <code class="inline">all</code> module</li>
+        <li>The <code class="inline">mvn clean install -PautoInstallSinglePackage</code> profile working against your local instance, run from <code class="inline">/aem-academy</code> (the project root) — this builds every module listed above and deploys the result in one step</li>
+        <li>If your checkout uses a different root folder name or package, mentally substitute it everywhere you see <code class="inline">/aem-academy</code> and <code class="inline">biz.netcentric.academy</code> below</li>
       </ul>
 
       <div class="callout pitfall alert alert-warning">
@@ -92,7 +131,7 @@
       <h2>Exercise 1 — Build &amp; Deploy to AEM</h2>
       <p>Maps to <strong>Compile and Run</strong>. The Java mental model is the same — source compiles to bytecode, a JVM runs it — but in an AEM project you don't call <code class="inline">javac</code>/<code class="inline">java</code> directly. Maven compiles your code into a bundle and installs it into the running JVM that's already inside AEM.</p>
 
-      <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/_01/HelloWorldServlet.java</span><code>package biz.netcentric.academy._01;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_01/HelloWorldServlet.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._01;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -121,7 +160,7 @@ public class HelloWorldServlet extends SlingSafeMethodsServlet {
 }</code></pre>
 
       <p>Build and deploy, then confirm the bundle is active before testing the endpoint:</p>
-      <pre data-code><span class="filename">terminal</span><code>mvn clean install -PautoInstallSinglePackage
+      <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage
 
 # check it deployed: open in a browser
 http://localhost:4502/system/console/bundles
@@ -137,13 +176,14 @@ curl http://localhost:4502/bin/academy/hello</code></pre>
       <h2>Exercise 2 — Service Interfaces in OSGi</h2>
       <p>Maps to <strong>Classes / Encapsulation / Interfaces</strong>. A <code class="inline">GreetingService</code> interface hides its implementation behind a contract — the same encapsulation idea from the slides, just expressed as an OSGi service rather than a plain class.</p>
 
-      <pre data-code><span class="filename">core/.../_02/GreetingService.java</span><code>package biz.netcentric.academy._02;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_02/GreetingService.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._02;
 
 public interface GreetingService {
     String greet(String name);
 }</code></pre>
 
-      <pre data-code><span class="filename">core/.../_02/GreetingServiceImpl.java</span><code>package biz.netcentric.academy._02;
+
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_02/GreetingServiceImpl.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._02;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -159,7 +199,7 @@ public class GreetingServiceImpl implements GreetingService {
     }
 }</code></pre>
 
-      <pre data-code><span class="filename">core/.../_02/GreetingServlet.java</span><code>package biz.netcentric.academy._02;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_02/GreetingServlet.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._02;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -191,7 +231,7 @@ public class GreetingServlet extends SlingSafeMethodsServlet {
     }
 }</code></pre>
 
-      <pre data-code><span class="filename">terminal</span><code>mvn clean install -PautoInstallSinglePackage
+      <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage
 
 curl "http://localhost:4502/bin/academy/greet?name=World"</code></pre>
 
@@ -203,7 +243,7 @@ curl "http://localhost:4502/bin/academy/greet?name=World"</code></pre>
       <h2>Exercise 3 — Collections in a Sling Model</h2>
       <p>Maps to <strong>Collections</strong>. A multi-value JCR property becomes a <code class="inline">List&lt;String&gt;</code> the moment it's read into Java — this is usually a student's first encounter with collections in a real AEM context.</p>
 
-      <pre data-code><span class="filename">core/.../_03/StudentModel.java</span><code>package biz.netcentric.academy._03;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_03/StudentModel.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._03;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Exporter;
@@ -245,7 +285,7 @@ public class StudentModel {
 
       <p>Create a test content node under CRXDE Lite (or via the package manager) at <code class="inline">/content/academy/student</code> with <code class="inline">sling:resourceType = academy/components/student</code>, plus <code class="inline">name</code>, <code class="inline">surname</code>, and a multi-value string <code class="inline">subjects</code> property.</p>
 
-      <pre data-code><span class="filename">terminal</span><code>mvn clean install -PautoInstallSinglePackage
+      <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage
 
 curl http://localhost:4502/content/academy/student.model.json</code></pre>
 
@@ -257,7 +297,7 @@ curl http://localhost:4502/content/academy/student.model.json</code></pre>
       <h2>Exercise 4 — Handling Errors in a Servlet</h2>
       <p>Maps to <strong>Declared vs. Runtime Exceptions</strong>. Rather than letting an exception crash a thread, a backend endpoint should catch it and turn it into a meaningful HTTP response — this is the most common exception-handling pattern students will actually write on the job.</p>
 
-      <pre data-code><span class="filename">core/.../_04/ValidationServlet.java</span><code>package biz.netcentric.academy._04;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_04/ValidationServlet.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._04;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -307,7 +347,7 @@ public class ValidationServlet extends SlingSafeMethodsServlet {
     }
 }</code></pre>
 
-      <pre data-code><span class="filename">terminal</span><code>mvn clean install -PautoInstallSinglePackage
+      <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage
 
 curl -i "http://localhost:4502/bin/academy/validate?username=admin"
 curl -i "http://localhost:4502/bin/academy/validate?username=jdoe"</code></pre>
@@ -320,7 +360,7 @@ curl -i "http://localhost:4502/bin/academy/validate?username=jdoe"</code></pre>
       <h2>Exercise 5 — Streams Over Page Resources</h2>
       <p>Maps to <strong>Lambdas &amp; Streams</strong>. Walking a page's children and pulling out their titles is one of the most common things backend code does in AEM — and it reads naturally as a stream pipeline.</p>
 
-      <pre data-code><span class="filename">core/.../_05/ChildPagesModel.java</span><code>package biz.netcentric.academy._05;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_05/ChildPagesModel.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._05;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Exporter;
@@ -353,7 +393,7 @@ public class ChildPagesModel {
 
       <p>Point this at any existing page in your content tree that has child pages — set <code class="inline">sling:resourceType = academy/components/page</code> on its <code class="inline">jcr:content</code> node, or test against a copy if you don't want to touch real content.</p>
 
-      <pre data-code><span class="filename">terminal</span><code>mvn clean install -PautoInstallSinglePackage
+      <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage
 
 curl http://localhost:4502/content/academy/page.model.json</code></pre>
 

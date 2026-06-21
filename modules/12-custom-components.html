@@ -75,32 +75,21 @@
       </div>
 
       <h2>Before you start: where this code lives</h2>
-      <p>Everything below assumes the standard AEM Project Archetype layout — the same multi-module Maven project referenced since the Java Primer. If you're starting from scratch, generate one (or use your training environment's existing project) and confirm it has this shape from the project root:</p>
-      <pre data-code><span class="filename">project root</span><code>my-aem-project/
-├── core/                    your Java code lives here
-│   └── src/main/java/biz/netcentric/academy/...
-├── ui.apps/                 component definitions, dialogs, HTL scripts
-│   └── src/main/content/jcr_root/apps/academy/...
-├── ui.content/               sample/demo content (optional, used for testing)
-│   └── src/main/content/jcr_root/content/academy/...
-├── ui.config/                OSGi configuration files
-│   └── src/main/content/jcr_root/apps/academy/osgiconfig/...
-├── all/                      bundles every module above into one deployable package
-└── pom.xml</code></pre>
+      <p>This uses the exact <code class="inline">/aem-academy</code> project structure from module 00's "Before you start" — go back there for the full picture if you skipped it. As a reminder: Java goes in <code class="inline">core</code> <em>(academy.core)</em>, anything an author drags onto a page goes in <code class="inline">ui.apps</code> <em>(academy.ui.apps)</em>, and every path below is given in full from <code class="inline">/aem-academy</code>, the project root.</p>
 
       <div class="callout alert alert-primary">
         <span class="label">Mental model</span>
-        Java goes in <code class="inline">core</code>. Anything an author drags onto a page — the component definition, its dialog, its HTL render script — goes in <code class="inline">ui.apps</code>. Running <code class="inline">mvn clean install -PautoInstallSinglePackage</code> from the project root builds every module and deploys the whole thing to <code class="inline">localhost:4502</code> in one command. You won't run <code class="inline">javac</code> or copy files into the repository by hand at any point.
+        Running <code class="inline">mvn clean install -PautoInstallSinglePackage</code> from <code class="inline">/aem-academy</code> builds every module and deploys the whole thing to <code class="inline">localhost:4502</code> in one command. You won't run <code class="inline">javac</code> or copy files into the repository by hand at any point.
       </div>
 
-      <p>Both components below assume your project already depends on the AEM Core Components (the project archetype includes this by default as <code class="inline">core.wcm.components.core</code>). If a Core Components class doesn't resolve when you build, add that dependency to <code class="inline">core/pom.xml</code> before continuing.</p>
+      <p>Both components below assume your project already depends on the AEM Core Components (the project archetype includes this by default as <code class="inline">core.wcm.components.core</code>). If a Core Components class doesn't resolve when you build, add that dependency to <code class="inline">/aem-academy/core/pom.xml</code> <em>(academy.core)</em> before continuing.</p>
 
       <h2>Component 1 — Image with Metadata</h2>
       <p>Rather than building an image component from scratch, we extend the Core Components Image component the same way module 3 described overlays working: by pointing <code class="inline">resourceSuperType</code> at it. We get the existing image-picking dialog, accessibility markup, and responsive image handling for free, and add one thing on top — a small metadata panel read from the underlying DAM asset.</p>
 
       <h3>Step 1 — the Java Sling Model</h3>
       <p>Save this as a brand new file at:</p>
-      <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/components/imagemetadata/ImageMetadataModel.java</span><code>package biz.netcentric.academy.components.imagemetadata;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/components/imagemetadata/ImageMetadataModel.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.components.imagemetadata;
 
 import com.adobe.cq.wcm.core.components.models.Image;
 import com.day.cq.dam.api.Asset;
@@ -182,7 +171,7 @@ public class ImageMetadataModel {
 
       <h3>Step 2 — the component definition</h3>
       <p>Create the component folder and its definition file:</p>
-      <pre data-code><span class="filename">ui.apps/src/main/content/jcr_root/apps/academy/components/imagemetadata/.content.xml</span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/imagemetadata/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
     xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
     jcr:primaryType="cq:Component"
@@ -191,7 +180,7 @@ public class ImageMetadataModel {
     sling:resourceSuperType="core/wcm/components/image/v3/image"/&gt;</code></pre>
 
       <h3>Step 3 — the render script</h3>
-      <pre data-code><span class="filename">ui.apps/src/main/content/jcr_root/apps/academy/components/imagemetadata/imagemetadata.html</span><code>&lt;div data-sly-use.metadata="biz.netcentric.academy.components.imagemetadata.ImageMetadataModel"&gt;
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/imagemetadata/imagemetadata.html <em>(academy.ui.apps)</em></span><code>&lt;div data-sly-use.metadata="biz.netcentric.academy.components.imagemetadata.ImageMetadataModel"&gt;
     &lt;img src="${metadata.src}" alt="${metadata.alt}" /&gt;
     &lt;dl data-sly-test="${metadata.hasMetadata}" class="academy-image-metadata"&gt;
         &lt;div data-sly-test="${metadata.width}"&gt;
@@ -214,9 +203,10 @@ public class ImageMetadataModel {
         There's no <code class="inline">_cq_dialog</code> folder in this component at all — and that's deliberate. Since we didn't provide one, Sling's resourceType resolution from module 3 walks up to <code class="inline">resourceSuperType</code> and uses the core Image component's own dialog instead. The image-picking UI an author sees is the exact same one the standard Image component uses.
       </div>
 
-      <h3>Step 4 — build, deploy, and try it</h3>
-      <pre data-code><span class="filename">terminal (from the project root)</span><code>mvn clean install -PautoInstallSinglePackage</code></pre>
-      <p>Once it deploys, open any page in the AEM editor, drag the new <strong>Image with Metadata</strong> component from the component browser (it sits in the "Academy Training" group) into a paragraph system, and pick any asset from <code class="inline">/content/dam</code> the same way you would with a normal Image component. If the asset has EXIF/TIFF metadata (most camera photos do; a plain screenshot usually won't), the dimensions, format, and camera model appear underneath it.</p>
+      <h3>Step 4 — build, deploy, and activate it</h3>
+      <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage</code></pre>
+      <p>Module 11 covered the full activation flow in detail — Template Editor → the layout container's <strong>Policy</strong> → allow the <code class="inline">Academy Training</code> component group — go back there if you need the step-by-step version. The one thing worth calling out specifically here: even though this component inherits its <em>dialog</em> from the core Image component, it does not inherit being <em>allowed</em>. <code class="inline">academy/components/imagemetadata</code> is its own distinct resource type with its own entry in the policy's component list, separate from the standard Image component — allow it explicitly, the same as any other new component.</p>
+      <p>Once it's allowed and deployed, open any page in the AEM editor, drag the new <strong>Image with Metadata</strong> component from the component browser (it sits in the "Academy Training" group) into a paragraph system, and pick any asset from <code class="inline">/content/dam</code> the same way you would with a normal Image component. If the asset has EXIF/TIFF metadata (most camera photos do; a plain screenshot usually won't), the dimensions, format, and camera model appear underneath it.</p>
 
       <div class="try-it alert alert-success">
         <span class="label">Try it with students</span>
@@ -227,7 +217,7 @@ public class ImageMetadataModel {
       <p>An author enters a city (and optionally a country, to disambiguate places that share a name), the component geocodes it through <a href="https://open-meteo.com/en/docs/geocoding-api" target="_blank" rel="noopener">Open-Meteo's free geocoding API</a>, then fetches current conditions from <a href="https://open-meteo.com/en/docs" target="_blank" rel="noopener">Open-Meteo's forecast API</a> for those coordinates. No API key is required for either endpoint.</p>
 
       <h3>Step 1 — the Java Sling Model</h3>
-      <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/components/weather/WeatherModel.java</span><code>package biz.netcentric.academy.components.weather;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/components/weather/WeatherModel.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.components.weather;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
@@ -358,14 +348,14 @@ public class WeatherModel {
       </div>
 
       <h3>Step 2 — the component definition and dialog</h3>
-      <pre data-code><span class="filename">ui.apps/src/main/content/jcr_root/apps/academy/components/weather/.content.xml</span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/weather/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
     xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
     jcr:primaryType="cq:Component"
     jcr:title="Weather"
     componentGroup="Academy Training"/&gt;</code></pre>
 
-      <pre data-code><span class="filename">ui.apps/src/main/content/jcr_root/apps/academy/components/weather/_cq_dialog/.content.xml</span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/weather/_cq_dialog/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
     xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
     jcr:primaryType="nt:unstructured"
@@ -392,7 +382,7 @@ public class WeatherModel {
 &lt;/jcr:root&gt;</code></pre>
 
       <h3>Step 3 — the render script</h3>
-      <pre data-code><span class="filename">ui.apps/src/main/content/jcr_root/apps/academy/components/weather/weather.html</span><code>&lt;div data-sly-use.weather="biz.netcentric.academy.components.weather.WeatherModel" class="academy-weather"&gt;
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/weather/weather.html <em>(academy.ui.apps)</em></span><code>&lt;div data-sly-use.weather="biz.netcentric.academy.components.weather.WeatherModel" class="academy-weather"&gt;
     &lt;p data-sly-test="${weather.error}" class="academy-weather-error"&gt;${weather.error}&lt;/p&gt;
     &lt;div data-sly-test="${weather.available}"&gt;
         &lt;h3&gt;${weather.resolvedLocation}&lt;/h3&gt;
@@ -400,9 +390,9 @@ public class WeatherModel {
     &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 
-      <h3>Step 4 — build, deploy, and try it</h3>
-      <pre data-code><span class="filename">terminal (from the project root)</span><code>mvn clean install -PautoInstallSinglePackage</code></pre>
-      <p>Drag the <strong>Weather</strong> component onto a page, open its dialog, and enter a city — "Lisbon" with country "Portugal" is a safe first test. Save the dialog and the live conditions should render within a second or two.</p>
+      <h3>Step 4 — build, deploy, and activate it</h3>
+      <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage</code></pre>
+      <p>Same activation step as the Image component above: allow the <code class="inline">Academy Training</code> group in the template's policy (module 11 has the full walkthrough) before it shows up for authors. Weather is a standalone component with its own dialog rather than an inherited one, so once it's allowed, drag it onto a page, open its dialog, and enter a city — "Lisbon" with country "Portugal" is a safe first test. Save the dialog and the live conditions should render within a second or two.</p>
 
       <div class="try-it alert alert-success">
         <span class="label">Try it with students</span>

@@ -80,7 +80,7 @@
 
       <h2>Anatomy of a model</h2>
       <p>A model declares what it can adapt <em>from</em> and, usually, which resource type it's tied to:</p>
-      <pre data-code><span class="filename">TeaserModel.java</span><code>package biz.netcentric.academy._05;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_05/TeaserModel.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._05;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
@@ -149,7 +149,7 @@ public class TeaserModel {
 
       <h2>Using a model in a template</h2>
       <p>Module 9 covers this properly, but the shape is short enough to preview here:</p>
-      <pre data-code><span class="filename">teaser.html</span><code>&lt;div data-sly-use.teaser="biz.netcentric.academy._05.TeaserModel"&gt;
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/teaser/teaser.html <em>(academy.ui.apps)</em></span><code>&lt;div data-sly-use.teaser="biz.netcentric.academy._05.TeaserModel"&gt;
     &lt;h2&gt;${teaser.title}&lt;/h2&gt;
     &lt;p&gt;${teaser.shortDescription}&lt;/p&gt;
 &lt;/div&gt;</code></pre>

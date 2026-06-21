@@ -79,7 +79,7 @@
 
       <h2>Writing a job consumer</h2>
       <p>This component does the actual weather fetch — the logic module 12 ran inline, moved here so it runs off the request thread entirely:</p>
-      <pre data-code><span class="filename">core/src/main/java/biz/netcentric/academy/jobs/WeatherRefreshJobExecutor.java</span><code>package biz.netcentric.academy.jobs;
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/jobs/WeatherRefreshJobExecutor.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.jobs;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ModifiableValueMap;
@@ -168,7 +168,7 @@ protected void activate() {
 
       <h2>Queue configuration</h2>
       <p>A job's queue controls how it's actually processed — how many run in parallel, what happens on failure, and whether order matters. Configure it as an OSGi factory configuration:</p>
-      <pre data-code><span class="filename">ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/config/org.apache.sling.event.jobs.QueueConfiguration~weatherqueue.cfg.json</span><code>{
+      <pre data-code><span class="filename">/aem-academy/ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/config/org.apache.sling.event.jobs.QueueConfiguration~weatherqueue.cfg.json <em>(academy.ui.config)</em></span><code>{
     "queue.name": "academy-weather-queue",
     "queue.topics": ["academy/weather/*"],
     "queue.type": "UNORDERED",

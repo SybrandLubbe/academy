@@ -76,15 +76,25 @@
       </div>
 
       <h2>Component anatomy</h2>
-      <pre data-code><span class="filename">/apps/academy/components/teaser/</span><code>teaser/
+      <p>Every component is a folder under <code class="inline">ui.apps</code> <em>(academy.ui.apps)</em>. The path you create it at in your project and the path it ends up at in the running repository are different — <code class="inline">jcr_root</code> in your project maps directly onto the repository root once deployed, so everything under it just drops the <code class="inline">jcr_root</code> segment:</p>
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/teaser/ <em>(academy.ui.apps — becomes /apps/academy/components/teaser in the repository)</em></span><code>teaser/
   .content.xml              component definition: title, group, resourceSuperType
   teaser.html                the HTL render script (module 9)
   _cq_dialog/.content.xml    the author dialog
   _cq_template/.content.xml  default content when dragged onto a page (optional)</code></pre>
 
+      <p>The component definition itself — the file that makes a folder an actual AEM component at all, rather than just an HTL script sitting somewhere — sets its title, which group it appears under in the author's component browser, and (optionally) which existing component it extends:</p>
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/teaser/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="cq:Component"
+    jcr:title="Teaser"
+    componentGroup="Academy Training"/&gt;</code></pre>
+      <p><code class="inline">componentGroup</code> matters more than it looks: it's both how the component is organized in the author's "Insert component" browser, and — as you'll see below — the thing a template's policy has to explicitly allow before an author can use the component at all.</p>
+
       <h2>The dialog is just more repository content</h2>
       <p>A dialog node tree maps directly onto the Granite UI form it renders, using the same resourceType resolution mechanism from module 3 — it's simply running inside the author's editing UI instead of a page:</p>
-      <pre data-code><span class="filename">_cq_dialog/.content.xml</span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/teaser/_cq_dialog/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
     xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
     jcr:primaryType="nt:unstructured"
@@ -116,8 +126,8 @@
       </div>
 
       <h2>Common field types</h2>
-      <p>A handful of Granite UI field types cover most dialogs: <code class="inline">textfield</code> for short text like a title, <code class="inline">pathfield</code> for browsing the repository to pick an asset or page, <code class="inline">select</code> for a fixed list of options, <code class="inline">checkbox</code> for a boolean, and <code class="inline">multifield</code> for a repeatable group — a list of link/label pairs, for example. <code class="inline">multifield</code> is the one that trips people up first, since each repetition is itself a small nested form:</p>
-      <pre data-code><span class="filename">multifield excerpt</span><code>&lt;links
+      <p>A handful of Granite UI field types cover most dialogs: <code class="inline">textfield</code> for short text like a title, <code class="inline">pathfield</code> for browsing the repository to pick an asset or page, <code class="inline">select</code> for a fixed list of options, <code class="inline">checkbox</code> for a boolean, and <code class="inline">multifield</code> for a repeatable group — a list of link/label pairs, for example. <code class="inline">multifield</code> is the one that trips people up first, since each repetition is itself a small nested form. This goes inside the same <code class="inline">_cq_dialog/.content.xml</code> above, as a sibling of <code class="inline">title</code> and <code class="inline">image</code> inside <code class="inline">&lt;items&gt;</code> — not a separate file:</p>
+      <pre data-code><span class="filename">multifield excerpt — inside the existing dialog's &lt;items&gt;</span><code>&lt;links
     jcr:primaryType="nt:unstructured"
     sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
     fieldLabel="Related links"&gt;
@@ -141,6 +151,22 @@
 
       <h2>Organizing a bigger dialog with tabs</h2>
       <p>Once a component grows past a handful of fields, wrap related groups in a tabs container instead of one long scrolling form — authors find a labeled "Advanced" or "SEO" tab far easier to navigate than a wall of fields, and it keeps the most-used settings on the first tab where they're seen immediately.</p>
+
+      <h2>Activating the component so authors can actually use it</h2>
+      <p>Deploying a component does not make it available to authors. A component that builds successfully and exists under <code class="inline">/apps</code> is still invisible in the page editor until it's explicitly allowed by the template it's being used on — this is the single most common "where did my component go?" moment for anyone new to AEM authoring, and it has nothing to do with your Java or dialog being broken.</p>
+      <ol>
+        <li>Build and deploy as usual: <code class="inline">mvn clean install -PautoInstallSinglePackage</code> from <code class="inline">/aem-academy</code>.</li>
+        <li>Confirm the component exists before chasing a policy problem: open <code class="inline">/apps/academy/components/teaser</code> in CRXDE Lite (<code class="inline">localhost:4502/crx/de</code>), or check it's listed at <code class="inline">/libs/wcm/core/content/sites/components/componentbrowser.html</code> &mdash; if it isn't there, the problem is the deploy, not the policy.</li>
+        <li>Open the page's <strong>template</strong> in the Template Editor: <strong>Tools → General → Templates</strong>, find the template the page uses, and open it.</li>
+        <li>Click into the layout container or responsive grid where you want the component allowed (the main paragraph system, typically), then click <strong>Policy</strong> in the toolbar that appears.</li>
+        <li>Under <strong>Components</strong>, find the <code class="inline">Academy Training</code> group (the exact <code class="inline">componentGroup</code> value from the component's <code class="inline">.content.xml</code>) and check it. Unchecked groups are simply never offered to authors, regardless of whether the component exists.</li>
+        <li>Save the policy and close the Template Editor.</li>
+        <li>Open an actual page using that template, click the <strong>+</strong> insert-component button in the paragraph system, and the Teaser should now appear — search by name if the browser has a lot of components.</li>
+      </ol>
+      <div class="callout pitfall alert alert-warning">
+        <span class="label">Common pitfall</span>
+        This entire policy step only applies to <strong>editable templates</strong> (almost every current AEM project). If you're on an older, non-editable-template project, the equivalent control is the page component's <strong>Design</strong> dialog instead (opened from the page Sidekick's gear icon) — the concept is identical, but the path to get there is different. If a component still doesn't show up after allowing its group, double-check you edited the policy on the correct layout container — a page can have several, each with its own independently-configured policy.
+      </div>
 
       <div class="try-it alert alert-success">
         <span class="label">Try it</span>
