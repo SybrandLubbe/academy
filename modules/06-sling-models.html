@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>06 Sling Models — AEM Backend Training</title>
-<meta name="description" content="Mapping repository content to typed Java objects with Sling Models.">
+<meta name="description" content="Sling Models and adaptation: injecting content into a model, and how a model relates to OSGi services and configuration.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -62,24 +62,23 @@
       </div>
 
       <h1 class="page-title">Sling Models</h1>
-      <p class="lede">A Sling Model turns a Resource into a typed Java object you can use directly in a template or a servlet — the bridge between the repository tree from module 2 and the components you'll build in module 11.</p>
+      <p class="lede">A Sling Model turns a Resource into a typed Java object you can use directly in a template or a servlet — the bridge between the repository tree from module 2 and the components you'll build in module 11. This module covers the basic shape of that bridge: what a model is, what adaptation means, and how content actually gets injected into one.</p>
 
       <div class="learn-box">
         <h3>What you'll learn</h3>
         <ul>
-          <li>The <code class="inline">@Model</code> annotation, and what "adaptable" means</li>
-          <li>The injectors you'll use constantly: <code class="inline">@ValueMapValue</code>, <code class="inline">@ChildResource</code>, <code class="inline">@SlingObject</code>, <code class="inline">@OSGiService</code></li>
+          <li>The <code class="inline">@Model</code> annotation, and what "adaptable" and "adaptation" actually mean</li>
+          <li>The injectors you'll use constantly: <code class="inline">@ValueMapValue</code>, <code class="inline">@ChildResource</code>, <code class="inline">@SlingObject</code>, <code class="inline">@Self</code>, <code class="inline">@Default</code></li>
           <li>Required vs. optional injection, and why <code class="inline">adaptTo()</code> sometimes silently returns null</li>
-          <li>Deriving values with <code class="inline">@PostConstruct</code></li>
-          <li>Exposing a model as JSON with <code class="inline">@Exporter</code></li>
+          <li>Deriving values with <code class="inline">@PostConstruct</code>, and exposing a model as JSON with <code class="inline">@Exporter</code></li>
         </ul>
       </div>
 
-      <h2>Why Sling Models exist</h2>
-      <p>Before models, components read content directly from a <code class="inline">ValueMap</code> or walked a <code class="inline">Resource</code> by hand inside the render script itself, mixing repository access with presentation logic. A Sling Model moves that access into a plain, testable Java class — the template asks the model for a typed value (a <code class="inline">String</code>, a <code class="inline">List</code>, a boolean) instead of reaching into the repository itself.</p>
+      <h2>Overview</h2>
+      <p>Before models, components read content directly from a <code class="inline">ValueMap</code> or walked a <code class="inline">Resource</code> by hand inside the render script itself, mixing repository access with presentation logic. A Sling Model moves that access into a plain, testable Java class — the template asks the model for a typed value (a <code class="inline">String</code>, a <code class="inline">List</code>, a boolean) instead of reaching into the repository itself. Everything in this module builds toward one idea: a model is a small, declarative translation layer between "stuff in the repository" and "a Java object your code can actually work with."</p>
 
-      <h2>Anatomy of a model</h2>
-      <p>A model declares what it can adapt <em>from</em> and, usually, which resource type it's tied to:</p>
+      <h2>01 · Sling Models &amp; Adaptation</h2>
+      <p>"Adaptation" is Sling's general-purpose mechanism for turning one kind of object into another related one — it's the same mechanism behind <code class="inline">resource.adaptTo(ValueMap.class)</code>, and a Sling Model is simply a custom adapter target you define yourself. A model declares what it can adapt <em>from</em> (its <strong>adaptable</strong>) and, usually, which resource type it's tied to:</p>
       <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/_05/TeaserModel.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._05;
 
 import org.apache.sling.api.resource.Resource;
@@ -133,26 +132,25 @@ public class TeaserModel {
 }</code></pre>
       <p>The <code class="inline">adaptables</code> value matters: <code class="inline">Resource.class</code> works wherever you have a resource — including adapting from inside another model — while <code class="inline">SlingHttpServletRequest.class</code> is only available during an actual request, but gives you request-specific things a bare resource can't, like selectors or request parameters.</p>
 
-      <h2>Injectors, briefly</h2>
-      <p>Each field's annotation tells Sling Models where to pull the value from. <code class="inline">@ValueMapValue</code> reads a property off the resource. <code class="inline">@ChildResource</code> resolves a named child node as a <code class="inline">Resource</code> (or adapts it straight into another model). <code class="inline">@SlingObject</code> injects framework objects you already know — <code class="inline">Resource</code>, <code class="inline">ResourceResolver</code>, <code class="inline">SlingHttpServletRequest</code>. <code class="inline">@OSGiService</code> injects a service from the registry, exactly like <code class="inline">@Reference</code> did for OSGi components in module 4 — models can depend on services too.</p>
-
-      <h2>Required vs. optional injection</h2>
-      <p>By default, every injected field is <strong>required</strong>: if Sling can't find a value for it, the whole model fails to instantiate and <code class="inline">resource.adaptTo(TeaserModel.class)</code> returns <code class="inline">null</code> — not a half-populated object. Setting <code class="inline">defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL</code> at the class level (as above) flips that default, which is usually what you want for content fields that are genuinely optional, like a teaser's image.</p>
+      <h2>02 · Injecting Content into a Model</h2>
+      <p>Each field's (or constructor parameter's) annotation tells Sling Models exactly where to pull its value from. A handful of injectors cover almost everything you'll write:</p>
+      <ul>
+        <li><code class="inline">@ValueMapValue</code> — reads a property straight off the resource's <code class="inline">ValueMap</code>. By far the most common injector; this is what <code class="inline">title</code> and <code class="inline">description</code> use above.</li>
+        <li><code class="inline">@ChildResource</code> — resolves a named child node as a <code class="inline">Resource</code>, or adapts it straight into another model in one step (used for <code class="inline">image</code> above).</li>
+        <li><code class="inline">@SlingObject</code> — injects framework objects you already know: <code class="inline">Resource</code>, <code class="inline">ResourceResolver</code>, <code class="inline">SlingHttpServletRequest</code>, <code class="inline">SlingHttpServletResponse</code>.</li>
+        <li><code class="inline">@Self</code> — injects the adaptable itself, typed as something else useful — most commonly used to pull in another model adapted from the exact same resource, the mechanism module 8 builds on for composing over Core Components.</li>
+        <li><code class="inline">@Default</code> — pairs with another injector to supply a fallback (<code class="inline">@Default(values = "Untitled")</code>) when the underlying value is missing, instead of leaving the field <code class="inline">null</code>.</li>
+      </ul>
+      <p>By default, every injected field is <strong>required</strong>: if Sling can't find a value for it, the whole model fails to instantiate and <code class="inline">resource.adaptTo(TeaserModel.class)</code> returns <code class="inline">null</code> — not a half-populated object. Setting <code class="inline">defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL</code> at the class level (as <code class="inline">TeaserModel</code> does above) flips that default, which is usually what you want for content fields that are genuinely optional, like a teaser's image. You can also mark an individual field optional without changing the class-wide default, by adding <code class="inline">@Optional</code> alongside its injector annotation (or <code class="inline">@Required</code> for the reverse, on a class set to optional by default).</p>
 
       <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>
         <code class="inline">adaptTo()</code> returning <code class="inline">null</code> with no exception is the single most common Sling Models debugging trap. It almost always means a required field had nothing to inject. Enable debug logging on <code class="inline">org.apache.sling.models.impl</code> in the Felix console to see exactly which field failed.
       </div>
 
-      <h2>Exposing a model as JSON</h2>
-      <p><code class="inline">@Exporter(name = "jackson", extensions = "json")</code> is what made the <code class="inline">.model.json</code> selector work in the Java Primer's exercises 3 and 5 — it's the same mechanism, now with the rest of the picture filled in: the model's getters become JSON fields, and anything you didn't expose with a getter simply isn't in the output.</p>
+      <p>Once content is injected, <code class="inline">@PostConstruct</code> is where you derive anything that isn't a direct 1:1 read — <code class="inline">shortDescription</code> above is built this way, after injection has already happened and every field is in its final state. And once a model has data worth handing to a client directly, <code class="inline">@Exporter(name = "jackson", extensions = "json")</code> is what made the <code class="inline">.model.json</code> selector work back in the Java Primer's exercises 3 and 5 — the model's getters become JSON fields, and anything you didn't expose with a getter simply isn't in the output.</p>
 
-      <h2>Using a model in a template</h2>
-      <p>Module 9 covers this properly, but the shape is short enough to preview here:</p>
-      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/teaser/teaser.html <em>(academy.ui.apps)</em></span><code>&lt;div data-sly-use.teaser="biz.netcentric.academy._05.TeaserModel"&gt;
-    &lt;h2&gt;${teaser.title}&lt;/h2&gt;
-    &lt;p&gt;${teaser.shortDescription}&lt;/p&gt;
-&lt;/div&gt;</code></pre>
+      <p>Module 7 picks up the thread from here — adaptables in depth, injection style, deployment, and how a model relates to OSGi services and configuration even though it's never an OSGi component itself.</p>
 
       <div class="try-it alert alert-success">
         <span class="label">Try it</span>
@@ -178,10 +176,10 @@ public class TeaserModel {
           </details>
         </li>
         <li>
-          <p class="quiz-question">What does @OSGiService let a Sling Model do?</p>
+          <p class="quiz-question">What does @Self do, and which later module's pattern depends on it?</p>
           <details class="quiz-answer">
             <summary>Show answer</summary>
-            <p class="quiz-answer-text">Inject a service from the OSGi registry into the model, the same way @Reference does for OSGi components — models can depend on services too.</p>
+            <p class="quiz-answer-text">It injects the adaptable itself, typed as something else useful — most commonly another model adapted from the same resource. Module 8's composition pattern for extending Core Components depends on it.</p>
           </details>
         </li>
         <li>
