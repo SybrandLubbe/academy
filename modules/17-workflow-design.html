@@ -133,6 +133,83 @@ public class AcademyApprovalStep implements WorkflowProcess {
         Build the model in the Workflow Model Editor with a Participant Step followed by <code class="inline">AcademyApprovalStep</code> above, set <code class="inline">requiredApproverRole</code> on the Process Step's own configuration, and trigger it manually on a test page to confirm the metadata gets written.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">Use the "recipe vs. dish" analogy from this module: what's a workflow model, and what's a workflow instance?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">The model is the recipe (the reusable design/sequence of steps); the instance is one specific run of that model against one payload, with its own independent state.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">A workflow seems "stuck" for one specific page but works fine for everything else. Where should you look first?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">That page's specific workflow instance state, not the model design — the model is shared and almost certainly fine.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Name the three standard ways a workflow instance gets created.</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Manually (an author selects "Start Workflow"), automatically via a launcher, or programmatically via the Workflow Java API.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's a launcher, in workflow terms, and what's its closest equivalent from an earlier module?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A visually-configured trigger that starts a model whenever content matching a path/event type changes — the workflow equivalent of ResourceChangeListener, but configured rather than coded.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What are "stages" in the Workflow Model Editor for?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Breaking a complex process into readable phases (like "Draft Review," "Legal Approval," "Publish") instead of one long flat chain of steps.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the difference between a Participant Step and a Dynamic Participant Step?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A Participant Step assigns a task to a fixed person/group; a Dynamic Participant Step resolves the assignee by script.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Which step type maps to the WorkflowProcess Java code you write?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A Process Step.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">In the AcademyApprovalStep example, how does a step read metadata configured on it inside the visual editor, and how does it hand data to a later step?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">args.get(...) (a MetaDataMap) reads step-level config; writing into workItem.getWorkflow().getWorkflowData().getMetaDataMap() hands data forward.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why should a custom workflow step be idempotent?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">AEM can retry a failed step, so running execute() twice for the same work item should never cause duplicate side effects (like sending two emails).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the best-practice guidance on where a step's actual logic should live?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">In a separate, unit-testable service rather than written inline in execute() — the same "thin model, logic in a service" advice from earlier modules.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="workflow-design">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

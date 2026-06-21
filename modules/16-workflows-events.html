@@ -155,6 +155,83 @@ protected void activate() {
         Deploy <code class="inline">AcademyChangeListener</code> scoped to <code class="inline">/content/academy</code>, then watch the log (<code class="inline">tail -f</code> on the error log, or the Felix console's log viewer) while you author a change under that path in the AEM UI.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What's the decision rule for choosing between a workflow, an event listener, and a scheduled job?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Does a person need to see and act on it → workflow. Should it happen automatically on a change → listener. Does it need to run on a clock → scheduler.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What interface does a custom workflow step implement, and what makes it show up in the workflow model editor's UI?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">WorkflowProcess; the process.label OSGi component property is what authors see when building a workflow model.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the modern replacement for the older JCR ObservationListener API, and what's different about it?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">ResourceChangeListener — a simpler interface scoped to specific paths and change types.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What two OSGi component properties scope a listener to additions and changes under a specific content path?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">ResourceChangeListener.PATHS (the path) and one or more ResourceChangeListener.CHANGES entries (e.g. "ADDED", "CHANGED").</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the common pitfall called out about code running inside onChange()?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It runs synchronously on the thread that triggered the change — a slow listener can visibly delay authoring or replication.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the recommended fix for heavier work that a listener triggers?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Hand it off to a Sling Job (JobManager.addJob(...)) instead of doing the real work inline.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does the Sling Scheduler's cron-like expression "0 0 2 * * ?" mean in the example?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Run at 2am daily.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does canRunConcurrently(false) protect against on a scheduled task?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A second run starting before the previous one has finished.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Give a real example of each of the three automation tools, as used in this module.</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Workflow → "Request for Activation"; listener → auto-tagging a page the moment it's created; scheduled job → a nightly report.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the WorkItem's payload typically used for, in a custom workflow step?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It carries the path of the content the workflow is acting on (workItem.getWorkflowData().getPayload()).</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="workflows-events">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

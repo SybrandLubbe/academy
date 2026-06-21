@@ -140,6 +140,83 @@ public class TeaserImpl implements Teaser {
         Convert the Java Primer's <code class="inline">StudentModel</code> (module 00, exercise 3) from field injection to constructor injection. Note which fields can become <code class="inline">final</code> once you do.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What mechanism does resource.adaptTo(MyModel.class) actually use under the hood?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">The generic Sling Adaptable mechanism via an OSGi-registered AdapterFactory for Sling Models — the same general mechanism used for things like adapting a Resource to a ValueMap.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the practical difference between putting @Model directly on a concrete class versus splitting it into an interface plus an implementation?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Interface-based models let callers adapt to the interface and never see the implementation class — enabling composition patterns and easier mocking in tests.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">How does a Sling Model actually get registered with OSGi — what replaces the @Component registration an OSGi service needs?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">There's no manual registration step; the Sling Models Maven plugin scans compiled classes for @Model annotations during the build and generates the OSGi metadata automatically.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the main practical benefit of constructor injection over field injection for a Sling Model?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Every field can become final — the object is fully valid the instant it exists, with no half-constructed window, and it's easier to unit test by calling the constructor directly with test values.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does @Inject combined with @ValueMapValue on a constructor parameter achieve?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It injects that value through the constructor instead of a field — constructor injection.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Give the decision rule for choosing Resource vs. SlingHttpServletRequest as a model's adaptable.</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Adapt from Resource whenever possible — it works in more places, including from inside another model; adapt from SlingHttpServletRequest only when you specifically need request-only data like selectors or request parameters.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the consequence of declaring adaptables = SlingHttpServletRequest.class out of habit, then trying to adapt that model from inside another model?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It returns null with no obvious explanation, since a request-only adaptable can't be satisfied from a bare Resource.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Where should real business logic live, according to this module's best-practices guidance?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">In an OSGi service that the model injects, keeping the model itself thin rather than growing it to hundreds of lines.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What specific mistake does the upcoming WeatherModel deliberately demonstrate, as referenced in this module?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Doing I/O (an outbound HTTP call) inside @PostConstruct without thinking it through.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">When should you default to interface-based models, according to this module?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">For anything another component, model, or test might need to depend on.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="sling-models-advanced">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

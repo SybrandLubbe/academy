@@ -402,6 +402,83 @@ curl http://localhost:4502/content/academy/page.model.json</code></pre>
         Swap <code class="inline">.sorted()</code> for a <code class="inline">.filter()</code> that only keeps published pages (check <code class="inline">jcr:content</code> for a <code class="inline">cq:lastReplicationAction</code> property equal to <code class="inline">Activate</code>). It's a small change that shows how naturally another pipeline stage slots in.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">In an AEM project, what command builds and deploys your code, and from which folder do you run it?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text"><code class="inline">mvn clean install -PautoInstallSinglePackage</code>, run from <code class="inline">/aem-academy</code> (the project root).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">A build succeeds but curl returns a 404 for your new servlet. What should you check first, and what's almost always the real cause?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Check <code class="inline">/system/console/components</code> — it's almost always a registration property typo (like a wrong <code class="inline">sling.servlet.paths</code>), not a missing deploy.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why split GreetingService into an interface plus a separate GreetingServiceImpl instead of one class?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Encapsulation — consumers depend on the contract, not the implementation, so the implementation can be swapped without touching anything that uses it.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What annotation does StudentModel use to read a property like "name" straight off the resource, and what happens if a required field can't be filled?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text"><code class="inline">@ValueMapValue</code>. If a required field has nothing to inject, the whole model fails to instantiate and <code class="inline">adaptTo()</code> returns <code class="inline">null</code> instead of a half-populated object.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">ValidationServlet throws InvalidUserException, a checked exception. What HTTP status does it return when validation fails, and why use a checked exception here?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">400. A checked exception forces callers to explicitly handle the failure case, modeling "this can and will happen for bad input" rather than treating it as an unexpected bug.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What two specific rules does validateUser() enforce in the exercise?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Username must not be blank, and "admin" (case-insensitive) is a reserved username.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">ChildPagesModel reads its children with a stream pipeline. What collection type does resource.getChildren() return, and why is StreamSupport.stream(...spliterator()...) needed?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It returns an <code class="inline">Iterable&lt;Resource&gt;</code>, not a <code class="inline">Collection</code>, so <code class="inline">StreamSupport.stream(resource.getChildren().spliterator(), false)</code> is needed to turn it into a Stream.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What annotation makes a Sling Model exportable via the .model.json selector?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text"><code class="inline">@Exporter(name = "jackson", extensions = "json")</code>.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">HelloWorldServlet extends SlingSafeMethodsServlet. What does "safe" mean here, and which HTTP method does the example register for?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">"Safe" methods don't change server state (GET, HEAD, OPTIONS); the example registers for GET via <code class="inline">sling.servlet.methods=GET</code>.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">If a junior's checkout isn't literally named "aem-academy," what should they do with every file path given in this curriculum?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Mentally substitute their own project's root folder name and package (<code class="inline">biz.netcentric.academy</code>) everywhere <code class="inline">/aem-academy</code> appears.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="java-primer">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

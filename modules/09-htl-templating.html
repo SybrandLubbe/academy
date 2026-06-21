@@ -121,6 +121,83 @@
         Build <code class="inline">teaser.html</code> against the <code class="inline">TeaserModel</code> from module 6, using <code class="inline">data-sly-test</code> so the whole component renders nothing when <code class="inline">title</code> is empty — confirm by emptying the title on your test content node and reloading the page.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What's the core security problem HTL was designed to eliminate that JSP had?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">JSP made output escaping the developer's responsibility on every line; a single missed escape was an XSS bug waiting to happen. HTL removes scriptlets and arbitrary method calls so escaping is automatic.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does data-sly-use do?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Instantiates a Sling Model (or legacy Use-API class) and binds it to a name you can reference in ${ } expressions.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Can a ${ } expression call a method with arguments? What does that constraint mean for where logic belongs?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">No — expressions are deliberately limited to reading properties/indexing/operators. Any logic needing parameters belongs in the model, not the template.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the difference between data-sly-test and just hiding an element with CSS?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">data-sly-test removes the element entirely from the output when the expression is falsy, rather than just visually hiding it.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What loop helpers does data-sly-list give you for free?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">item.index, item.count, item.first, item.last (for the named iteration variable).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">How does data-sly-repeat differ from data-sly-list?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">data-sly-repeat keeps the wrapping element itself in the output once per item, while data-sly-list only repeats the children.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">How does HTL decide whether to apply HTML-escaping, URI-escaping, or JS-string-escaping to an expression's output?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It infers it automatically from where the expression sits in the markup (context-aware escaping) — you don't choose it yourself.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does context='unsafe' do, and why is it dangerous?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It disables escaping entirely; it removes the exact XSS protection HTL was built to provide, and should never be used just to "make a value work."</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the functional difference between data-sly-resource and data-sly-include?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">data-sly-resource renders a child resource through the full Sling resolution pipeline (selectors, resourceType inheritance); data-sly-include just pulls in another script's raw markup within the same component, with no resource-resolution pass.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Does an HTL comment (<!--/* ... */-->) reach the visitor's browser?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">No — it's stripped server-side and never leaves AEM, unlike a normal HTML comment.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="htl-templating">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

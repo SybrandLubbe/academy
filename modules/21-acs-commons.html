@@ -91,6 +91,83 @@
         Install ACS Commons locally, then use the Bulk Workflow Manager to run a simple, harmless workflow model (even just module 17's exercise model) against every page under <code class="inline">/content/academy</code>, and compare that experience to hand-writing the same loop in the Groovy Console from module 20.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">Is ACS Commons part of the official AEM product, and who maintains it?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">No — it's a free, open-source collection maintained by Adobe Consulting Services and the wider AEM community.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the recommended check to do before building a custom solution to a problem that feels generic?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Check whether ACS Commons already has a maintained, tested answer — it very often does.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Name two deployment approaches for ACS Commons, and which is appropriate for a real project versus a quick trial.</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Download and install the content package via Package Manager (quick local trial), or add it as a Maven dependency to the all module (real project, deploys with the standard build).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does the Ensure Oak Index framework let you do?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Define custom Oak query indexes as content, deployed and verified the same way as any other package.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does Dispatcher Flush Rules give you control over, and which earlier module's concepts does it build on?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Fine-grained control over what gets invalidated on replication; it builds on the dispatcher concepts from the Dispatcher, Caching & Deployment module.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does the Bulk Workflow Manager do?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Runs a workflow model against thousands of resources matching a query, with throttling and progress tracking built in.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What problem do On-Deploy Scripts solve, and what's the safer alternative they offer compared to a Groovy Console script?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Running one-time migration code automatically as part of a deployment — a safer, more auditable alternative to an ad-hoc Groovy Console script for anything that needs to happen exactly once per environment.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does the Redirect Manager let content authors do without needing a developer?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Manage URL redirects through a UI, instead of hand-editing dispatcher rules for every change.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why is the Bulk Workflow Manager described as solving something "tedious and risky to script by hand"?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Running a workflow against thousands of resources at scale, with proper throttling and progress tracking, is hard to get right with a hand-rolled loop.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">According to this module, even if you don't install ACS Commons directly, what's still valuable about it being open source?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It's free to inspect, fork, or read for implementation patterns.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="acs-commons">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

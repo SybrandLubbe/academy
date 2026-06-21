@@ -138,6 +138,83 @@ public class AcademyChangeListener implements ResourceChangeListener {
         Give one of your own OSGi services an extra configurable property using <code class="inline">@Designate</code> — a sensible default, plus a way to override it — then deploy two different values for it via <code class="inline">config.author</code> and <code class="inline">config.publish</code> and confirm each instance picks up its own value.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What's the difference between MANDATORY and OPTIONAL reference cardinality?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">MANDATORY (the default) means the component won't activate without exactly one match; OPTIONAL means it activates either way, with zero or one match.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why do OPTIONAL and MULTIPLE references need to be declared volatile?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Because the set of available services can change at runtime as bundles start/stop, and volatile ensures the field reflects that safely across threads.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does immediate = true change about when a component activates?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It activates eagerly when the bundle starts, instead of lazily the first time something needs it — necessary for listeners/schedulers that nothing ever calls via @Reference.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why does every service in this curriculum use a separate interface and implementation, rather than @Component directly on a concrete class?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">So consumers depend only on the interface and never the implementation — letting the implementation be swapped (different provider, or a mock for testing) without touching any consuming code.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What naming convention does a .cfg.json configuration file follow?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It's named after the component's fully-qualified class name — its OSGi PID.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Where does OSGi configuration live in the project, and how does it get deployed?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Under <code class="inline">ui.config</code> (academy.ui.config), as part of the same <code class="inline">mvn clean install -PautoInstallSinglePackage</code> build/deploy as everything else.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">How does AEM decide which run-mode-scoped config folder applies to a given instance at startup?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It resolves the most specific folder matching the instance's actual active run modes — e.g. config.author overrides config on an author instance.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why is hand-editing a config in /system/console/configMgr risky long-term?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It gets silently overwritten by whatever's checked into ui.config on the next deployment.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What did module 5 build on from an earlier module for OSGi configuration?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">@Designate and @ObjectClassDefinition, introduced for a configurable service in module 5 (OSGi: Bundles, Services & Components).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">A config value needs to differ between author and publish. What's the correct way to handle that?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Use separate run-mode-scoped folders (config.author / config.publish) rather than hand-editing per environment.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="osgi-services-config">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

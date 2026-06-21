@@ -246,6 +246,83 @@ class GreetingServletTest {
         Write an <code class="inline">AemContext</code>-based test for module 8's <code class="inline">AcademyTeaserModel</code> that builds a resource with <code class="inline">resourceSuperType</code> pointing at a stand-in core Teaser resource type, and confirms <code class="inline">getBadgeLabel()</code> returns what you set while <code class="inline">getTitle()</code> still delegates correctly.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">Why does the module recommend extracting validation logic out of ValidationServlet into a standalone UsernameValidator class first?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Extracting logic out of a servlet into a plain class is, on its own, the single biggest thing you can do to make code testable.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does @ParameterizedTest with @CsvSource let you do that a single @Test can't, conveniently?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Run the same test body once per row of input/expected-output data, covering multiple cases without writing near-identical test methods.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the key difference between a plain Mockito test and one using AemContext?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Plain Mockito mocks a dependency interface and is fast with no setup; AemContext is needed once code touches Resource, ResourceResolver, or relies on real OSGi service injection.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does context.addModelsForClasses(...) do, and what happens if you forget it?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It registers a Sling Model class with the mock context so adaptTo() can find it; forgetting it means adaptTo() silently returns null.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">In the ChildPagesModelTest example, what's actually being tested, and what AEM Mocks feature builds the test content?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">ChildPagesModel's getChildPageTitles() sorting behavior; context.create().resource(...) builds the in-memory content tree.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does context.registerInjectActivateService(servlet) do for a servlet under test?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Performs real field injection on the servlet's @Reference fields using services registered in the mock OSGi registry, exactly as the real OSGi runtime would.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why does the GreetingServletTest example matter for the earlier "always use an interface" advice?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Without the GreetingService interface, there'd be nothing to register a fake implementation against — none of this would be mockable at all.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the stated best practice about what NOT to test?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Don't test the framework itself — there's no value in a test that only confirms ValueMap.get() works; test your own logic.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">When should you prefer a plain Mockito test over setting up an AemContext?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Whenever your code doesn't actually touch Resource or OSGi — AemContext should only be used when genuinely needed.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the practical reason this module gives for preferring fast unit tests over redeploying to localhost:4502 for everyday feedback?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A unit test runs in milliseconds with no AEM instance required, while build/deploy/curl is slow and tests far more than just the one piece of logic you changed.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="unit-testing">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

@@ -131,6 +131,83 @@
         In CRXDE Lite, navigate to any existing page's <code class="inline">jcr:content</code> node and look at its properties panel. Find <code class="inline">sling:resourceType</code> and note its value — you'll use exactly this property to understand rendering in the next module.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">A page in AEM is actually two nodes stacked together. Name them and their primary types.</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">The <code class="inline">cq:Page</code> node (e.g. <code class="inline">/content/my-site/en/about</code>) and its <code class="inline">jcr:content</code> child node (<code class="inline">cq:PageContent</code>).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Where does a page's title actually live — on the cq:Page node or somewhere else?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">On the <code class="inline">jcr:content</code> child node (as <code class="inline">jcr:title</code>), not on the <code class="inline">cq:Page</code> node itself.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does the jcr: namespace prefix indicate, versus cq: versus sling:?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text"><code class="inline">jcr:</code> = core JCR spec concepts; <code class="inline">cq:</code> = AEM-specific concepts (from the old Communiqué product); <code class="inline">sling:</code> = Sling-specific properties like <code class="inline">sling:resourceType</code>.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Which top-level repository path should you NEVER edit directly, and what should you do instead?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text"><code class="inline">/libs</code> — never edit it directly (overwritten on upgrade); overlay it under <code class="inline">/apps</code> instead.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the simple mental-model question to ask when you're not sure whether something belongs under /content or /apps?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">"Is this content an author typed in, or code a developer wrote?" Content → <code class="inline">/content</code>, code → <code class="inline">/apps</code>.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does the mix:versionable mixin type enable on a node?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Participation in JCR versioning — it's what powers features like page version history.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's CRXDE Lite good for, and what is it explicitly NOT meant for?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Good for poking around and quick debugging; not where you do real development.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the alternative to walking the tree by hand when you need to find nodes by criteria, like "all pages using template X"?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Query Builder / JCR-SQL2.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Name four common JCR property types mentioned in this module.</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">String, boolean, date, and binary (long and reference types are also mentioned).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why does the page/jcr:content split "trip up almost every new developer at least once"?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Because querying the page node itself for title/properties returns nothing — that data lives under the <code class="inline">jcr:content</code> child node instead.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="jcr-repository">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

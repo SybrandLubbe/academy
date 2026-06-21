@@ -120,6 +120,83 @@ Sling looks for, in order:
         Pick any component on a page you have access to, find its <code class="inline">sling:resourceType</code> in CRXDE Lite, then locate the matching script under <code class="inline">/apps</code>. Check whether it declares a <code class="inline">sling:resourceSuperType</code> and, if so, follow the chain.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What four parts does Sling decompose every incoming URL into?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Path, selectors, extension, and suffix.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">In a URL like /content/my-site/en/about.teaser.html/jcr:content/par/image, identify the selector and the suffix.</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Selector = <code class="inline">teaser</code>; suffix = <code class="inline">/jcr:content/par/image</code>.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does Sling produce once the path portion is resolved against the repository?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A <code class="inline">Resource</code> object — a thin wrapper around the underlying JCR node (or whatever backend Sling is configured to read from).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What property tells Sling which component should render a resource?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text"><code class="inline">sling:resourceType</code>.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">When resolving a script, which path does Sling search first — /apps or /libs?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text"><code class="inline">/apps</code> first, then <code class="inline">/libs</code>.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">How does this search order make /apps overlays work, mechanically?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Because /apps is searched first, recreating the same resourceType path under /apps silently takes priority over the /libs version.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does sling:resourceSuperType let a component do?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Declare another component as its "super type" — if Sling can't find a script for the component's own resourceType, it walks up to the super type and tries again, similar to class inheritance.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">In AEM, what does "servlet" usually mean — registered by URL path or by resource type?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Usually registered by resource type, unlike a typical Java web framework's URL-path routing (though path-based registration is also possible).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the classic symptom of editing the /libs copy of a script while an /apps overlay quietly wins?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">"I changed the file but nothing happened" — the change has no visible effect because /apps is resolved first.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Besides resourceType and selectors, what else strongly influences which script or servlet handles a request?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">The extension (usually <code class="inline">html</code>, but could be <code class="inline">json</code>, <code class="inline">xml</code>, or a custom one).</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="sling-framework">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

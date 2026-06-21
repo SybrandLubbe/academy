@@ -193,6 +193,83 @@ public class GreetingServiceImpl implements GreetingService {
         On a local AEM instance, open <code class="inline">/system/console/bundles</code> and find a bundle that is not <code class="inline">Active</code>. Click into it to see which import is unsatisfied, and reason about why that dependency might be missing.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What is a bundle, technically?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A JAR file with extra manifest metadata describing what Java packages it exports and imports.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">List the bundle lifecycle states in order.</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">INSTALLED → RESOLVED → STARTING → ACTIVE (and STOPPING → RESOLVED on shutdown).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">A bundle is stuck in RESOLVED instead of ACTIVE. What's the most common cause?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A missing dependency — some package it imports isn't being exported by anything currently active.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the relationship between a "component" and a "service" in OSGi terms?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A component is a plain annotated Java class; it typically implements a service interface, which is what gets published to the registry.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does declaring @Component(service = GreetingService.class) actually do?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Publishes that implementation to the OSGi service registry under the GreetingService interface, so it can be found/injected by interface.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What annotation pulls a service into a consuming component, and what happens if no implementation is active when the consumer tries to start?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text"><code class="inline">@Reference</code>; OSGi holds the component back from activating (unless the reference is explicitly optional).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Which three lifecycle annotations can a component use to hook into activation, config changes, and teardown?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text"><code class="inline">@Activate</code>, <code class="inline">@Modified</code>, and <code class="inline">@Deactivate</code>.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Where can OSGi configuration be edited per-environment after deployment?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">The OSGi Configuration Manager — Felix Web Console → Configuration, or <code class="inline">/system/console/configMgr</code>.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why does editing a configuration by hand in the Felix console cause problems later?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It doesn't affect other environments (author/publish are separate JVMs), and hand-edited config tends to get lost on the next deployment unless captured as a .cfg.json file.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What do /system/console/bundles and /system/console/components each show you?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text"><code class="inline">/system/console/bundles</code> shows every bundle's state and why it's not Active; <code class="inline">/system/console/components</code> shows the same idea one level down, for individual components.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="osgi-services">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

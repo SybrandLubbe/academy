@@ -149,6 +149,83 @@ names.count();  // throws - the stream was already consumed above</code></pre>
         Take the <code class="inline">WeatherModel</code> from module 12, deliberately break its <code class="inline">equals</code>/<code class="inline">hashCode</code> contract on a small wrapper class around its results, and reproduce the "lost in a HashSet" bug from this module's first example with real output in front of you.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What's the classic symptom when a class overrides equals() but not hashCode(), and is used as a HashSet element?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">contains() returns false for an object that should be "equal" — the two instances land in different hash buckets, so equals() never even gets called to compare them.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the rule about hashCode() and a HashSet/HashMap key whose fields can change after insertion?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Never use a mutable field in hashCode() for an object you intend to store as a key — if it changes after insertion, the object becomes unreachable via contains()/remove().</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the difference in purpose between Comparable and a Comparator?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Comparable defines a class's single natural ordering (used by sort()/TreeSet/TreeMap); a Comparator defines an alternative ordering without changing the class itself.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What happens in a TreeSet if compareTo() returns 0 for two objects that equals() says are NOT equal?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">The TreeSet silently drops one of them — it uses compareTo(), not equals(), to decide what counts as a duplicate.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the rule of thumb for choosing an interface versus an abstract class?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Interface = "any of these unrelated classes can do this" (a contract, no shared state); abstract class = "these classes are fundamentally the same kind of thing," sharing state/behavior. A class can implement many interfaces but extend only one class.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why does this module recommend defaulting to interfaces for Sling Models and OSGi services specifically?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Composition via @Via only works against an interface boundary, and interfaces are what makes services swappable and mockable.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why does calling a stream's terminal operation twice throw an exception?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A stream can only be consumed once; reusing it throws IllegalStateException: stream has already been operated upon or closed.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Where does a null inside a stream pipeline typically throw a NullPointerException, and why can that be confusing?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">At the point it's dereferenced inside the pipeline (e.g. inside map()), not at the point it entered the stream — which can make the stack trace point somewhere unhelpful.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the recommended fix for debugging a long inline lambda/stream chain?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Break it into named, separately-callable methods before debugging — stepping through an inline lambda chain is much harder to follow than stepping through a named method.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Before reaching for a full IDE remote-debug session, what should you try first, and where?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Set a package's log level to DEBUG live via the Felix console's Sling Log Support (/system/console/slinglog) — no restart or redeploy needed.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="java-pitfalls">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

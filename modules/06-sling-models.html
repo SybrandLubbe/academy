@@ -159,6 +159,83 @@ public class TeaserModel {
         Extend <code class="inline">StudentModel</code> from the Java Primer's exercise 3 with a <code class="inline">@PostConstruct</code> method that builds a <code class="inline">fullName</code> field from <code class="inline">name</code> and <code class="inline">surname</code>, then confirm it shows up at <code class="inline">/content/academy/student.model.json</code>.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">Why do Sling Models exist — what problem do they solve compared to reading a ValueMap directly in a render script?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">They move repository access out of the render script into a plain, testable Java class — the template asks for a typed value instead of reaching into the repository itself.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does @ChildResource do, that's different from @ValueMapValue?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It resolves a named child node as a Resource (or adapts it straight into another model), rather than reading a property off the current resource.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does @OSGiService let a Sling Model do?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Inject a service from the OSGi registry into the model, the same way @Reference does for OSGi components — models can depend on services too.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">By default, is an injected field required or optional? What happens if a required field can't be filled?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Required by default; if it can't be filled, the whole model fails to instantiate and adaptTo() returns null, not a half-populated object.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does setting defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL at the class level change?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">It flips the default so fields are optional unless marked otherwise — appropriate for content fields that are genuinely optional.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">adaptTo() returns null with no exception. What's the single most common cause, and how do you find out which field is at fault?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">A required field had nothing to inject; enable debug logging on org.apache.sling.models.impl in the Felix console to see exactly which field failed.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What annotation makes a model's getters serializable as JSON via the .model.json selector?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">@Exporter(name = "jackson", extensions = "json").</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does the adaptables value on @Model control?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">What kind of object the model can be created from — e.g. Resource.class vs SlingHttpServletRequest.class.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Does Resource.class or SlingHttpServletRequest.class work in more contexts as an adaptable, and why?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Resource.class — it's available wherever you have a resource, including adapting from inside another model, while a request adaptable only works during an actual HTTP request.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">TeaserModel builds a shortDescription field by truncating description to 80 characters. Which lifecycle annotation runs that logic after injection completes?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">@PostConstruct.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="sling-models">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

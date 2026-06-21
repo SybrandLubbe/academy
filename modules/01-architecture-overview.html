@@ -120,6 +120,83 @@
         If you have access to a local AEM instance, open <code class="inline">http://localhost:4502/crx/de</code> (CRXDE Lite) and browse to <code class="inline">/apps</code> and <code class="inline">/content</code>. Don't worry about understanding everything you see yet — just get comfortable with the idea that this tree is the entire system.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">AEM is described as three open-source projects stacked together, plus Adobe's apps on top. Name the three.</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Apache Jackrabbit Oak (the repository), Apache Sling (the resource framework), and Apache Felix/OSGi (the runtime).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">In a typical MVC framework you define routes. How does Sling's approach to "routing" differ?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">There's no separate route table — the content tree itself is the routing table; Sling maps the URL path directly onto a repository path.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What does OSGi let you do with bundles that a typical monolithic Java app can't easily do?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Load, wire, and hot-swap modular JARs (bundles) independently, without restarting the whole server.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the difference between an author and a publish instance, in terms of what each is for?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Author is where content is created/edited (never exposed to end users); publish serves the live public-facing site with a replicated copy of approved content.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What triggers replication, and what does it actually move?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Activating a page triggers it; it pushes content (and sometimes code) from author to publish.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What two jobs does the dispatcher do?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Caches rendered pages as static files, and acts as a security gatekeeper blocking requests that don't match an allow-list of safe URL patterns.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Why does a service registered or configured on author not automatically exist on publish?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Author and publish are separate JVMs with separate copies of the repository — nothing is shared automatically.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the rule about /libs, and what should you do instead of editing it directly?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Never edit anything under <code class="inline">/libs</code> (it's overwritten on every upgrade); instead, overlay it by recreating the path under <code class="inline">/apps</code>.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Which module covers exactly how that /apps overlay resolution works?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Module 4, Sling Framework Fundamentals.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What's the most common category of "it works locally but not in production" bug this module warns about?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Dispatcher rules — issues that don't show up in a single local author-only setup.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="arch-overview">
         <label for="complete" class="form-check-label">Mark this module as complete</label>

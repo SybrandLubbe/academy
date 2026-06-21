@@ -173,6 +173,83 @@
         Add a checkbox field <code class="inline">./openInNewTab</code> to the teaser dialog you sketched above, then add a matching <code class="inline">@ValueMapValue private boolean openInNewTab;</code> field to <code class="inline">TeaserModel</code> and expose it with a getter.
       </div>
 
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What four things typically live inside a component's folder?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">.content.xml (component definition), the HTL render script, _cq_dialog/.content.xml (the author dialog), and optionally _cq_template/.content.xml (default content).</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">When you create a file under ui.apps/src/main/content/jcr_root/apps/academy/components/teaser/, what path does it end up at in the deployed repository?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">/apps/academy/components/teaser — the jcr_root segment is dropped once deployed.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What two things does componentGroup on a component's .content.xml control?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">How it's organized in the author's "Insert component" browser, and which group a template policy has to allow before authors can use it.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What resourceType powers a dialog itself, and what does that imply about how a dialog is resolved?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">cq/gui/components/authoring/dialog — dialogs use the exact same resourceType resolution mechanism as render scripts.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">In the dialog example, what does a textfield's name="./jcr:title" attribute actually write to?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">The jcr:title property directly on the component's own node — the dialog is just an editor for the exact nodes the Sling Model reads.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What AEM field type would you use for a repeatable group of fields, like a list of link/label pairs?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">multifield.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">What replaced the older design dialog (cq:design_dialog) on modern editable-template projects, and where does it live?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Content policies, under /conf/.../policies — author-locked, component-level settings scoped to a specific template-and-component pairing.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">A component is deployed and exists under /apps, but an author can't find it anywhere in the page editor. What's almost always the cause?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Its component group hasn't been allowed in the relevant template's policy yet.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">Walk through where in the Template Editor you go to allow a new component group.</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">Tools → General → Templates → open the template → click into the layout container/responsive grid → click Policy → check the component group under Components.</p>
+          </details>
+        </li>
+        <li>
+          <p class="quiz-question">On an older, non-editable-template project, what's the equivalent control to a template policy?</p>
+          <details class="quiz-answer">
+            <summary>Show answer</summary>
+            <p class="quiz-answer-text">The page component's Design dialog, opened from the page Sidekick's gear icon.</p>
+          </details>
+        </li>
+        </ol>
+      </div>
+
       <div class="complete-row form-check">
         <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="dialogs-components">
         <label for="complete" class="form-check-label">Mark this module as complete</label>
