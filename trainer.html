@@ -1213,7 +1213,7 @@
 <script>
   // PIN is stored as a SHA-256 hash so the plaintext isn't visible in source.
   // Default PIN: netcentric  →  update this hash if you change the PIN.
-  const HASH = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8";
+  const HASH = "e8c039209e898ce1fd9377e6e66b11bc13ec16493865e94e559f1ecc9552dbc0";
 
   async function sha256(str) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
