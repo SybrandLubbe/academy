@@ -121,77 +121,37 @@
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
         <ol class="quiz-list">
         <li>
           <p class="quiz-question">What four sections make up a typical dispatcher farm configuration?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">/cache/rules, /cache/invalidate, /filter, and /statfileslevel (plus /clientheaders) — broadly: cache, rules, filter, invalidate.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the job of /cache/rules versus /cache/invalidate?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">/cache/rules decides what's allowed to be cached at all; /cache/invalidate decides what gets thrown out when content changes.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">In the example rule set, why is anything with a query string explicitly denied from caching?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Query strings usually mean personalized or parameterized output that shouldn't be cached for everyone.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What does statfileslevel control, and when is it the first thing worth checking?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">How deep the dispatcher checks a folder's .stat file timestamp to decide whether cached content under that path still needs revalidating — check it first when invalidation seems to be "not reaching" a nested path.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Walk through what happens, step by step, when an author activates a page.</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">A flush agent on publish sends an invalidation request to the dispatcher, which deletes the matching cached files so the next visitor regenerates fresh output.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Why does /cache/invalidate commonly remove *.html but leave heavier assets like images untouched?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">To avoid an expensive mass re-fetch over something that didn't actually change — images are far more expensive to regenerate than HTML.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Is /filter a caching mechanism or a security mechanism?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Security — it's a deny-by-default allow-list deciding what's even allowed to reach AEM, unrelated to caching decisions.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the standard pattern for writing /filter rules?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Deny everything first, then explicitly allow only the specific extensions, selectors, and paths your application actually serves.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Which earlier module first introduced the dispatcher conceptually, before this module's actual configuration?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Module 1, Architecture Overview.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Why would a request return correctly when tested directly against publish, but get rejected when going through the dispatcher?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">The dispatcher's /filter allow-list rejected it before it ever reached AEM — a security concern separate from whether AEM itself would have served it.</p>
-          </details>
         </li>
         </ol>
       </div>

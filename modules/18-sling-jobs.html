@@ -185,77 +185,37 @@ protected void activate() {
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
         <ol class="quiz-list">
         <li>
           <p class="quiz-question">What separates a Sling Job from the plain Sling Scheduler, in terms of durability?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">A Sling Job is persistent — if the instance restarts mid-job, the job isn't lost and is retried per the queue's configuration, unlike the plain scheduler.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What does a job's topic identify?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Which registered consumer/executor handles that unit of work.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's required before getServiceResourceResolver(...) will work inside a job executor, and what's the symptom of forgetting it?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">A service user mapping configured for the named subservice (e.g. "academy-weather-writer"); forgetting it causes a login exception that looks unrelated to the actual business logic.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the difference between triggering an immediate job and registering a scheduled job?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">An immediate job (jobManager.addJob(...)) runs right away in response to something happening; a scheduled job (jobManager.createJob(...).schedule()...add()) is registered once, typically in @Activate, and runs repeatedly on its own.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What does the cron expression "0 */15 * * * ?" mean in the recurring job example?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Every 15 minutes.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the practical payoff of moving WeatherModel's weather fetch into a scheduled job?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">WeatherModel can read from a cached value instead of making a live HTTP call on every page render — pages load instantly regardless of Open-Meteo's responsiveness.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What does queue.type: UNORDERED mean for how jobs on that queue are processed, versus ORDERED?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">UNORDERED processes jobs in parallel with no guaranteed order; ORDERED processes jobs on the same topic strictly one at a time.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Which queue.type would you choose if later jobs depend on earlier ones having finished?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">ORDERED.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What do queue.retries and queue.retrydelay control?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">What happens when process() returns a failed result — how many times and how long to wait before retrying.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Where does queue configuration live, and what naming pattern does its factory config file follow?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">A .cfg.json under ui.config, named after org.apache.sling.event.jobs.QueueConfiguration with a ~name suffix for the factory config instance.</p>
-          </details>
         </li>
         </ol>
       </div>

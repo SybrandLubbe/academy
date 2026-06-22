@@ -123,77 +123,37 @@ println "Done. Dry run: ${dryRun}, updated: ${updated}"</code></pre>
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
         <ol class="quiz-list">
         <li>
           <p class="quiz-question">What problem is the Groovy Console specifically meant to solve, compared to writing a full OSGi bundle?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">A one-off content fix or migration (relabeling a property across many pages, backfilling a field) where building/deploying a full bundle for a script you'll run once is overkill.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What does Groovy compile to, and what does that mean for using existing Java APIs from a Groovy script?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">The same JVM bytecode as Java; it can call any Java API directly, so everything you know about ResourceResolver/Resource/JCR still applies.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Name two syntax differences Groovy has from Java that matter for short scripts.</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Semicolons are optional, and def is used for type inference instead of explicit type declarations (also: string interpolation with "${expression}").</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Is the AEM Groovy Console part of the AEM product itself?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">No — it's a community-maintained, open-source add-on, installed separately as a content package.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">How do you install the Groovy Console once you've downloaded the right release?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Through AEM's Package Manager (/crx/packmgr) → Upload Package → select the file → Install.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Why should the Groovy Console never be installed on a production publish instance?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">It grants whoever has access the ability to run arbitrary code with full repository permissions.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What useful object does the console pre-bind for you, so you don't need to obtain it yourself?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">A ResourceResolver.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">In the example backfill script, what does setting dryRun = true actually do?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">It prints what would change ("Would update: ...") without calling resourceResolver.commit(), so nothing is actually modified.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What API does the script use to actually write the new property once dryRun is false?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Adapting the resource to ModifiableValueMap and calling .put(...), followed by resourceResolver.commit().</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What single habit does this module say separates a safe content migration from "an afternoon spent restoring from backup"?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Running the script once with dryRun = true and reading the output carefully before flipping it to false.</p>
-          </details>
         </li>
         </ol>
       </div>

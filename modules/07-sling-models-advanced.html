@@ -180,77 +180,37 @@ protected void init() {
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
         <ol class="quiz-list">
         <li>
           <p class="quiz-question">What mechanism does resource.adaptTo(MyModel.class) actually use under the hood?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">The generic Sling Adaptable mechanism via an OSGi-registered AdapterFactory for Sling Models — the same general mechanism used for things like adapting a Resource to a ValueMap.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the practical difference between putting @Model directly on a concrete class versus splitting it into an interface plus an implementation?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Interface-based models let callers adapt to the interface and never see the implementation class — enabling composition patterns and easier mocking in tests.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">How does a Sling Model actually get registered with OSGi — what replaces the @Component registration an OSGi service needs?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">There's no manual registration step; the Sling Models Maven plugin scans compiled classes for @Model annotations during the build and generates the OSGi metadata automatically.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the main practical benefit of constructor injection over field injection for a Sling Model?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Every field can become final — the object is fully valid the instant it exists, with no half-constructed window, and it's easier to unit test by calling the constructor directly with test values.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What does data-sly-use.teaser="..." actually trigger behind the scenes?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">It calls resource.adaptTo(TeaserModel.class) and binds the result to the "teaser" name used in the expressions below it.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Give the decision rule for choosing Resource vs. SlingHttpServletRequest as a model's adaptable, and what goes wrong if you default to Request out of habit?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Adapt from Resource whenever possible — it works in more places, including from inside another model. Defaulting to SlingHttpServletRequest out of habit means the model can't later be adapted from inside another model (which only has a Resource to offer) — it'll return null with no obvious explanation.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Where should real business logic live, according to this module's best-practices guidance?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">In an OSGi service that the model injects, keeping the model itself thin rather than growing it to hundreds of lines.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What specific mistake does the upcoming WeatherModel deliberately demonstrate, as referenced in this module?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Doing I/O (an outbound HTTP call) inside @PostConstruct without thinking it through.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the practical difference between an OSGi component's @Reference and a Sling Model's @OSGiService?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">They look up the exact same OSGi service registry — @OSGiService exists as a separate annotation only because a model isn't itself an OSGi component that OSGi can manage.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">A model needs a value that's the same for every site but should differ between author and publish. Does that belong in OSGi configuration or Context-Aware Configuration?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">OSGi configuration, behind an injected service — Context-Aware Configuration is for values that differ per site or piece of content, not per environment.</p>
-          </details>
         </li>
         </ol>
       </div>

@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trainer Answer Key — AEM Backend Training</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #ffffff;
+    --surface: #f7f8fa;
+    --ink:     #111827;
+    --ink-soft:#374151;
+    --ink-faint:#6b7280;
+    --accent:  #0D6EFD;
+    --accent-bg:#eff6ff;
+    --warn:    #92400e;
+    --warn-bg: #fef3c7;
+    --line:    #e5e7eb;
+    --radius:  8px;
+    --font-body:"system-ui",sans-serif;
+    --font-head:"Space Grotesk",sans-serif;
+    --font-mono:"IBM Plex Mono",monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--ink); }
+
+  /* ---------- GATE ---------- */
+  #gate {
+    position: fixed; inset: 0; z-index: 1000;
+    background: #0f172a;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px;
+  }
+  #gate.hidden { display: none; }
+  .gate-card {
+    background: #1e293b; border-radius: 12px;
+    padding: 36px 40px; width: min(400px, 90vw);
+    text-align: center; border: 1px solid #334155;
+  }
+  .gate-logo {
+    font-family: var(--font-head); font-size: 13px; font-weight: 600;
+    color: #94a3b8; letter-spacing: .08em; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .gate-title {
+    font-family: var(--font-head); font-size: 22px; font-weight: 700;
+    color: #f1f5f9; margin-bottom: 6px;
+  }
+  .gate-sub {
+    font-size: 14px; color: #64748b; margin-bottom: 28px; line-height: 1.5;
+  }
+  .gate-input {
+    width: 100%; padding: 11px 14px;
+    font-family: var(--font-mono); font-size: 18px; letter-spacing: .15em;
+    background: #0f172a; border: 1.5px solid #334155; border-radius: 6px;
+    color: #f1f5f9; text-align: center; margin-bottom: 14px;
+    outline: none;
+  }
+  .gate-input:focus { border-color: var(--accent); }
+  .gate-btn {
+    width: 100%; padding: 12px;
+    background: var(--accent); color: #fff;
+    font-family: var(--font-head); font-weight: 600; font-size: 15px;
+    border: none; border-radius: 6px; cursor: pointer;
+  }
+  .gate-btn:hover { background: #0b5ed7; }
+  .gate-error {
+    margin-top: 12px; font-size: 13px; color: #f87171; min-height: 18px;
+  }
+  .gate-hint {
+    margin-top: 22px; font-size: 12px; color: #475569; font-style: italic;
+  }
+
+  /* ---------- MAIN ---------- */
+  #main { display: none; }
+  #main.visible { display: block; }
+
+  .site-header {
+    background: #212529; color: #f8f9fa;
+    padding: 14px 40px; display: flex; align-items: center; gap: 14px;
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid #343a40;
+    print-color-adjust: exact; -webkit-print-color-adjust: exact;
+  }
+  .site-header .brand {
+    font-family: var(--font-head); font-weight: 700; font-size: 15px;
+    flex: 1;
+  }
+  .site-header .badge {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    background: #dc2626; color: #fff;
+    padding: 3px 10px; border-radius: 50rem;
+  }
+  .print-btn {
+    background: #343a40; color: #adb5bd; border: 1px solid #495057;
+    padding: 6px 14px; border-radius: 6px; font-size: 13px; cursor: pointer;
+    font-family: var(--font-head); font-weight: 600;
+  }
+  .print-btn:hover { background: #495057; color: #fff; }
+
+  /* ---------- QUICK NAV ---------- */
+  .quick-nav {
+    background: var(--surface); border-bottom: 1px solid var(--line);
+    padding: 14px 40px;
+  }
+  .quick-nav p {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .07em;
+    color: var(--ink-faint); margin-bottom: 10px;
+  }
+  .quick-nav-links {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .quick-nav-links a {
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--accent); text-decoration: none;
+    padding: 3px 10px; border: 1px solid #dbeafe; border-radius: 4px;
+    background: var(--accent-bg);
+    white-space: nowrap;
+  }
+  .quick-nav-links a:hover { background: #dbeafe; }
+
+  /* ---------- CONTENT ---------- */
+  .content-wrap {
+    max-width: 920px; margin: 0 auto; padding: 40px 40px 80px;
+  }
+
+  .page-intro {
+    background: var(--warn-bg); border: 1px solid #fde68a; border-radius: var(--radius);
+    padding: 16px 20px; margin-bottom: 40px;
+    font-size: 14px; color: var(--warn); line-height: 1.6;
+  }
+  .page-intro strong { font-weight: 700; }
+
+  .module-section {
+    margin-bottom: 56px; break-inside: avoid-page;
+  }
+  .module-section h2 {
+    font-family: var(--font-head); font-size: 20px; font-weight: 700;
+    color: var(--ink); margin-bottom: 20px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--accent);
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .mod-num {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+    color: #fff; background: var(--accent);
+    padding: 2px 8px; border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .qa-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .qa-item:last-child { border-bottom: none; }
+
+  .qa-num {
+    font-family: var(--font-mono); font-weight: 600;
+    color: var(--accent); margin-right: 2px;
+  }
+  .qa-q {
+    font-weight: 600; color: var(--ink);
+    font-size: 15px; margin-bottom: 10px; line-height: 1.5;
+  }
+  .qa-a {
+    background: var(--surface); border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 10px 14px; font-size: 14px;
+    color: var(--ink-soft); line-height: 1.6;
+  }
+  .qa-a code {
+    font-family: var(--font-mono); font-size: 12.5px;
+    background: #e5e7eb; color: #1f2937;
+    padding: 1px 5px; border-radius: 3px;
+  }
+
+  /* ---------- PRINT ---------- */
+  @media print {
+    #gate { display: none !important; }
+    #main { display: block !important; }
+    .site-header { position: static; background: #212529 !important; }
+    .print-btn, .quick-nav { display: none; }
+    .content-wrap { padding: 20px 0; }
+    .module-section { break-inside: avoid; page-break-inside: avoid; }
+    .qa-item { break-inside: avoid; page-break-inside: avoid; }
+    .qa-a { background: #f7f8fa !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======== GATE ======== -->
+<div id="gate">
+  <div class="gate-card">
+    <p class="gate-logo">◆ AEM Backend Training</p>
+    <p class="gate-title">Trainer Answer Key</p>
+    <p class="gate-sub">This document contains all quiz answers for all 22 modules. Enter the trainer PIN to continue.</p>
+    <input
+      id="pin-input"
+      class="gate-input"
+      type="password"
+      maxlength="30"
+      placeholder="PIN"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="none"
+      spellcheck="false"
+    >
+    <button class="gate-btn" onclick="checkPin()">Unlock</button>
+    <p class="gate-error" id="gate-error"></p>
+    <p class="gate-hint">Contact your academy coordinator if you haven&rsquo;t received the PIN.</p>
+  </div>
+</div>
+
+<!-- ======== MAIN ======== -->
+<div id="main">
+  <header class="site-header">
+    <span class="brand">◆ /content/training &mdash; Trainer Answer Key</span>
+    <span class="badge">TRAINER ONLY</span>
+    <button class="print-btn" onclick="window.print()">⎙ Print / PDF</button>
+  </header>
+
+  <div class="quick-nav">
+    <p>Jump to module</p>
+    <div class="quick-nav-links">
+          <a href="#m00">00 · Java Primer for AEM</a>
+          <a href="#m01">01 · Architecture Overview</a>
+          <a href="#m02">02 · JCR & the Content Repository</a>
+          <a href="#m03">03 · Sling Framework Fundamentals</a>
+          <a href="#m04">04 · OSGi: Bundles, Services & Components</a>
+          <a href="#m05">05 · OSGi Services & Configuration</a>
+          <a href="#m06">06 · Sling Models</a>
+          <a href="#m07">07 · Sling Models In Depth</a>
+          <a href="#m08">08 · Extending Core Component Models</a>
+          <a href="#m09">09 · HTL Templating</a>
+          <a href="#m10">10 · Servlets & Backend APIs</a>
+          <a href="#m11">11 · Dialogs & Components</a>
+          <a href="#m12">12 · Custom Components Workshop</a>
+          <a href="#m13">13 · Java Pitfalls in AEM</a>
+          <a href="#m14">14 · Unit Testing</a>
+          <a href="#m15">15 · Context-Aware Configuration</a>
+          <a href="#m16">16 · Workflows & Event Handling</a>
+          <a href="#m17">17 · Workflow Design & Custom Steps</a>
+          <a href="#m18">18 · Sling Jobs</a>
+          <a href="#m19">19 · Dispatcher, Caching & Deployment</a>
+          <a href="#m20">20 · Groovy Console</a>
+          <a href="#m21">21 · ACS Commons</a>
+    </div>
+  </div>
+
+  <div class="content-wrap">
+    <div class="page-intro">
+      <strong>For trainer use only.</strong> This document lists all Knowledge Check questions and their model answers across all 22 modules.
+      Questions on student module pages show no answers — this is the only place they appear.
+      Use the Print / PDF button to save a copy, or reference this page live during a session.
+    </div>
+
+        <section class="module-section" id="m00">
+          <h2><span class="mod-num">00</span>Java Primer for AEM</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> In an AEM project, what command builds and deploys your code, and from which folder do you run it?</p>
+            <p class="qa-a"><code class="inline">mvn clean install -PautoInstallSinglePackage</code>, run from <code class="inline">/aem-academy</code> (the project root).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> A build succeeds but curl returns a 404 for your new servlet. What should you check first, and what's almost always the real cause?</p>
+            <p class="qa-a">Check <code class="inline">/system/console/components</code> — it's almost always a registration property typo (like a wrong <code class="inline">sling.servlet.paths</code>), not a missing deploy.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> Why split GreetingService into an interface plus a separate GreetingServiceImpl instead of one class?</p>
+            <p class="qa-a">Encapsulation — consumers depend on the contract, not the implementation, so the implementation can be swapped without touching anything that uses it.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What annotation does StudentModel use to read a property like "name" straight off the resource, and what happens if a required field can't be filled?</p>
+            <p class="qa-a"><code class="inline">@ValueMapValue</code>. If a required field has nothing to inject, the whole model fails to instantiate and <code class="inline">adaptTo()</code> returns <code class="inline">null</code> instead of a half-populated object.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> ValidationServlet throws InvalidUserException, a checked exception. What HTTP status does it return when validation fails, and why use a checked exception here?</p>
+            <p class="qa-a">400. A checked exception forces callers to explicitly handle the failure case, modeling "this can and will happen for bad input" rather than treating it as an unexpected bug.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What two specific rules does validateUser() enforce in the exercise?</p>
+            <p class="qa-a">Username must not be blank, and "admin" (case-insensitive) is a reserved username.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> ChildPagesModel reads its children with a stream pipeline. What collection type does resource.getChildren() return, and why is StreamSupport.stream(...spliterator()...) needed?</p>
+            <p class="qa-a">It returns an <code class="inline">Iterable&lt;Resource&gt;</code>, not a <code class="inline">Collection</code>, so <code class="inline">StreamSupport.stream(resource.getChildren().spliterator(), false)</code> is needed to turn it into a Stream.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> What annotation makes a Sling Model exportable via the .model.json selector?</p>
+            <p class="qa-a"><code class="inline">@Exporter(name = "jackson", extensions = "json")</code>.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> HelloWorldServlet extends SlingSafeMethodsServlet. What does "safe" mean here, and which HTTP method does the example register for?</p>
+            <p class="qa-a">"Safe" methods don't change server state (GET, HEAD, OPTIONS); the example registers for GET via <code class="inline">sling.servlet.methods=GET</code>.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> If a junior's checkout isn't literally named "aem-academy," what should they do with every file path given in this curriculum?</p>
+            <p class="qa-a">Mentally substitute their own project's root folder name and package (<code class="inline">biz.netcentric.academy</code>) everywhere <code class="inline">/aem-academy</code> appears.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m01">
+          <h2><span class="mod-num">01</span>Architecture Overview</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> AEM is described as three open-source projects stacked together, plus Adobe's apps on top. Name the three.</p>
+            <p class="qa-a">Apache Jackrabbit Oak (the repository), Apache Sling (the resource framework), and Apache Felix/OSGi (the runtime).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> In a typical MVC framework you define routes. How does Sling's approach to "routing" differ?</p>
+            <p class="qa-a">There's no separate route table — the content tree itself is the routing table; Sling maps the URL path directly onto a repository path.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What does OSGi let you do with bundles that a typical monolithic Java app can't easily do?</p>
+            <p class="qa-a">Load, wire, and hot-swap modular JARs (bundles) independently, without restarting the whole server.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What's the difference between an author and a publish instance, in terms of what each is for?</p>
+            <p class="qa-a">Author is where content is created/edited (never exposed to end users); publish serves the live public-facing site with a replicated copy of approved content.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What triggers replication, and what does it actually move?</p>
+            <p class="qa-a">Activating a page triggers it; it pushes content (and sometimes code) from author to publish.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What two jobs does the dispatcher do?</p>
+            <p class="qa-a">Caches rendered pages as static files, and acts as a security gatekeeper blocking requests that don't match an allow-list of safe URL patterns.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> Why does a service registered or configured on author not automatically exist on publish?</p>
+            <p class="qa-a">Author and publish are separate JVMs with separate copies of the repository — nothing is shared automatically.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> What's the rule about /libs, and what should you do instead of editing it directly?</p>
+            <p class="qa-a">Never edit anything under <code class="inline">/libs</code> (it's overwritten on every upgrade); instead, overlay it by recreating the path under <code class="inline">/apps</code>.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> Which module covers exactly how that /apps overlay resolution works?</p>
+            <p class="qa-a">Module 4, Sling Framework Fundamentals.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> What's the most common category of "it works locally but not in production" bug this module warns about?</p>
+            <p class="qa-a">Dispatcher rules — issues that don't show up in a single local author-only setup.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m02">
+          <h2><span class="mod-num">02</span>JCR & the Content Repository</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> A page in AEM is actually two nodes stacked together. Name them and their primary types.</p>
+            <p class="qa-a">The <code class="inline">cq:Page</code> node (e.g. <code class="inline">/content/my-site/en/about</code>) and its <code class="inline">jcr:content</code> child node (<code class="inline">cq:PageContent</code>).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> Where does a page's title actually live — on the cq:Page node or somewhere else?</p>
+            <p class="qa-a">On the <code class="inline">jcr:content</code> child node (as <code class="inline">jcr:title</code>), not on the <code class="inline">cq:Page</code> node itself.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What does the jcr: namespace prefix indicate, versus cq: versus sling:?</p>
+            <p class="qa-a"><code class="inline">jcr:</code> = core JCR spec concepts; <code class="inline">cq:</code> = AEM-specific concepts (from the old Communiqué product); <code class="inline">sling:</code> = Sling-specific properties like <code class="inline">sling:resourceType</code>.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> Which top-level repository path should you NEVER edit directly, and what should you do instead?</p>
+            <p class="qa-a"><code class="inline">/libs</code> — never edit it directly (overwritten on upgrade); overlay it under <code class="inline">/apps</code> instead.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What's the simple mental-model question to ask when you're not sure whether something belongs under /content or /apps?</p>
+            <p class="qa-a">"Is this content an author typed in, or code a developer wrote?" Content → <code class="inline">/content</code>, code → <code class="inline">/apps</code>.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What does the mix:versionable mixin type enable on a node?</p>
+            <p class="qa-a">Participation in JCR versioning — it's what powers features like page version history.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> What's CRXDE Lite good for, and what is it explicitly NOT meant for?</p>
+            <p class="qa-a">Good for poking around and quick debugging; not where you do real development.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> What's the alternative to walking the tree by hand when you need to find nodes by criteria, like "all pages using template X"?</p>
+            <p class="qa-a">Query Builder / JCR-SQL2.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> Name four common JCR property types mentioned in this module.</p>
+            <p class="qa-a">String, boolean, date, and binary (long and reference types are also mentioned).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> Why does the page/jcr:content split "trip up almost every new developer at least once"?</p>
+            <p class="qa-a">Because querying the page node itself for title/properties returns nothing — that data lives under the <code class="inline">jcr:content</code> child node instead.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m03">
+          <h2><span class="mod-num">03</span>Sling Framework Fundamentals</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What four parts does Sling decompose every incoming URL into?</p>
+            <p class="qa-a">Path, selectors, extension, and suffix.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> In a URL like /content/my-site/en/about.teaser.html/jcr:content/par/image, identify the selector and the suffix.</p>
+            <p class="qa-a">Selector = <code class="inline">teaser</code>; suffix = <code class="inline">/jcr:content/par/image</code>.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What does Sling produce once the path portion is resolved against the repository?</p>
+            <p class="qa-a">A <code class="inline">Resource</code> object — a thin wrapper around the underlying JCR node (or whatever backend Sling is configured to read from).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What property tells Sling which component should render a resource?</p>
+            <p class="qa-a"><code class="inline">sling:resourceType</code>.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> When resolving a script, which path does Sling search first — /apps or /libs?</p>
+            <p class="qa-a"><code class="inline">/apps</code> first, then <code class="inline">/libs</code>.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> How does this search order make /apps overlays work, mechanically?</p>
+            <p class="qa-a">Because /apps is searched first, recreating the same resourceType path under /apps silently takes priority over the /libs version.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> What does sling:resourceSuperType let a component do?</p>
+            <p class="qa-a">Declare another component as its "super type" — if Sling can't find a script for the component's own resourceType, it walks up to the super type and tries again, similar to class inheritance.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> In AEM, what does "servlet" usually mean — registered by URL path or by resource type?</p>
+            <p class="qa-a">Usually registered by resource type, unlike a typical Java web framework's URL-path routing (though path-based registration is also possible).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> What's the classic symptom of editing the /libs copy of a script while an /apps overlay quietly wins?</p>
+            <p class="qa-a">"I changed the file but nothing happened" — the change has no visible effect because /apps is resolved first.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> Besides resourceType and selectors, what else strongly influences which script or servlet handles a request?</p>
+            <p class="qa-a">The extension (usually <code class="inline">html</code>, but could be <code class="inline">json</code>, <code class="inline">xml</code>, or a custom one).</p>
+          </div>
+        </section>
+        <section class="module-section" id="m04">
+          <h2><span class="mod-num">04</span>OSGi: Bundles, Services & Components</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What is a bundle, technically?</p>
+            <p class="qa-a">A JAR file with extra manifest metadata describing what Java packages it exports and imports.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> List the bundle lifecycle states in order.</p>
+            <p class="qa-a">INSTALLED → RESOLVED → STARTING → ACTIVE (and STOPPING → RESOLVED on shutdown).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> A bundle is stuck in RESOLVED instead of ACTIVE. What's the most common cause?</p>
+            <p class="qa-a">A missing dependency — some package it imports isn't being exported by anything currently active.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What's the relationship between a "component" and a "service" in OSGi terms?</p>
+            <p class="qa-a">A component is a plain annotated Java class; it typically implements a service interface, which is what gets published to the registry.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What does declaring @Component(service = GreetingService.class) actually do?</p>
+            <p class="qa-a">Publishes that implementation to the OSGi service registry under the GreetingService interface, so it can be found/injected by interface.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What annotation pulls a service into a consuming component, and what happens if no implementation is active when the consumer tries to start?</p>
+            <p class="qa-a"><code class="inline">@Reference</code>; OSGi holds the component back from activating (unless the reference is explicitly optional).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> Which three lifecycle annotations can a component use to hook into activation, config changes, and teardown?</p>
+            <p class="qa-a"><code class="inline">@Activate</code>, <code class="inline">@Modified</code>, and <code class="inline">@Deactivate</code>.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> Where can OSGi configuration be edited per-environment after deployment?</p>
+            <p class="qa-a">The OSGi Configuration Manager — Felix Web Console → Configuration, or <code class="inline">/system/console/configMgr</code>.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> Why does editing a configuration by hand in the Felix console cause problems later?</p>
+            <p class="qa-a">It doesn't affect other environments (author/publish are separate JVMs), and hand-edited config tends to get lost on the next deployment unless captured as a .cfg.json file.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> What do /system/console/bundles and /system/console/components each show you?</p>
+            <p class="qa-a"><code class="inline">/system/console/bundles</code> shows every bundle's state and why it's not Active; <code class="inline">/system/console/components</code> shows the same idea one level down, for individual components.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m05">
+          <h2><span class="mod-num">05</span>OSGi Services & Configuration</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What's the difference between MANDATORY and OPTIONAL reference cardinality?</p>
+            <p class="qa-a">MANDATORY (the default) means the component won't activate without exactly one match; OPTIONAL means it activates either way, with zero or one match.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> Why do OPTIONAL and MULTIPLE references need to be declared volatile?</p>
+            <p class="qa-a">Because the set of available services can change at runtime as bundles start/stop, and volatile ensures the field reflects that safely across threads.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What does immediate = true change about when a component activates?</p>
+            <p class="qa-a">It activates eagerly when the bundle starts, instead of lazily the first time something needs it — necessary for listeners/schedulers that nothing ever calls via @Reference.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> Why does every service in this curriculum use a separate interface and implementation, rather than @Component directly on a concrete class?</p>
+            <p class="qa-a">So consumers depend only on the interface and never the implementation — letting the implementation be swapped (different provider, or a mock for testing) without touching any consuming code.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What naming convention does a .cfg.json configuration file follow?</p>
+            <p class="qa-a">It's named after the component's fully-qualified class name — its OSGi PID.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> Where does OSGi configuration live in the project, and how does it get deployed?</p>
+            <p class="qa-a">Under <code class="inline">ui.config</code> (academy.ui.config), as part of the same <code class="inline">mvn clean install -PautoInstallSinglePackage</code> build/deploy as everything else.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> How does AEM decide which run-mode-scoped config folder applies to a given instance at startup?</p>
+            <p class="qa-a">It resolves the most specific folder matching the instance's actual active run modes — e.g. config.author overrides config on an author instance.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> Why is hand-editing a config in /system/console/configMgr risky long-term?</p>
+            <p class="qa-a">It gets silently overwritten by whatever's checked into ui.config on the next deployment.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> What did module 5 build on from an earlier module for OSGi configuration?</p>
+            <p class="qa-a">@Designate and @ObjectClassDefinition, introduced for a configurable service in module 5 (OSGi: Bundles, Services & Components).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> A config value needs to differ between author and publish. What's the correct way to handle that?</p>
+            <p class="qa-a">Use separate run-mode-scoped folders (config.author / config.publish) rather than hand-editing per environment.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m06">
+          <h2><span class="mod-num">06</span>Sling Models</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> Why do Sling Models exist — what problem do they solve compared to reading a ValueMap directly in a render script?</p>
+            <p class="qa-a">They move repository access out of the render script into a plain, testable Java class — the template asks for a typed value instead of reaching into the repository itself.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What does @ChildResource do, that's different from @ValueMapValue?</p>
+            <p class="qa-a">It resolves a named child node as a Resource (or adapts it straight into another model), rather than reading a property off the current resource.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What does @OSGiService let a Sling Model do?</p>
+            <p class="qa-a">Inject a service from the OSGi registry into the model, the same way @Reference does for OSGi components — models can depend on services too.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> By default, is an injected field required or optional? What happens if a required field can't be filled?</p>
+            <p class="qa-a">Required by default; if it can't be filled, the whole model fails to instantiate and adaptTo() returns null, not a half-populated object.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What does setting defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL at the class level change?</p>
+            <p class="qa-a">It flips the default so fields are optional unless marked otherwise — appropriate for content fields that are genuinely optional.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> adaptTo() returns null with no exception. What's the single most common cause, and how do you find out which field is at fault?</p>
+            <p class="qa-a">A required field had nothing to inject; enable debug logging on org.apache.sling.models.impl in the Felix console to see exactly which field failed.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> What annotation makes a model's getters serializable as JSON via the .model.json selector?</p>
+            <p class="qa-a">@Exporter(name = "jackson", extensions = "json").</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> What does the adaptables value on @Model control?</p>
+            <p class="qa-a">What kind of object the model can be created from — e.g. Resource.class vs SlingHttpServletRequest.class.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> Does Resource.class or SlingHttpServletRequest.class work in more contexts as an adaptable, and why?</p>
+            <p class="qa-a">Resource.class — it's available wherever you have a resource, including adapting from inside another model, while a request adaptable only works during an actual HTTP request.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> TeaserModel builds a shortDescription field by truncating description to 80 characters. Which lifecycle annotation runs that logic after injection completes?</p>
+            <p class="qa-a">@PostConstruct.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m07">
+          <h2><span class="mod-num">07</span>Sling Models In Depth</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What mechanism does resource.adaptTo(MyModel.class) actually use under the hood?</p>
+            <p class="qa-a">The generic Sling Adaptable mechanism via an OSGi-registered AdapterFactory for Sling Models — the same general mechanism used for things like adapting a Resource to a ValueMap.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What's the practical difference between putting @Model directly on a concrete class versus splitting it into an interface plus an implementation?</p>
+            <p class="qa-a">Interface-based models let callers adapt to the interface and never see the implementation class — enabling composition patterns and easier mocking in tests.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> How does a Sling Model actually get registered with OSGi — what replaces the @Component registration an OSGi service needs?</p>
+            <p class="qa-a">There's no manual registration step; the Sling Models Maven plugin scans compiled classes for @Model annotations during the build and generates the OSGi metadata automatically.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What's the main practical benefit of constructor injection over field injection for a Sling Model?</p>
+            <p class="qa-a">Every field can become final — the object is fully valid the instant it exists, with no half-constructed window, and it's easier to unit test by calling the constructor directly with test values.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What does @Inject combined with @ValueMapValue on a constructor parameter achieve?</p>
+            <p class="qa-a">It injects that value through the constructor instead of a field — constructor injection.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> Give the decision rule for choosing Resource vs. SlingHttpServletRequest as a model's adaptable.</p>
+            <p class="qa-a">Adapt from Resource whenever possible — it works in more places, including from inside another model; adapt from SlingHttpServletRequest only when you specifically need request-only data like selectors or request parameters.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> What's the consequence of declaring adaptables = SlingHttpServletRequest.class out of habit, then trying to adapt that model from inside another model?</p>
+            <p class="qa-a">It returns null with no obvious explanation, since a request-only adaptable can't be satisfied from a bare Resource.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> Where should real business logic live, according to this module's best-practices guidance?</p>
+            <p class="qa-a">In an OSGi service that the model injects, keeping the model itself thin rather than growing it to hundreds of lines.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> What specific mistake does the upcoming WeatherModel deliberately demonstrate, as referenced in this module?</p>
+            <p class="qa-a">Doing I/O (an outbound HTTP call) inside @PostConstruct without thinking it through.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> When should you default to interface-based models, according to this module?</p>
+            <p class="qa-a">For anything another component, model, or test might need to depend on.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m08">
+          <h2><span class="mod-num">08</span>Extending Core Component Models</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> In plain English, what does @Via(type = ResourceSuperType.class) tell Sling Models to do?</p>
+            <p class="qa-a">Before injecting into this model, first adapt the same resource to whatever model the resourceSuperType registers, and hand you that already-built object.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What's the model-layer equivalent of this composition pattern at the render-script layer?</p>
+            <p class="qa-a">resourceType/resourceSuperType inheritance for render scripts — the same overlay/inheritance idea, applied at the model layer instead.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> Why does reusing a Core Component's model usually beat reimplementing a component like Image or Teaser from scratch?</p>
+            <p class="qa-a">The Core Components ship years of refined accessibility markup, responsive image handling, edit-mode placeholders, and dialog UX that reimplementing from a blank HTL file throws away.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What's the difference between "composing by wrapping" and "composing by interface inheritance"?</p>
+            <p class="qa-a">Wrapping holds the core model in a private field and exposes your own getters (more control, can diverge from the parent); interface inheritance has your interface extend the core component's interface directly (more honest when there's no divergence).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> Which approach should you default to, and when should you reach for the other?</p>
+            <p class="qa-a">Default to wrapping; reach for interface inheritance only when you're confident you'll never want to diverge from the parent's behavior.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What two test dependencies does core/pom.xml need before any unit test will run at all?</p>
+            <p class="qa-a">io.wcm.testing.aem-mock.junit5 and mockito-core (both scope test).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> Where do test classes live relative to main source?</p>
+            <p class="qa-a">In a parallel src/test/java folder (instead of src/main/java), mirroring the same package structure.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> In the AcademyTeaserModel example, what does @Self combined with @Via(type = ResourceSuperType.class) inject?</p>
+            <p class="qa-a">A fully populated instance of the Core Components' own Teaser model for the same resource.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> What's the benefit of adding a new field like badgeLabel to a composed model, versus reimplementing title/link logic yourself?</p>
+            <p class="qa-a">You only need to add what's actually new — the inherited fields' fallback logic, link resolution, etc. are already handled by the wrapped core model.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> Which later module covers unit testing properly, building on the test setup introduced here?</p>
+            <p class="qa-a">Module 14, Unit Testing.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m09">
+          <h2><span class="mod-num">09</span>HTL Templating</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What's the core security problem HTL was designed to eliminate that JSP had?</p>
+            <p class="qa-a">JSP made output escaping the developer's responsibility on every line; a single missed escape was an XSS bug waiting to happen. HTL removes scriptlets and arbitrary method calls so escaping is automatic.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What does data-sly-use do?</p>
+            <p class="qa-a">Instantiates a Sling Model (or legacy Use-API class) and binds it to a name you can reference in ${ } expressions.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> Can a ${ } expression call a method with arguments? What does that constraint mean for where logic belongs?</p>
+            <p class="qa-a">No — expressions are deliberately limited to reading properties/indexing/operators. Any logic needing parameters belongs in the model, not the template.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What's the difference between data-sly-test and just hiding an element with CSS?</p>
+            <p class="qa-a">data-sly-test removes the element entirely from the output when the expression is falsy, rather than just visually hiding it.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What loop helpers does data-sly-list give you for free?</p>
+            <p class="qa-a">item.index, item.count, item.first, item.last (for the named iteration variable).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> How does data-sly-repeat differ from data-sly-list?</p>
+            <p class="qa-a">data-sly-repeat keeps the wrapping element itself in the output once per item, while data-sly-list only repeats the children.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> How does HTL decide whether to apply HTML-escaping, URI-escaping, or JS-string-escaping to an expression's output?</p>
+            <p class="qa-a">It infers it automatically from where the expression sits in the markup (context-aware escaping) — you don't choose it yourself.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> What does context='unsafe' do, and why is it dangerous?</p>
+            <p class="qa-a">It disables escaping entirely; it removes the exact XSS protection HTL was built to provide, and should never be used just to "make a value work."</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> What's the functional difference between data-sly-resource and data-sly-include?</p>
+            <p class="qa-a">data-sly-resource renders a child resource through the full Sling resolution pipeline (selectors, resourceType inheritance); data-sly-include just pulls in another script's raw markup within the same component, with no resource-resolution pass.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> Does an HTL comment (<!--/* ... */-->) reach the visitor's browser?</p>
+            <p class="qa-a">No — it's stripped server-side and never leaves AEM, unlike a normal HTML comment.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m10">
+          <h2><span class="mod-num">10</span>Servlets & Backend APIs</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What's the AEM-native alternative to registering a servlet by URL path?</p>
+            <p class="qa-a">Registering it against a resource type (sling.servlet.resourceTypes), the same mechanism used for render script resolution.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What properties does the resourceType-based example combine to scope exactly which requests the servlet answers?</p>
+            <p class="qa-a">sling.servlet.resourceTypes, sling.servlet.selectors, sling.servlet.extensions, and sling.servlet.methods.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> When is it better to use a Sling Model's @Exporter instead of writing a servlet at all?</p>
+            <p class="qa-a">When all you need is a resource's properties as JSON — @Exporter is simpler to maintain for that case.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> Name three reasons you'd write an actual servlet instead of relying on @Exporter.</p>
+            <p class="qa-a">A non-GET verb, a request body, a response shape that isn't "this resource as JSON," or a side effect like writing content or calling another system.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> Why prefer getRequestParameter over getParameter for reading input?</p>
+            <p class="qa-a">It's encoding-aware and avoids platform-default charset bugs getParameter is prone to on some setups.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What library does the SearchServlet example use to build a JSON response, and does it need an extra Maven dependency?</p>
+            <p class="qa-a">javax.json; no extra dependency needed since it ships with AEM.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> Why is building JSON via string concatenation risky once a response has nested or repeated data?</p>
+            <p class="qa-a">A stray unescaped character breaks the response into invalid JSON — string concatenation doesn't handle escaping for you.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> What has to happen before a client's POST/PUT/DELETE request will be accepted by Sling's CSRF filter?</p>
+            <p class="qa-a">The client must first fetch a token from /libs/granite/csrf/token.json and send it back as a CSRF-Token header.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> A POST returns 403. What should you check before auditing ACLs/permissions?</p>
+            <p class="qa-a">The response body for a CSRF-related message — a 403 on a non-GET request is, more often than not, a missing CSRF token rather than a permissions problem.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> When should you reach for a resourceType-based servlet over a path-based one?</p>
+            <p class="qa-a">When the endpoint is naturally "an action on this kind of resource" rather than a standalone utility.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m11">
+          <h2><span class="mod-num">11</span>Dialogs & Components</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What four things typically live inside a component's folder?</p>
+            <p class="qa-a">.content.xml (component definition), the HTL render script, _cq_dialog/.content.xml (the author dialog), and optionally _cq_template/.content.xml (default content).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> When you create a file under ui.apps/src/main/content/jcr_root/apps/academy/components/teaser/, what path does it end up at in the deployed repository?</p>
+            <p class="qa-a">/apps/academy/components/teaser — the jcr_root segment is dropped once deployed.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What two things does componentGroup on a component's .content.xml control?</p>
+            <p class="qa-a">How it's organized in the author's "Insert component" browser, and which group a template policy has to allow before authors can use it.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What resourceType powers a dialog itself, and what does that imply about how a dialog is resolved?</p>
+            <p class="qa-a">cq/gui/components/authoring/dialog — dialogs use the exact same resourceType resolution mechanism as render scripts.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> In the dialog example, what does a textfield's name="./jcr:title" attribute actually write to?</p>
+            <p class="qa-a">The jcr:title property directly on the component's own node — the dialog is just an editor for the exact nodes the Sling Model reads.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What AEM field type would you use for a repeatable group of fields, like a list of link/label pairs?</p>
+            <p class="qa-a">multifield.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> What replaced the older design dialog (cq:design_dialog) on modern editable-template projects, and where does it live?</p>
+            <p class="qa-a">Content policies, under /conf/.../policies — author-locked, component-level settings scoped to a specific template-and-component pairing.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> A component is deployed and exists under /apps, but an author can't find it anywhere in the page editor. What's almost always the cause?</p>
+            <p class="qa-a">Its component group hasn't been allowed in the relevant template's policy yet.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> Walk through where in the Template Editor you go to allow a new component group.</p>
+            <p class="qa-a">Tools → General → Templates → open the template → click into the layout container/responsive grid → click Policy → check the component group under Components.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> On an older, non-editable-template project, what's the equivalent control to a template policy?</p>
+            <p class="qa-a">The page component's Design dialog, opened from the page Sidekick's gear icon.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m12">
+          <h2><span class="mod-num">12</span>Custom Components Workshop</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What single declaration makes ImageMetadataModel reuse the core Image component's dialog, instead of needing its own _cq_dialog?</p>
+            <p class="qa-a">Setting sling:resourceSuperType="core/wcm/components/image/v3/image" on the component definition — with no _cq_dialog folder of its own, resolution falls back to the parent's dialog.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> Which Asset API method does ImageMetadataModel call to read DAM metadata like image width?</p>
+            <p class="qa-a">asset.getMetadataValue("tiff:ImageWidth") (and similarly for tiff:ImageLength, dc:format, tiff:Model).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> Why might a plain screenshot or graphic asset show no metadata at all when using this component?</p>
+            <p class="qa-a">It likely lacks EXIF/TIFF metadata, unlike most camera photos.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What two external API calls does WeatherModel make, and in what order?</p>
+            <p class="qa-a">First Open-Meteo's geocoding API (city/country → latitude/longitude), then Open-Meteo's forecast API for current conditions at those coordinates.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What Java HTTP client does WeatherModel use to make these calls?</p>
+            <p class="qa-a">java.net.http.HttpClient, the built-in JDK 11+ client.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What does the geocode() method do when a country is supplied alongside an ambiguous city name like "Cambridge"?</p>
+            <p class="qa-a">It loops through the geocoding results looking for one whose country matches, rather than just blindly using the first result.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> Why is making a synchronous HTTP call inside WeatherModel's @PostConstruct flagged as a problem?</p>
+            <p class="qa-a">Every page render then waits on a third-party API — slow, fragile if that API has an outage, and an easy way to get rate-limited.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> Which later module shows the production-correct fix for that synchronous-HTTP-call problem?</p>
+            <p class="qa-a">Module 18, Sling Jobs — a scheduled background job fetches and caches the weather periodically instead.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> Even though ImageMetadataModel inherits its dialog from the core Image component, does it automatically inherit being allowed in a template's policy?</p>
+            <p class="qa-a">No — it's a distinct resourceType (academy/components/imagemetadata) with its own entry in the policy's component list and has to be allowed explicitly.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> What field does an author fill in on the Weather component's dialog to disambiguate a city that exists in multiple countries?</p>
+            <p class="qa-a">The optional country field.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m13">
+          <h2><span class="mod-num">13</span>Java Pitfalls in AEM</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What's the classic symptom when a class overrides equals() but not hashCode(), and is used as a HashSet element?</p>
+            <p class="qa-a">contains() returns false for an object that should be "equal" — the two instances land in different hash buckets, so equals() never even gets called to compare them.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What's the rule about hashCode() and a HashSet/HashMap key whose fields can change after insertion?</p>
+            <p class="qa-a">Never use a mutable field in hashCode() for an object you intend to store as a key — if it changes after insertion, the object becomes unreachable via contains()/remove().</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What's the difference in purpose between Comparable and a Comparator?</p>
+            <p class="qa-a">Comparable defines a class's single natural ordering (used by sort()/TreeSet/TreeMap); a Comparator defines an alternative ordering without changing the class itself.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What happens in a TreeSet if compareTo() returns 0 for two objects that equals() says are NOT equal?</p>
+            <p class="qa-a">The TreeSet silently drops one of them — it uses compareTo(), not equals(), to decide what counts as a duplicate.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What's the rule of thumb for choosing an interface versus an abstract class?</p>
+            <p class="qa-a">Interface = "any of these unrelated classes can do this" (a contract, no shared state); abstract class = "these classes are fundamentally the same kind of thing," sharing state/behavior. A class can implement many interfaces but extend only one class.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> Why does this module recommend defaulting to interfaces for Sling Models and OSGi services specifically?</p>
+            <p class="qa-a">Composition via @Via only works against an interface boundary, and interfaces are what makes services swappable and mockable.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> Why does calling a stream's terminal operation twice throw an exception?</p>
+            <p class="qa-a">A stream can only be consumed once; reusing it throws IllegalStateException: stream has already been operated upon or closed.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> Where does a null inside a stream pipeline typically throw a NullPointerException, and why can that be confusing?</p>
+            <p class="qa-a">At the point it's dereferenced inside the pipeline (e.g. inside map()), not at the point it entered the stream — which can make the stack trace point somewhere unhelpful.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> What's the recommended fix for debugging a long inline lambda/stream chain?</p>
+            <p class="qa-a">Break it into named, separately-callable methods before debugging — stepping through an inline lambda chain is much harder to follow than stepping through a named method.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> Before reaching for a full IDE remote-debug session, what should you try first, and where?</p>
+            <p class="qa-a">Set a package's log level to DEBUG live via the Felix console's Sling Log Support (/system/console/slinglog) — no restart or redeploy needed.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m14">
+          <h2><span class="mod-num">14</span>Unit Testing</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> Why does the module recommend extracting validation logic out of ValidationServlet into a standalone UsernameValidator class first?</p>
+            <p class="qa-a">Extracting logic out of a servlet into a plain class is, on its own, the single biggest thing you can do to make code testable.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What does @ParameterizedTest with @CsvSource let you do that a single @Test can't, conveniently?</p>
+            <p class="qa-a">Run the same test body once per row of input/expected-output data, covering multiple cases without writing near-identical test methods.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What's the key difference between a plain Mockito test and one using AemContext?</p>
+            <p class="qa-a">Plain Mockito mocks a dependency interface and is fast with no setup; AemContext is needed once code touches Resource, ResourceResolver, or relies on real OSGi service injection.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What does context.addModelsForClasses(...) do, and what happens if you forget it?</p>
+            <p class="qa-a">It registers a Sling Model class with the mock context so adaptTo() can find it; forgetting it means adaptTo() silently returns null.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> In the ChildPagesModelTest example, what's actually being tested, and what AEM Mocks feature builds the test content?</p>
+            <p class="qa-a">ChildPagesModel's getChildPageTitles() sorting behavior; context.create().resource(...) builds the in-memory content tree.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What does context.registerInjectActivateService(servlet) do for a servlet under test?</p>
+            <p class="qa-a">Performs real field injection on the servlet's @Reference fields using services registered in the mock OSGi registry, exactly as the real OSGi runtime would.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> Why does the GreetingServletTest example matter for the earlier "always use an interface" advice?</p>
+            <p class="qa-a">Without the GreetingService interface, there'd be nothing to register a fake implementation against — none of this would be mockable at all.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> What's the stated best practice about what NOT to test?</p>
+            <p class="qa-a">Don't test the framework itself — there's no value in a test that only confirms ValueMap.get() works; test your own logic.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> When should you prefer a plain Mockito test over setting up an AemContext?</p>
+            <p class="qa-a">Whenever your code doesn't actually touch Resource or OSGi — AemContext should only be used when genuinely needed.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> What's the practical reason this module gives for preferring fast unit tests over redeploying to localhost:4502 for everyday feedback?</p>
+            <p class="qa-a">A unit test runs in milliseconds with no AEM instance required, while build/deploy/curl is slow and tests far more than just the one piece of logic you changed.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m15">
+          <h2><span class="mod-num">15</span>Context-Aware Configuration</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What problem does Context-Aware Configuration solve that run-mode configuration can't?</p>
+            <p class="qa-a">A value that differs per-site on the same instance, resolved by content hierarchy — run mode only describes the environment (author/publish), not which content is being requested.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What property links a page to its configuration tree under /conf?</p>
+            <p class="qa-a">sling:configRef.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What annotation defines a configuration type for CA Config, and does it need a separate @Component/@Designate registration?</p>
+            <p class="qa-a">@Configuration (with @Property on each field); no, CA Config's framework discovers @Configuration-annotated interfaces automatically.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> How do you read a CA Config value from inside a Sling Model?</p>
+            <p class="qa-a">Adapt a resource or request (via @Self) to ConfigurationBuilder, then call .as(YourConfig.class).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> If no sling:configRef is set on a page or its ancestors, what happens when you call ConfigurationBuilder.as()?</p>
+            <p class="qa-a">It silently falls back to the annotation's default values — which can look identical to "it's working" until you actually need a non-default value.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What does CA Config resolution actually do when walking from a resource up to find a value?</p>
+            <p class="qa-a">It walks up the content hierarchy through parent resources, following sling:configRef to locate the relevant /conf tree, falling back to a global default if nothing site-specific exists.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> What problem does the WCM IO Context-Aware Configuration Editor solve that's missing out of the box?</p>
+            <p class="qa-a">Out of the box, CA Config values can only be edited as raw repository content under /conf; the editor adds a proper UI so non-developers can edit them without CRXDE Lite.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> Where do the editor's form fields and labels come from?</p>
+            <p class="qa-a">They're generated directly from your @Configuration/@Property annotation interface — no separate UI code needed.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> What AemContext feature is needed to unit test code that depends on a CA Config value?</p>
+            <p class="qa-a">The CACONFIG context plugin (new AemContext(ContextPlugins.CACONFIG)), letting you write config values directly into the mock /conf tree.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> What's the suggested fix for WeatherModel's blank-country fallback, tying CA Config back to the components workshop?</p>
+            <p class="qa-a">Use ConfigurationBuilder to fall back to config.defaultCountry() whenever the dialog's country field is left empty.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m16">
+          <h2><span class="mod-num">16</span>Workflows & Event Handling</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What's the decision rule for choosing between a workflow, an event listener, and a scheduled job?</p>
+            <p class="qa-a">Does a person need to see and act on it → workflow. Should it happen automatically on a change → listener. Does it need to run on a clock → scheduler.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What interface does a custom workflow step implement, and what makes it show up in the workflow model editor's UI?</p>
+            <p class="qa-a">WorkflowProcess; the process.label OSGi component property is what authors see when building a workflow model.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What's the modern replacement for the older JCR ObservationListener API, and what's different about it?</p>
+            <p class="qa-a">ResourceChangeListener — a simpler interface scoped to specific paths and change types.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What two OSGi component properties scope a listener to additions and changes under a specific content path?</p>
+            <p class="qa-a">ResourceChangeListener.PATHS (the path) and one or more ResourceChangeListener.CHANGES entries (e.g. "ADDED", "CHANGED").</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What's the common pitfall called out about code running inside onChange()?</p>
+            <p class="qa-a">It runs synchronously on the thread that triggered the change — a slow listener can visibly delay authoring or replication.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What's the recommended fix for heavier work that a listener triggers?</p>
+            <p class="qa-a">Hand it off to a Sling Job (JobManager.addJob(...)) instead of doing the real work inline.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> What does the Sling Scheduler's cron-like expression "0 0 2 * * ?" mean in the example?</p>
+            <p class="qa-a">Run at 2am daily.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> What does canRunConcurrently(false) protect against on a scheduled task?</p>
+            <p class="qa-a">A second run starting before the previous one has finished.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> Give a real example of each of the three automation tools, as used in this module.</p>
+            <p class="qa-a">Workflow → "Request for Activation"; listener → auto-tagging a page the moment it's created; scheduled job → a nightly report.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> What's the WorkItem's payload typically used for, in a custom workflow step?</p>
+            <p class="qa-a">It carries the path of the content the workflow is acting on (workItem.getWorkflowData().getPayload()).</p>
+          </div>
+        </section>
+        <section class="module-section" id="m17">
+          <h2><span class="mod-num">17</span>Workflow Design & Custom Steps</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> Use the "recipe vs. dish" analogy from this module: what's a workflow model, and what's a workflow instance?</p>
+            <p class="qa-a">The model is the recipe (the reusable design/sequence of steps); the instance is one specific run of that model against one payload, with its own independent state.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> A workflow seems "stuck" for one specific page but works fine for everything else. Where should you look first?</p>
+            <p class="qa-a">That page's specific workflow instance state, not the model design — the model is shared and almost certainly fine.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> Name the three standard ways a workflow instance gets created.</p>
+            <p class="qa-a">Manually (an author selects "Start Workflow"), automatically via a launcher, or programmatically via the Workflow Java API.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What's a launcher, in workflow terms, and what's its closest equivalent from an earlier module?</p>
+            <p class="qa-a">A visually-configured trigger that starts a model whenever content matching a path/event type changes — the workflow equivalent of ResourceChangeListener, but configured rather than coded.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What are "stages" in the Workflow Model Editor for?</p>
+            <p class="qa-a">Breaking a complex process into readable phases (like "Draft Review," "Legal Approval," "Publish") instead of one long flat chain of steps.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What's the difference between a Participant Step and a Dynamic Participant Step?</p>
+            <p class="qa-a">A Participant Step assigns a task to a fixed person/group; a Dynamic Participant Step resolves the assignee by script.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> Which step type maps to the WorkflowProcess Java code you write?</p>
+            <p class="qa-a">A Process Step.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> In the AcademyApprovalStep example, how does a step read metadata configured on it inside the visual editor, and how does it hand data to a later step?</p>
+            <p class="qa-a">args.get(...) (a MetaDataMap) reads step-level config; writing into workItem.getWorkflow().getWorkflowData().getMetaDataMap() hands data forward.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> Why should a custom workflow step be idempotent?</p>
+            <p class="qa-a">AEM can retry a failed step, so running execute() twice for the same work item should never cause duplicate side effects (like sending two emails).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> What's the best-practice guidance on where a step's actual logic should live?</p>
+            <p class="qa-a">In a separate, unit-testable service rather than written inline in execute() — the same "thin model, logic in a service" advice from earlier modules.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m18">
+          <h2><span class="mod-num">18</span>Sling Jobs</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What separates a Sling Job from the plain Sling Scheduler, in terms of durability?</p>
+            <p class="qa-a">A Sling Job is persistent — if the instance restarts mid-job, the job isn't lost and is retried per the queue's configuration, unlike the plain scheduler.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What does a job's topic identify?</p>
+            <p class="qa-a">Which registered consumer/executor handles that unit of work.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> What's required before getServiceResourceResolver(...) will work inside a job executor, and what's the symptom of forgetting it?</p>
+            <p class="qa-a">A service user mapping configured for the named subservice (e.g. "academy-weather-writer"); forgetting it causes a login exception that looks unrelated to the actual business logic.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What's the difference between triggering an immediate job and registering a scheduled job?</p>
+            <p class="qa-a">An immediate job (jobManager.addJob(...)) runs right away in response to something happening; a scheduled job (jobManager.createJob(...).schedule()...add()) is registered once, typically in @Activate, and runs repeatedly on its own.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What does the cron expression "0 */15 * * * ?" mean in the recurring job example?</p>
+            <p class="qa-a">Every 15 minutes.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What's the practical payoff of moving WeatherModel's weather fetch into a scheduled job?</p>
+            <p class="qa-a">WeatherModel can read from a cached value instead of making a live HTTP call on every page render — pages load instantly regardless of Open-Meteo's responsiveness.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> What does queue.type: UNORDERED mean for how jobs on that queue are processed, versus ORDERED?</p>
+            <p class="qa-a">UNORDERED processes jobs in parallel with no guaranteed order; ORDERED processes jobs on the same topic strictly one at a time.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> Which queue.type would you choose if later jobs depend on earlier ones having finished?</p>
+            <p class="qa-a">ORDERED.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> What do queue.retries and queue.retrydelay control?</p>
+            <p class="qa-a">What happens when process() returns a failed result — how many times and how long to wait before retrying.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> Where does queue configuration live, and what naming pattern does its factory config file follow?</p>
+            <p class="qa-a">A .cfg.json under ui.config, named after org.apache.sling.event.jobs.QueueConfiguration with a ~name suffix for the factory config instance.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m19">
+          <h2><span class="mod-num">19</span>Dispatcher, Caching & Deployment</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What four sections make up a typical dispatcher farm configuration?</p>
+            <p class="qa-a">/cache/rules, /cache/invalidate, /filter, and /statfileslevel (plus /clientheaders) — broadly: cache, rules, filter, invalidate.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What's the job of /cache/rules versus /cache/invalidate?</p>
+            <p class="qa-a">/cache/rules decides what's allowed to be cached at all; /cache/invalidate decides what gets thrown out when content changes.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> In the example rule set, why is anything with a query string explicitly denied from caching?</p>
+            <p class="qa-a">Query strings usually mean personalized or parameterized output that shouldn't be cached for everyone.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What does statfileslevel control, and when is it the first thing worth checking?</p>
+            <p class="qa-a">How deep the dispatcher checks a folder's .stat file timestamp to decide whether cached content under that path still needs revalidating — check it first when invalidation seems to be "not reaching" a nested path.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> Walk through what happens, step by step, when an author activates a page.</p>
+            <p class="qa-a">A flush agent on publish sends an invalidation request to the dispatcher, which deletes the matching cached files so the next visitor regenerates fresh output.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> Why does /cache/invalidate commonly remove *.html but leave heavier assets like images untouched?</p>
+            <p class="qa-a">To avoid an expensive mass re-fetch over something that didn't actually change — images are far more expensive to regenerate than HTML.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> Is /filter a caching mechanism or a security mechanism?</p>
+            <p class="qa-a">Security — it's a deny-by-default allow-list deciding what's even allowed to reach AEM, unrelated to caching decisions.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> What's the standard pattern for writing /filter rules?</p>
+            <p class="qa-a">Deny everything first, then explicitly allow only the specific extensions, selectors, and paths your application actually serves.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> Which earlier module first introduced the dispatcher conceptually, before this module's actual configuration?</p>
+            <p class="qa-a">Module 1, Architecture Overview.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> Why would a request return correctly when tested directly against publish, but get rejected when going through the dispatcher?</p>
+            <p class="qa-a">The dispatcher's /filter allow-list rejected it before it ever reached AEM — a security concern separate from whether AEM itself would have served it.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m20">
+          <h2><span class="mod-num">20</span>Groovy Console</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> What problem is the Groovy Console specifically meant to solve, compared to writing a full OSGi bundle?</p>
+            <p class="qa-a">A one-off content fix or migration (relabeling a property across many pages, backfilling a field) where building/deploying a full bundle for a script you'll run once is overkill.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What does Groovy compile to, and what does that mean for using existing Java APIs from a Groovy script?</p>
+            <p class="qa-a">The same JVM bytecode as Java; it can call any Java API directly, so everything you know about ResourceResolver/Resource/JCR still applies.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> Name two syntax differences Groovy has from Java that matter for short scripts.</p>
+            <p class="qa-a">Semicolons are optional, and def is used for type inference instead of explicit type declarations (also: string interpolation with "${expression}").</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> Is the AEM Groovy Console part of the AEM product itself?</p>
+            <p class="qa-a">No — it's a community-maintained, open-source add-on, installed separately as a content package.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> How do you install the Groovy Console once you've downloaded the right release?</p>
+            <p class="qa-a">Through AEM's Package Manager (/crx/packmgr) → Upload Package → select the file → Install.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> Why should the Groovy Console never be installed on a production publish instance?</p>
+            <p class="qa-a">It grants whoever has access the ability to run arbitrary code with full repository permissions.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> What useful object does the console pre-bind for you, so you don't need to obtain it yourself?</p>
+            <p class="qa-a">A ResourceResolver.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> In the example backfill script, what does setting dryRun = true actually do?</p>
+            <p class="qa-a">It prints what would change ("Would update: ...") without calling resourceResolver.commit(), so nothing is actually modified.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> What API does the script use to actually write the new property once dryRun is false?</p>
+            <p class="qa-a">Adapting the resource to ModifiableValueMap and calling .put(...), followed by resourceResolver.commit().</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> What single habit does this module say separates a safe content migration from "an afternoon spent restoring from backup"?</p>
+            <p class="qa-a">Running the script once with dryRun = true and reading the output carefully before flipping it to false.</p>
+          </div>
+        </section>
+        <section class="module-section" id="m21">
+          <h2><span class="mod-num">21</span>ACS Commons</h2>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">1.</span> Is ACS Commons part of the official AEM product, and who maintains it?</p>
+            <p class="qa-a">No — it's a free, open-source collection maintained by Adobe Consulting Services and the wider AEM community.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">2.</span> What's the recommended check to do before building a custom solution to a problem that feels generic?</p>
+            <p class="qa-a">Check whether ACS Commons already has a maintained, tested answer — it very often does.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">3.</span> Name two deployment approaches for ACS Commons, and which is appropriate for a real project versus a quick trial.</p>
+            <p class="qa-a">Download and install the content package via Package Manager (quick local trial), or add it as a Maven dependency to the all module (real project, deploys with the standard build).</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">4.</span> What does the Ensure Oak Index framework let you do?</p>
+            <p class="qa-a">Define custom Oak query indexes as content, deployed and verified the same way as any other package.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">5.</span> What does Dispatcher Flush Rules give you control over, and which earlier module's concepts does it build on?</p>
+            <p class="qa-a">Fine-grained control over what gets invalidated on replication; it builds on the dispatcher concepts from the Dispatcher, Caching & Deployment module.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">6.</span> What does the Bulk Workflow Manager do?</p>
+            <p class="qa-a">Runs a workflow model against thousands of resources matching a query, with throttling and progress tracking built in.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">7.</span> What problem do On-Deploy Scripts solve, and what's the safer alternative they offer compared to a Groovy Console script?</p>
+            <p class="qa-a">Running one-time migration code automatically as part of a deployment — a safer, more auditable alternative to an ad-hoc Groovy Console script for anything that needs to happen exactly once per environment.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">8.</span> What does the Redirect Manager let content authors do without needing a developer?</p>
+            <p class="qa-a">Manage URL redirects through a UI, instead of hand-editing dispatcher rules for every change.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">9.</span> Why is the Bulk Workflow Manager described as solving something "tedious and risky to script by hand"?</p>
+            <p class="qa-a">Running a workflow against thousands of resources at scale, with proper throttling and progress tracking, is hard to get right with a hand-rolled loop.</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q"><span class="qa-num">10.</span> According to this module, even if you don't install ACS Commons directly, what's still valuable about it being open source?</p>
+            <p class="qa-a">It's free to inspect, fork, or read for implementation patterns.</p>
+          </div>
+        </section>
+  </div>
+</div>
+
+<script>
+  // PIN is stored as a SHA-256 hash so the plaintext isn't visible in source.
+  // Default PIN: netcentric  →  update this hash if you change the PIN.
+  const HASH = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8";
+
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function checkPin() {
+    const val = document.getElementById('pin-input').value.trim();
+    const hash = await sha256(val);
+    if (hash === HASH) {
+      document.getElementById('gate').classList.add('hidden');
+      document.getElementById('main').classList.add('visible');
+      sessionStorage.setItem('trainer_auth', '1');
+    } else {
+      const err = document.getElementById('gate-error');
+      err.textContent = 'Incorrect PIN — try again.';
+      document.getElementById('pin-input').value = '';
+      document.getElementById('pin-input').focus();
+      setTimeout(() => err.textContent = '', 2500);
+    }
+  }
+
+  // Allow Enter key to submit
+  document.getElementById('pin-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPin();
+  });
+
+  // Auto-unlock if already authenticated in this browser session
+  if (sessionStorage.getItem('trainer_auth') === '1') {
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('main').classList.add('visible');
+  }
+</script>
+
+</body>
+</html>

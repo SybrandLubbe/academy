@@ -141,77 +141,37 @@ response.getWriter().write(responseBody.build().toString());</code></pre>
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
         <ol class="quiz-list">
         <li>
           <p class="quiz-question">What's the AEM-native alternative to registering a servlet by URL path?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Registering it against a resource type (sling.servlet.resourceTypes), the same mechanism used for render script resolution.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What properties does the resourceType-based example combine to scope exactly which requests the servlet answers?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">sling.servlet.resourceTypes, sling.servlet.selectors, sling.servlet.extensions, and sling.servlet.methods.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">When is it better to use a Sling Model's @Exporter instead of writing a servlet at all?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">When all you need is a resource's properties as JSON — @Exporter is simpler to maintain for that case.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Name three reasons you'd write an actual servlet instead of relying on @Exporter.</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">A non-GET verb, a request body, a response shape that isn't "this resource as JSON," or a side effect like writing content or calling another system.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Why prefer getRequestParameter over getParameter for reading input?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">It's encoding-aware and avoids platform-default charset bugs getParameter is prone to on some setups.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What library does the SearchServlet example use to build a JSON response, and does it need an extra Maven dependency?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">javax.json; no extra dependency needed since it ships with AEM.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Why is building JSON via string concatenation risky once a response has nested or repeated data?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">A stray unescaped character breaks the response into invalid JSON — string concatenation doesn't handle escaping for you.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What has to happen before a client's POST/PUT/DELETE request will be accepted by Sling's CSRF filter?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">The client must first fetch a token from /libs/granite/csrf/token.json and send it back as a CSRF-Token header.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">A POST returns 403. What should you check before auditing ACLs/permissions?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">The response body for a CSRF-related message — a 403 on a non-GET request is, more often than not, a missing CSRF token rather than a permissions problem.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">When should you reach for a resourceType-based servlet over a path-based one?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">When the endpoint is naturally "an action on this kind of resource" rather than a standalone utility.</p>
-          </details>
         </li>
         </ol>
       </div>

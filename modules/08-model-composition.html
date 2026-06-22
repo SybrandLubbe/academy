@@ -151,77 +151,37 @@ public class AcademyTeaserModel {
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
         <ol class="quiz-list">
         <li>
           <p class="quiz-question">In plain English, what does @Via(type = ResourceSuperType.class) tell Sling Models to do?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Before injecting into this model, first adapt the same resource to whatever model the resourceSuperType registers, and hand you that already-built object.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the model-layer equivalent of this composition pattern at the render-script layer?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">resourceType/resourceSuperType inheritance for render scripts — the same overlay/inheritance idea, applied at the model layer instead.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Why does reusing a Core Component's model usually beat reimplementing a component like Image or Teaser from scratch?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">The Core Components ship years of refined accessibility markup, responsive image handling, edit-mode placeholders, and dialog UX that reimplementing from a blank HTL file throws away.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the difference between "composing by wrapping" and "composing by interface inheritance"?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Wrapping holds the core model in a private field and exposes your own getters (more control, can diverge from the parent); interface inheritance has your interface extend the core component's interface directly (more honest when there's no divergence).</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Which approach should you default to, and when should you reach for the other?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Default to wrapping; reach for interface inheritance only when you're confident you'll never want to diverge from the parent's behavior.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What two test dependencies does core/pom.xml need before any unit test will run at all?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">io.wcm.testing.aem-mock.junit5 and mockito-core (both scope test).</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Where do test classes live relative to main source?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">In a parallel src/test/java folder (instead of src/main/java), mirroring the same package structure.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">In the AcademyTeaserModel example, what does @Self combined with @Via(type = ResourceSuperType.class) inject?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">A fully populated instance of the Core Components' own Teaser model for the same resource.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the benefit of adding a new field like badgeLabel to a composed model, versus reimplementing title/link logic yourself?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">You only need to add what's actually new — the inherited fields' fallback logic, link resolution, etc. are already handled by the wrapped core model.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Which later module covers unit testing properly, building on the test setup introduced here?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Module 14, Unit Testing.</p>
-          </details>
         </li>
         </ol>
       </div>

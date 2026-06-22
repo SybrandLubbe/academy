@@ -401,77 +401,37 @@ public class WeatherModel {
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
         <ol class="quiz-list">
         <li>
           <p class="quiz-question">What single declaration makes ImageMetadataModel reuse the core Image component's dialog, instead of needing its own _cq_dialog?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Setting sling:resourceSuperType="core/wcm/components/image/v3/image" on the component definition — with no _cq_dialog folder of its own, resolution falls back to the parent's dialog.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Which Asset API method does ImageMetadataModel call to read DAM metadata like image width?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">asset.getMetadataValue("tiff:ImageWidth") (and similarly for tiff:ImageLength, dc:format, tiff:Model).</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Why might a plain screenshot or graphic asset show no metadata at all when using this component?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">It likely lacks EXIF/TIFF metadata, unlike most camera photos.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What two external API calls does WeatherModel make, and in what order?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">First Open-Meteo's geocoding API (city/country → latitude/longitude), then Open-Meteo's forecast API for current conditions at those coordinates.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What Java HTTP client does WeatherModel use to make these calls?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">java.net.http.HttpClient, the built-in JDK 11+ client.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What does the geocode() method do when a country is supplied alongside an ambiguous city name like "Cambridge"?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">It loops through the geocoding results looking for one whose country matches, rather than just blindly using the first result.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Why is making a synchronous HTTP call inside WeatherModel's @PostConstruct flagged as a problem?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Every page render then waits on a third-party API — slow, fragile if that API has an outage, and an easy way to get rate-limited.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Which later module shows the production-correct fix for that synchronous-HTTP-call problem?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Module 18, Sling Jobs — a scheduled background job fetches and caches the weather periodically instead.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Even though ImageMetadataModel inherits its dialog from the core Image component, does it automatically inherit being allowed in a template's policy?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">No — it's a distinct resourceType (academy/components/imagemetadata) with its own entry in the policy's component list and has to be allowed explicitly.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What field does an author fill in on the Weather component's dialog to disambiguate a city that exists in multiple countries?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">The optional country field.</p>
-          </details>
         </li>
         </ol>
       </div>

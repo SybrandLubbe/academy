@@ -150,77 +150,37 @@ void resolvesDefaultCountryFromCaConfig() {
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions to ask students once they've finished this module — answers are hidden by default so you can quiz live before revealing them.</p>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
         <ol class="quiz-list">
         <li>
           <p class="quiz-question">What problem does Context-Aware Configuration solve that run-mode configuration can't?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">A value that differs per-site on the same instance, resolved by content hierarchy — run mode only describes the environment (author/publish), not which content is being requested.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What property links a page to its configuration tree under /conf?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">sling:configRef.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What annotation defines a configuration type for CA Config, and does it need a separate @Component/@Designate registration?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">@Configuration (with @Property on each field); no, CA Config's framework discovers @Configuration-annotated interfaces automatically.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">How do you read a CA Config value from inside a Sling Model?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Adapt a resource or request (via @Self) to ConfigurationBuilder, then call .as(YourConfig.class).</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">If no sling:configRef is set on a page or its ancestors, what happens when you call ConfigurationBuilder.as()?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">It silently falls back to the annotation's default values — which can look identical to "it's working" until you actually need a non-default value.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What does CA Config resolution actually do when walking from a resource up to find a value?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">It walks up the content hierarchy through parent resources, following sling:configRef to locate the relevant /conf tree, falling back to a global default if nothing site-specific exists.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What problem does the WCM IO Context-Aware Configuration Editor solve that's missing out of the box?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Out of the box, CA Config values can only be edited as raw repository content under /conf; the editor adds a proper UI so non-developers can edit them without CRXDE Lite.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">Where do the editor's form fields and labels come from?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">They're generated directly from your @Configuration/@Property annotation interface — no separate UI code needed.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What AemContext feature is needed to unit test code that depends on a CA Config value?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">The CACONFIG context plugin (new AemContext(ContextPlugins.CACONFIG)), letting you write config values directly into the mock /conf tree.</p>
-          </details>
         </li>
         <li>
           <p class="quiz-question">What's the suggested fix for WeatherModel's blank-country fallback, tying CA Config back to the components workshop?</p>
-          <details class="quiz-answer">
-            <summary>Show answer</summary>
-            <p class="quiz-answer-text">Use ConfigurationBuilder to fall back to config.defaultCountry() whenever the dialog's country field is left empty.</p>
-          </details>
         </li>
         </ol>
       </div>
