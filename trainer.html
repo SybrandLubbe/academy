@@ -390,219 +390,219 @@
             <p class="qa-a">Because querying the page node itself for title/properties returns nothing — that data lives under the <code class="inline">jcr:content</code> child node instead.</p>
           </div>
         </section>
-        <section class="module-section" id="m03">
+                <section class="module-section" id="m03">
           <h2><span class="mod-num">03</span>Sling Framework Fundamentals</h2>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">1.</span> What four parts does Sling decompose every incoming URL into?</p>
-            <p class="qa-a">Path, selectors, extension, and suffix.</p>
+            <p class="qa-q"><span class="qa-num">1.</span> In your own words: why does Sling not need a separate routing table/config file like a Spring or Express app does?</p>
+            <p class="qa-a">Because the URL path maps directly to a node in the JCR repository, and that node carries a <code>sling:resourceType</code> property that points to the component that renders it. The content tree is the routing table — no separate config needed.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">2.</span> In a URL like /content/my-site/en/about.teaser.html/jcr:content/par/image, identify the selector and the suffix.</p>
-            <p class="qa-a">Selector = <code class="inline">teaser</code>; suffix = <code class="inline">/jcr:content/par/image</code>.</p>
+            <p class="qa-q"><span class="qa-num">2.</span> A URL is /content/shop/products.sale.json/category/shoes — identify the path, selector, extension, and suffix.</p>
+            <p class="qa-a">Path = <code>/content/shop/products</code>, selector = <code>sale</code>, extension = <code>json</code>, suffix = <code>/category/shoes</code>.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">3.</span> What does Sling produce once the path portion is resolved against the repository?</p>
-            <p class="qa-a">A <code class="inline">Resource</code> object — a thin wrapper around the underlying JCR node (or whatever backend Sling is configured to read from).</p>
+            <p class="qa-q"><span class="qa-num">3.</span> What is a Resource, and what are the two things it gives you access to?</p>
+            <p class="qa-a">A Resource is Sling's wrapper around a JCR node. It gives you: (1) the node's path, and (2) a ValueMap — a typed map of every property on that node.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">4.</span> What property tells Sling which component should render a resource?</p>
-            <p class="qa-a"><code class="inline">sling:resourceType</code>.</p>
+            <p class="qa-q"><span class="qa-num">4.</span> An author adds a Teaser component to a page. What property on that component's content node tells Sling which script to render it with?</p>
+            <p class="qa-a"><code>sling:resourceType</code> — its value is a path to the component folder under <code>/apps</code> (or <code>/libs</code>) that contains the render script.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">5.</span> When resolving a script, which path does Sling search first — /apps or /libs?</p>
-            <p class="qa-a"><code class="inline">/apps</code> first, then <code class="inline">/libs</code>.</p>
+            <p class="qa-q"><span class="qa-num">5.</span> Sling looks for a render script in /apps first, then /libs. Why does this order matter, and what pattern does it enable?</p>
+            <p class="qa-a">Because <code>/apps</code> is always searched first, you can place a file at the same path under <code>/apps</code> and it silently takes priority over the Adobe default in <code>/libs</code>. This is called an overlay, and it's the correct way to customise out-of-the-box AEM components.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">6.</span> How does this search order make /apps overlays work, mechanically?</p>
-            <p class="qa-a">Because /apps is searched first, recreating the same resourceType path under /apps silently takes priority over the /libs version.</p>
+            <p class="qa-q"><span class="qa-num">6.</span> A junior developer edits a file under /libs to fix a bug. It works. Three weeks later the fix is gone. What happened, and what should they have done instead?</p>
+            <p class="qa-a">An AEM service pack or upgrade overwrote <code>/libs</code> completely. They should have created an overlay — a copy of the file at the same path under <code>/apps</code> — so their change survives upgrades.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">7.</span> What does sling:resourceSuperType let a component do?</p>
-            <p class="qa-a">Declare another component as its "super type" — if Sling can't find a script for the component's own resourceType, it walks up to the super type and tries again, similar to class inheritance.</p>
+            <p class="qa-q"><span class="qa-num">7.</span> What does sling:resourceSuperType let you do, in plain English? Give a practical example.</p>
+            <p class="qa-a">It lets a component inherit render scripts from another component without copy-pasting them. Example: a custom Teaser that sets <code>sling:resourceSuperType</code> to the Core Teaser inherits all of its scripts and only needs to add or override the parts that differ.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">8.</span> In AEM, what does "servlet" usually mean — registered by URL path or by resource type?</p>
-            <p class="qa-a">Usually registered by resource type, unlike a typical Java web framework's URL-path routing (though path-based registration is also possible).</p>
+            <p class="qa-q"><span class="qa-num">8.</span> You have a News Article component and you want to render it differently for mobile devices. You don't want to change the content. How could you use selectors to achieve this?</p>
+            <p class="qa-a">Add a selector-specific script: e.g. <code>article.mobile.html</code> alongside <code>article.html</code>. Mobile requests use the <code>.mobile.</code> selector and Sling routes them to the mobile-specific script, while desktop requests continue to use the default.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">9.</span> What's the classic symptom of editing the /libs copy of a script while an /apps overlay quietly wins?</p>
-            <p class="qa-a">"I changed the file but nothing happened" — the change has no visible effect because /apps is resolved first.</p>
+            <p class="qa-q"><span class="qa-num">9.</span> What is the difference between a selector and an extension, and how does each one participate in Sling's script resolution?</p>
+            <p class="qa-a">A selector is a dot-separated word between the path and the extension (e.g. <code>print</code> in <code>page.print.html</code>); the extension is the final segment (e.g. <code>html</code>, <code>json</code>). Both are used to find the exact script — Sling looks for a file named <code>resourceTypeName.selector.extension</code>.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">10.</span> Besides resourceType and selectors, what else strongly influences which script or servlet handles a request?</p>
-            <p class="qa-a">The extension (usually <code class="inline">html</code>, but could be <code class="inline">json</code>, <code class="inline">xml</code>, or a custom one).</p>
+            <p class="qa-q"><span class="qa-num">10.</span> A content node has sling:resourceType = 'academy/components/hero'. Sling looks for hero.html — where does it look, and in what order?</p>
+            <p class="qa-a">First <code>/apps/academy/components/hero/hero.html</code>, then <code>/apps/academy/components/hero/html.jsp</code> (older JSP form), and only if neither exists does it fall back to the same paths under <code>/libs</code>.</p>
           </div>
         </section>
-        <section class="module-section" id="m04">
+                <section class="module-section" id="m04">
           <h2><span class="mod-num">04</span>OSGi: Bundles, Services & Components</h2>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">1.</span> What is a bundle, technically?</p>
-            <p class="qa-a">A JAR file with extra manifest metadata describing what Java packages it exports and imports.</p>
+            <p class="qa-q"><span class="qa-num">1.</span> In plain English: what is an OSGi bundle, and how is it different from a regular Java JAR?</p>
+            <p class="qa-a">A bundle is a JAR with extra metadata in its MANIFEST.MF that declares what Java packages it exports (shares with others) and imports (needs from others). OSGi uses this to wire bundles together and load them in the right order. A regular JAR has no such contract.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">2.</span> List the bundle lifecycle states in order.</p>
-            <p class="qa-a">INSTALLED → RESOLVED → STARTING → ACTIVE (and STOPPING → RESOLVED on shutdown).</p>
+            <p class="qa-q"><span class="qa-num">2.</span> A bundle is stuck in the RESOLVED state instead of ACTIVE. What does this tell you, and where in the Felix console do you look to find out why?</p>
+            <p class="qa-a">RESOLVED means all package-level dependencies are met, but a component inside the bundle has an unsatisfied @Reference. Go to <code>/system/console/components</code>, find your component, and read the 'unsatisfied references' list to see which service type has no active provider.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">3.</span> A bundle is stuck in RESOLVED instead of ACTIVE. What's the most common cause?</p>
-            <p class="qa-a">A missing dependency — some package it imports isn't being exported by anything currently active.</p>
+            <p class="qa-q"><span class="qa-num">3.</span> What is the difference between an OSGi component and an OSGi service? Can you have a component that doesn't publish a service?</p>
+            <p class="qa-a">A component is a Java class annotated with @Component — a managed unit of code. A service is a capability it publishes to the registry via the <code>service</code> attribute. Yes, a component can exist without publishing any service (e.g. a standalone event listener with <code>immediate = true</code>).</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">4.</span> What's the relationship between a "component" and a "service" in OSGi terms?</p>
-            <p class="qa-a">A component is a plain annotated Java class; it typically implements a service interface, which is what gets published to the registry.</p>
+            <p class="qa-q"><span class="qa-num">4.</span> What does @Component(service = GreetingService.class) actually do — what is written to the registry, and under what key?</p>
+            <p class="qa-a">It registers the implementing class in the OSGi service registry under the <code>GreetingService</code> interface as the key. Any component that asks for <code>GreetingService</code> via @Reference will get this implementation injected.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">5.</span> What does declaring @Component(service = GreetingService.class) actually do?</p>
-            <p class="qa-a">Publishes that implementation to the OSGi service registry under the GreetingService interface, so it can be found/injected by interface.</p>
+            <p class="qa-q"><span class="qa-num">5.</span> Why do we use @Reference instead of just writing 'new GreetingServiceImpl()' to get a dependency?</p>
+            <p class="qa-a">@Reference lets OSGi inject whatever is currently registered as that service type, without hardcoding a dependency on the concrete class. This enables swapping implementations, testing with fakes, and letting OSGi manage the lifecycle — none of which work if you use <code>new</code>.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">6.</span> What annotation pulls a service into a consuming component, and what happens if no implementation is active when the consumer tries to start?</p>
-            <p class="qa-a"><code class="inline">@Reference</code>; OSGi holds the component back from activating (unless the reference is explicitly optional).</p>
+            <p class="qa-q"><span class="qa-num">6.</span> You deploy a new GreetingServiceImpl but GreetingServlet still uses the old behaviour. You check /system/console/components and see GreetingServlet is 'unsatisfied'. What does this mean?</p>
+            <p class="qa-a">GreetingServlet has a @Reference that OSGi can't satisfy — perhaps the new GreetingServiceImpl didn't deploy successfully (check the bundle state), or it registered under a different interface name.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">7.</span> Which three lifecycle annotations can a component use to hook into activation, config changes, and teardown?</p>
-            <p class="qa-a"><code class="inline">@Activate</code>, <code class="inline">@Modified</code>, and <code class="inline">@Deactivate</code>.</p>
+            <p class="qa-q"><span class="qa-num">7.</span> What is @Activate used for? Give a real example of something you'd do inside it.</p>
+            <p class="qa-a">@Activate marks a method to be called when the component starts (and when config changes if you also add @Modified). Real example: reading configuration values and storing them as fields, opening a connection pool, or scheduling a background timer.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">8.</span> Where can OSGi configuration be edited per-environment after deployment?</p>
-            <p class="qa-a">The OSGi Configuration Manager — Felix Web Console → Configuration, or <code class="inline">/system/console/configMgr</code>.</p>
+            <p class="qa-q"><span class="qa-num">8.</span> What does @Deactivate do, and when is it called?</p>
+            <p class="qa-a">@Deactivate marks a method called when the component is stopped — on bundle uninstall or AEM shutdown. Use it to clean up resources: close database connections, cancel scheduled tasks, release thread pools.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">9.</span> Why does editing a configuration by hand in the Felix console cause problems later?</p>
-            <p class="qa-a">It doesn't affect other environments (author/publish are separate JVMs), and hand-edited config tends to get lost on the next deployment unless captured as a .cfg.json file.</p>
+            <p class="qa-q"><span class="qa-num">9.</span> You edit a configuration value in /system/console/configMgr and it works. Three days later, a colleague deploys and your change is gone. Why?</p>
+            <p class="qa-a">The Felix console stores config in the JCR repository of that one instance. A deployment replaces it with whatever is in the project's <code>ui.config</code> .cfg.json files. Any hand-edited value that isn't also committed to source control will be silently overwritten on deploy.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">10.</span> What do /system/console/bundles and /system/console/components each show you?</p>
-            <p class="qa-a"><code class="inline">/system/console/bundles</code> shows every bundle's state and why it's not Active; <code class="inline">/system/console/components</code> shows the same idea one level down, for individual components.</p>
+            <p class="qa-q"><span class="qa-num">10.</span> Name the two Felix console URLs every AEM developer must know, and describe in one sentence what each one shows you.</p>
+            <p class="qa-a"><code>/system/console/bundles</code> — shows every bundle and its lifecycle state, plus unsatisfied imports for anything not ACTIVE. <code>/system/console/components</code> — shows every OSGi component, its state, and which @Reference fields are unsatisfied.</p>
           </div>
         </section>
-        <section class="module-section" id="m05">
+                <section class="module-section" id="m05">
           <h2><span class="mod-num">05</span>OSGi Services & Configuration</h2>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">1.</span> What's the difference between MANDATORY and OPTIONAL reference cardinality?</p>
-            <p class="qa-a">MANDATORY (the default) means the component won't activate without exactly one match; OPTIONAL means it activates either way, with zero or one match.</p>
+            <p class="qa-q"><span class="qa-num">1.</span> What does 'MANDATORY' reference cardinality mean, and what happens to the consuming component if no matching service is registered?</p>
+            <p class="qa-a">MANDATORY (the default) means the component cannot start without exactly one matching service. If none is registered, the component stays in the 'satisfied' state but never activates — it appears in /system/console/components with an 'unsatisfied references' list.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">2.</span> Why do OPTIONAL and MULTIPLE references need to be declared volatile?</p>
-            <p class="qa-a">Because the set of available services can change at runtime as bundles start/stop, and volatile ensures the field reflects that safely across threads.</p>
+            <p class="qa-q"><span class="qa-num">2.</span> Why must OPTIONAL and MULTIPLE references be declared volatile? Explain in plain English, not just 'it's required'.</p>
+            <p class="qa-a">Because OSGi can inject or remove these services while the component is already running (as bundles start and stop). The <code>volatile</code> keyword prevents the JVM from caching the field's value in a CPU register — without it, a thread might read a stale null or a reference to a service that was unregistered seconds ago.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">3.</span> What does immediate = true change about when a component activates?</p>
-            <p class="qa-a">It activates eagerly when the bundle starts, instead of lazily the first time something needs it — necessary for listeners/schedulers that nothing ever calls via @Reference.</p>
+            <p class="qa-q"><span class="qa-num">3.</span> You write an event listener with @Component but it never seems to fire, even though the component shows as 'satisfied' in /system/console/components. What is the most likely cause?</p>
+            <p class="qa-a">Missing <code>immediate = true</code>. Without it, OSGi activates the component lazily — only when something else references it. Since nothing ever calls @Reference on a listener, it never activates and never starts listening.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">4.</span> Why does every service in this curriculum use a separate interface and implementation, rather than @Component directly on a concrete class?</p>
-            <p class="qa-a">So consumers depend only on the interface and never the implementation — letting the implementation be swapped (different provider, or a mock for testing) without touching any consuming code.</p>
+            <p class="qa-q"><span class="qa-num">4.</span> What does immediate = true do, and which types of components almost always need it?</p>
+            <p class="qa-a">It forces the component to activate the moment its bundle becomes ACTIVE, without waiting for anyone to reference it. Components that need it: ResourceChangeListeners, Sling Schedulers, JobConsumers, EventHandlers — anything that runs proactively rather than being called.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">5.</span> What naming convention does a .cfg.json configuration file follow?</p>
-            <p class="qa-a">It's named after the component's fully-qualified class name — its OSGi PID.</p>
+            <p class="qa-q"><span class="qa-num">5.</span> Give two concrete reasons why splitting a service into an interface and a separate implementation class matters in a real project.</p>
+            <p class="qa-a">(1) Swappability: any consumer holds only the interface type, so the implementation can be replaced (e.g. with a mock in tests, or a different provider in production) without changing any consumer code. (2) Multiple implementations: you can register two implementations of the same interface and use service ranking or target filters to control which one each consumer gets.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">6.</span> Where does OSGi configuration live in the project, and how does it get deployed?</p>
-            <p class="qa-a">Under <code class="inline">ui.config</code> (academy.ui.config), as part of the same <code class="inline">mvn clean install -PautoInstallSinglePackage</code> build/deploy as everything else.</p>
+            <p class="qa-q"><span class="qa-num">6.</span> What is the naming convention for a .cfg.json file, and where in the project does it live?</p>
+            <p class="qa-a">The file is named after the component's OSGi PID — its fully-qualified class name — e.g. <code>biz.netcentric.academy.GreetingServiceImpl.cfg.json</code>. It lives under <code>ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/config/</code> (or a run-mode-scoped subfolder).</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">7.</span> How does AEM decide which run-mode-scoped config folder applies to a given instance at startup?</p>
-            <p class="qa-a">It resolves the most specific folder matching the instance's actual active run modes — e.g. config.author overrides config on an author instance.</p>
+            <p class="qa-q"><span class="qa-num">7.</span> A colleague edits a log level in /system/console/configMgr. It works. You deploy the next morning and the log level is back to the old value. Explain exactly what happened.</p>
+            <p class="qa-a">The deployment installed the content package from <code>ui.config</code>, which contained the old .cfg.json value. The hand-edited console change was stored only in the JCR of that instance and was overwritten by the deploy. Fix: commit the desired value to the .cfg.json file in source control.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">8.</span> Why is hand-editing a config in /system/console/configMgr risky long-term?</p>
-            <p class="qa-a">It gets silently overwritten by whatever's checked into ui.config on the next deployment.</p>
+            <p class="qa-q"><span class="qa-num">8.</span> An AEM instance has run modes 'author' and 'dev' active. You have config folders: config/, config.author/, config.author.dev/. Which one applies, and why?</p>
+            <p class="qa-a"><code>config.author.dev/</code> applies — AEM picks the most specific folder that matches all active run modes. Since the instance is both 'author' and 'dev', the two-label folder wins over the single-label folders.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">9.</span> What did module 5 build on from an earlier module for OSGi configuration?</p>
-            <p class="qa-a">@Designate and @ObjectClassDefinition, introduced for a configurable service in module 5 (OSGi: Bundles, Services & Components).</p>
+            <p class="qa-q"><span class="qa-num">9.</span> You need the same service to point at a mock API on dev but a real API in production. How do you implement this without changing any code and without touching the Felix console manually?</p>
+            <p class="qa-a">Create two .cfg.json files with the same PID: one in <code>config.author.dev/</code> (or <code>config.dev/</code>) pointing at the mock URL, and one in <code>config/</code> (or <code>config.publish/</code>) pointing at the real URL. Deploy both; AEM applies the right one per environment automatically.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">10.</span> A config value needs to differ between author and publish. What's the correct way to handle that?</p>
-            <p class="qa-a">Use separate run-mode-scoped folders (config.author / config.publish) rather than hand-editing per environment.</p>
+            <p class="qa-q"><span class="qa-num">10.</span> What is the OSGi PID of a service, and how do you find it if you're unsure what to name your .cfg.json file?</p>
+            <p class="qa-a">The PID is the fully-qualified class name of the component (e.g. <code>biz.netcentric.academy.GreetingServiceImpl</code>). To find it: deploy the service, open <code>/system/console/configMgr</code>, find the entry by its @ObjectClassDefinition name, and read the PID shown in brackets.</p>
           </div>
         </section>
-        <section class="module-section" id="m06">
+                <section class="module-section" id="m06">
           <h2><span class="mod-num">06</span>Sling Models</h2>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">1.</span> Why do Sling Models exist — what problem do they solve compared to reading a ValueMap directly in a render script?</p>
-            <p class="qa-a">They move repository access out of the render script into a plain, testable Java class — the template asks for a typed value instead of reaching into the repository itself.</p>
+            <p class="qa-q"><span class="qa-num">1.</span> In your own words: what problem does a Sling Model solve? What would the alternative look like without one?</p>
+            <p class="qa-a">A Sling Model moves repository-reading code out of the render template into a clean, testable Java class. Without it, templates would contain property lookups, type casts, null checks, and business logic — mixing data access with presentation, making both harder to test and maintain.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">2.</span> What does @ChildResource do, that's different from @ValueMapValue?</p>
-            <p class="qa-a">It resolves a named child node as a Resource (or adapts it straight into another model), rather than reading a property off the current resource.</p>
+            <p class="qa-q"><span class="qa-num">2.</span> What does 'adaptation' mean? Rewrite 'resource.adaptTo(TeaserModel.class)' in plain English as if explaining to a non-developer.</p>
+            <p class="qa-a">Adaptation means 'convert this object into a different, related type.' In plain English: 'Sling, please take this content node and give me a TeaserModel Java object filled with its data.'</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">3.</span> What does @OSGiService let a Sling Model do?</p>
-            <p class="qa-a">Inject a service from the OSGi registry into the model, the same way @Reference does for OSGi components — models can depend on services too.</p>
+            <p class="qa-q"><span class="qa-num">3.</span> What does @ValueMapValue read, and where does the value come from in the repository?</p>
+            <p class="qa-a">It reads a property directly from the content node's ValueMap — the JCR property whose name matches the field name (or the name you specify in the annotation). For example, @ValueMapValue on a field named 'title' reads the 'title' property from the node.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">4.</span> By default, is an injected field required or optional? What happens if a required field can't be filled?</p>
-            <p class="qa-a">Required by default; if it can't be filled, the whole model fails to instantiate and adaptTo() returns null, not a half-populated object.</p>
+            <p class="qa-q"><span class="qa-num">4.</span> What is the difference between @ChildResource and @ValueMapValue — when would you use each one?</p>
+            <p class="qa-a">@ValueMapValue reads a flat property (String, boolean, int, etc.) from the current node's ValueMap. @ChildResource resolves a named child node as a Resource object (or adapts it to another model). Use @ChildResource when complex data lives in a sub-node rather than as a flat property.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">5.</span> What does setting defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL at the class level change?</p>
-            <p class="qa-a">It flips the default so fields are optional unless marked otherwise — appropriate for content fields that are genuinely optional.</p>
+            <p class="qa-q"><span class="qa-num">5.</span> A required field on a model has no matching property on the content node. What does adaptTo() return, and does it throw an exception?</p>
+            <p class="qa-a">It returns null — no exception, just a silent null. This is a major pitfall: you get no error, and your template silently renders as blank.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">6.</span> adaptTo() returns null with no exception. What's the single most common cause, and how do you find out which field is at fault?</p>
-            <p class="qa-a">A required field had nothing to inject; enable debug logging on org.apache.sling.models.impl in the Felix console to see exactly which field failed.</p>
+            <p class="qa-q"><span class="qa-num">6.</span> What does defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL do to a whole model class?</p>
+            <p class="qa-a">It makes every injected field optional by default — if a property is missing, the field stays null and adaptation still succeeds. Individual fields can still be marked @Required to override this. Use it for content fields that may legitimately be empty.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">7.</span> What annotation makes a model's getters serializable as JSON via the .model.json selector?</p>
-            <p class="qa-a">@Exporter(name = "jackson", extensions = "json").</p>
+            <p class="qa-q"><span class="qa-num">7.</span> You call adaptTo() and get null. Walk through the steps you would take to debug this.</p>
+            <p class="qa-a">(1) Go to /system/console/slinglog and set DEBUG on org.apache.sling.models.impl. (2) Trigger the request again. (3) Read the log — it lists each field injection attempt and the first failure. Fix that field (wrong type, wrong property name, or a required service not available).</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">8.</span> What does the adaptables value on @Model control?</p>
-            <p class="qa-a">What kind of object the model can be created from — e.g. Resource.class vs SlingHttpServletRequest.class.</p>
+            <p class="qa-q"><span class="qa-num">8.</span> What is @PostConstruct for, and at what point in the lifecycle does it run relative to field injection?</p>
+            <p class="qa-a">@PostConstruct marks a method to run after all field injection is complete, but before the model is returned to the caller. Use it to derive computed values (truncate text, combine fields, run validations) that depend on the injected data being fully available.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">9.</span> Does Resource.class or SlingHttpServletRequest.class work in more contexts as an adaptable, and why?</p>
-            <p class="qa-a">Resource.class — it's available wherever you have a resource, including adapting from inside another model, while a request adaptable only works during an actual HTTP request.</p>
+            <p class="qa-q"><span class="qa-num">9.</span> What does the @Exporter annotation do, and what URL pattern does it respond to?</p>
+            <p class="qa-a">@Exporter(name='jackson', extensions='json') makes the model's public getters available as JSON at the resource path with the .model.json selector appended — e.g. <code>/content/site/page/jcr:content/teaser.model.json</code>.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">10.</span> TeaserModel builds a shortDescription field by truncating description to 80 characters. Which lifecycle annotation runs that logic after injection completes?</p>
-            <p class="qa-a">@PostConstruct.</p>
+            <p class="qa-q"><span class="qa-num">10.</span> You want to inject the ResourceResolver into a model. Which annotation do you use?</p>
+            <p class="qa-a">@SlingObject — it injects Sling framework objects including ResourceResolver, Resource, SlingHttpServletRequest, and SlingHttpServletResponse.</p>
           </div>
         </section>
-        <section class="module-section" id="m07">
+                <section class="module-section" id="m07">
           <h2><span class="mod-num">07</span>Sling Models In Depth</h2>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">1.</span> What mechanism does resource.adaptTo(MyModel.class) actually use under the hood?</p>
-            <p class="qa-a">The generic Sling Adaptable mechanism via an OSGi-registered AdapterFactory for Sling Models — the same general mechanism used for things like adapting a Resource to a ValueMap.</p>
+            <p class="qa-q"><span class="qa-num">1.</span> Describe in your own words what adaptTo() does internally — what is the mechanism that makes it work?</p>
+            <p class="qa-a">adaptTo() looks up the OSGi service registry for a registered AdapterFactory that can convert the source type (e.g. Resource) to the target type (e.g. TeaserModel). The Sling Models AdapterFactory intercepts the call, reads the @Model annotation, runs injection on every annotated field, calls @PostConstruct, and returns the populated instance — or null if a required field failed.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">2.</span> What's the practical difference between putting @Model directly on a concrete class versus splitting it into an interface plus an implementation?</p>
-            <p class="qa-a">Interface-based models let callers adapt to the interface and never see the implementation class — enabling composition patterns and easier mocking in tests.</p>
+            <p class="qa-q"><span class="qa-num">2.</span> You declare adaptables = SlingHttpServletRequest.class on a model. A colleague tries to inject it inside another model via @ChildResource. It always comes back null. Why?</p>
+            <p class="qa-a">Because the inner model adaptation is triggered from a Resource (no request exists at that point), but the model declares it can only be adapted from SlingHttpServletRequest. The AdapterFactory finds no matching adaptable and returns null. Fix: change adaptables to Resource.class if the model doesn't genuinely need request data.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">3.</span> How does a Sling Model actually get registered with OSGi — what replaces the @Component registration an OSGi service needs?</p>
-            <p class="qa-a">There's no manual registration step; the Sling Models Maven plugin scans compiled classes for @Model annotations during the build and generates the OSGi metadata automatically.</p>
+            <p class="qa-q"><span class="qa-num">3.</span> What are two things you have access to with SlingHttpServletRequest that you don't get from a bare Resource? Give concrete examples.</p>
+            <p class="qa-a">(1) URL selectors — e.g. request.getRequestPathInfo().getSelectorString() returns 'print' for /page.print.html. (2) Query/form parameters — request.getParameter('q') for a search term. A Resource alone has neither of these.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">4.</span> What's the main practical benefit of constructor injection over field injection for a Sling Model?</p>
-            <p class="qa-a">Every field can become final — the object is fully valid the instant it exists, with no half-constructed window, and it's easier to unit test by calling the constructor directly with test values.</p>
+            <p class="qa-q"><span class="qa-num">4.</span> Show the constructor injection version of a model that injects a title String and a price double. What is the advantage over field injection for these two fields specifically?</p>
+            <p class="qa-a">@Inject public ProductModel(@ValueMapValue String title, @ValueMapValue double price) { this.title = title; this.price = price; } — Both fields can be final, making the object immutable and fully valid the instant it's constructed with no @PostConstruct needed.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">5.</span> What does @Inject combined with @ValueMapValue on a constructor parameter achieve?</p>
-            <p class="qa-a">It injects that value through the constructor instead of a field — constructor injection.</p>
+            <p class="qa-q"><span class="qa-num">5.</span> What does 'adapters = Teaser.class' in the @Model annotation do, and why does it matter for the module 8 composition pattern?</p>
+            <p class="qa-a">It registers the implementation class under the Teaser interface in the adapter registry — callers do resource.adaptTo(Teaser.class) and get TeaserImpl back. Module 8's composition pattern relies on adapting to Core Component interfaces (like com.adobe.cq.wcm.core.components.models.Teaser) which Core Components publish this way.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">6.</span> Give the decision rule for choosing Resource vs. SlingHttpServletRequest as a model's adaptable.</p>
-            <p class="qa-a">Adapt from Resource whenever possible — it works in more places, including from inside another model; adapt from SlingHttpServletRequest only when you specifically need request-only data like selectors or request parameters.</p>
+            <p class="qa-q"><span class="qa-num">6.</span> You deploy a new Sling Model but adaptTo() keeps returning null. You haven't changed the content node. Walk through three things you would check.</p>
+            <p class="qa-a">(1) Enable DEBUG logging on org.apache.sling.models.impl to find which field failed. (2) Check /system/console/bundles to ensure the bundle is ACTIVE (not just RESOLVED). (3) Verify the resourceType in the content node matches the resourceType declared on the @Model annotation exactly — case-sensitive.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">7.</span> What's the consequence of declaring adaptables = SlingHttpServletRequest.class out of habit, then trying to adapt that model from inside another model?</p>
-            <p class="qa-a">It returns null with no obvious explanation, since a request-only adaptable can't be satisfied from a bare Resource.</p>
+            <p class="qa-q"><span class="qa-num">7.</span> Why is there no @Component annotation on a Sling Model, and how does OSGi know the model exists at all?</p>
+            <p class="qa-a">The Sling Models Maven plugin (bnd plugin integration) scans compiled classes for @Model annotations during the build and generates the OSGi AdapterFactory registration metadata automatically. No manual @Component registration is needed.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">8.</span> Where should real business logic live, according to this module's best-practices guidance?</p>
-            <p class="qa-a">In an OSGi service that the model injects, keeping the model itself thin rather than growing it to hundreds of lines.</p>
+            <p class="qa-q"><span class="qa-num">8.</span> A model needs to call a geocoding API to convert a city name to coordinates. Should this happen in @PostConstruct, in an @OSGiService, or somewhere else entirely? Explain.</p>
+            <p class="qa-a">Neither @PostConstruct nor directly. The call should happen in an OSGi service (injected via @OSGiService), or better: in a scheduled Sling Job (module 18) that caches the result. Doing I/O in @PostConstruct blocks the render thread on every page load.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">9.</span> What specific mistake does the upcoming WeatherModel deliberately demonstrate, as referenced in this module?</p>
-            <p class="qa-a">Doing I/O (an outbound HTTP call) inside @PostConstruct without thinking it through.</p>
+            <p class="qa-q"><span class="qa-num">9.</span> What is the difference between @OSGiService in a model and @Reference in an OSGi component? What do they share?</p>
+            <p class="qa-a">They perform the same lookup against the same OSGi service registry and inject the same type. The only difference is the annotation name — @Reference is used in @Component-managed classes, @OSGiService is used in Sling Models (which are not OSGi components). Both will return null (or prevent activation/adaptation) if no matching service is active.</p>
           </div>
           <div class="qa-item">
-            <p class="qa-q"><span class="qa-num">10.</span> When should you default to interface-based models, according to this module?</p>
-            <p class="qa-a">For anything another component, model, or test might need to depend on.</p>
+            <p class="qa-q"><span class="qa-num">10.</span> Give a rule for deciding whether a configurable value should come through @OSGiService + @Designate, or through ConfigurationBuilder + @Self in the model.</p>
+            <p class="qa-a">If the value is the same for all sites on the instance and only changes between environments (dev/staging/prod), use OSGi config through a service. If the value should differ per site or per piece of content in the same instance, use Context-Aware Configuration via ConfigurationBuilder directly in the model.</p>
           </div>
         </section>
         <section class="module-section" id="m08">

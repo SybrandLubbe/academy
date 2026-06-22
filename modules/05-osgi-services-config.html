@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>05 OSGi Services & Configuration — AEM Backend Training</title>
-<meta name="description" content="Reference cardinality, immediate components, and deploying OSGi configuration as JSON across run modes.">
+<meta name="description" content="Reference cardinality, immediate components, .cfg.json files, and run-mode-scoped configuration for AEM beginners.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -62,115 +62,212 @@
       </div>
 
       <h1 class="page-title">OSGi Services &amp; Configuration</h1>
-      <p class="lede">Module 4 covered the basics of services and components. Here's the rest: how to declare exactly what a dependency requires, when a component should start immediately rather than lazily, and how configuration actually gets deployed as part of a real project instead of edited by hand in the Felix console.</p>
+      <p class="lede">Module 4 gave you the basics. This module fills in the rest: how to handle services that aren't always available, why some components must start immediately, how to structure configuration files correctly, and how run modes let you use different settings on different environments without changing a line of code.</p>
 
       <div class="learn-box">
         <h3>What you'll learn</h3>
         <ul>
-          <li>Reference cardinality — mandatory, optional, and multiple dependencies</li>
-          <li>What <code class="inline">immediate = true</code> changes about a component's lifecycle</li>
-          <li>Why every service should have a separate interface and implementation class</li>
-          <li>Deploying configuration as <code class="inline">.cfg.json</code> files instead of hand-editing the console</li>
-          <li>How run-mode-specific configuration folders are resolved</li>
+          <li>Reference cardinality: what it means for a dependency to be mandatory, optional, or multiple</li>
+          <li>Why some components need <code class="inline">immediate = true</code> to ever start at all</li>
+          <li>Why you <em>always</em> separate an interface from its implementation — and what breaks if you don't</li>
+          <li>How to ship configuration as checked-in <code class="inline">.cfg.json</code> files instead of hand-editing the console</li>
+          <li>How run-mode folders (<code class="inline">config.author</code>, <code class="inline">config.publish</code>) give you different settings per environment</li>
         </ul>
       </div>
 
-      <h2>Reference cardinality</h2>
-      <p>Module 4's <code class="inline">@Reference</code> examples were all implicitly <strong>mandatory</strong> — the default. OSGi lets you be explicit about whether a dependency is required, optional, or one of several:</p>
-      <pre data-code><span class="filename">cardinality options</span><code>// default: exactly one, required - component won't activate without it
+      <h2>Reference cardinality — what happens when a dependency is missing</h2>
+      <p>In module 4, every <code class="inline">@Reference</code> was the simplest form: one required dependency. But real projects have three different situations:</p>
+
+      <pre data-code><span class="filename">the three cardinality options — annotated with when to use each</span><code>// ── MANDATORY (default) ──────────────────────────────────────────────
+// Your component WON'T start unless exactly one matching service is active.
+// Use this for: things your code fundamentally cannot function without.
 @Reference
 private GreetingService greetingService;
 
-// zero or one - component activates either way
+
+// ── OPTIONAL ──────────────────────────────────────────────────────────
+// Your component starts whether or not the service is present.
+// The field will be null if nothing is registered.
+// Must be volatile because OSGi can inject/remove it at any time.
 @Reference(cardinality = ReferenceCardinality.OPTIONAL)
-private volatile GreetingService greetingService;
+private volatile GreetingService greetingService;   ← volatile is REQUIRED
 
-// zero or more, injected as a list
+
+// ── MULTIPLE ──────────────────────────────────────────────────────────
+// Collects all registered implementations into a list.
+// Great for extension points: any bundle can register a handler.
+// Also must be volatile.
 @Reference(cardinality = ReferenceCardinality.MULTIPLE)
-private volatile List&lt;GreetingService&gt; greetingServices;</code></pre>
-      <p>Optional and multiple references need <code class="inline">volatile</code> because the set of available services can change at runtime — a dependency can appear or disappear as bundles start and stop, and the field needs to reflect that safely across threads. <code class="inline">MANDATORY</code> (the default) is right for something your component genuinely cannot function without; <code class="inline">OPTIONAL</code> suits a nice-to-have that degrades gracefully if it's missing.</p>
+private volatile List&lt;GreetingService&gt; greetingServices;  ← volatile is REQUIRED</code></pre>
 
-      <h2>Immediate components</h2>
-      <p>By default, an OSGi component activates lazily — the first time something actually needs it. That's wrong for a component that has to be running proactively, like a <code class="inline">ResourceChangeListener</code> or a scheduled job: nothing ever "calls" a listener to trigger its activation, so without help it might never start at all.</p>
-      <pre data-code><span class="filename">forcing eager activation</span><code>@Component(
-        service = ResourceChangeListener.class,
-        immediate = true,
-        property = {
-                ResourceChangeListener.PATHS + "=/content/academy",
-                ResourceChangeListener.CHANGES + "=ADDED"
-        }
-)
-public class AcademyChangeListener implements ResourceChangeListener {
-    // ...
-}</code></pre>
       <div class="callout alert alert-primary">
-        <span class="label">Mental model</span>
-        If nothing in your code ever calls <code class="inline">@Reference</code> to pull a component in, mark it <code class="inline">immediate = true</code> — otherwise it may simply never start. Listeners, schedulers, and anything purely reactive almost always need this.
+        <span class="label">Why volatile?</span>
+        OPTIONAL and MULTIPLE references can change <em>while your component is running</em> — a new bundle might activate (adding a new service) or deactivate (removing one). The <code class="inline">volatile</code> keyword tells the JVM: "don't cache this field's value in a CPU register — always re-read it from main memory." Without it, a thread could see a stale null or stale list.
       </div>
 
-      <h2>Interfaces and implementation classes</h2>
-      <p>Every service in this curriculum so far has followed the same shape: a plain interface, and a separate <code class="inline">@Component</code>-annotated implementation. That's not boilerplate for its own sake — consumers depend on the interface and never reference the implementation class directly, which means the implementation can be swapped (a different provider, a mock for testing in module 14) without touching a single line of consuming code. Skipping the interface and putting <code class="inline">@Component</code> straight on a concrete class still works mechanically, but it locks every consumer to that one implementation.</p>
+      <h2>A real example: a pipeline of content processors</h2>
+      <p>Here's a practical use of <code class="inline">MULTIPLE</code> cardinality — an extension point where any bundle can register a content processor and the main service automatically discovers all of them:</p>
+      <pre data-code><span class="filename">using MULTIPLE cardinality for a plugin-style extension point</span><code>// The shared contract
+public interface ContentProcessor {
+    String process(String input);
+}
 
-      <h2>OSGi configuration: Designate, properly</h2>
-      <p>Module 4 introduced <code class="inline">@Designate</code> and <code class="inline">@ObjectClassDefinition</code> for a configurable service. The piece that was missing is how that configuration gets deployed as part of a real project rather than typed into the Felix console by hand — which doesn't survive a redeploy and isn't checked into source control.</p>
-      <p>Configuration ships as a <code class="inline">.cfg.json</code> file, named after the component's fully-qualified class name (its OSGi PID), placed under <code class="inline">ui.config</code>:</p>
-      <pre data-code><span class="filename">/aem-academy/ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/config/biz.netcentric.academy._02.GreetingServiceImpl.cfg.json <em>(academy.ui.config)</em></span><code>{
+// Main service: picks up ALL registered ContentProcessors automatically
+@Component(service = ContentPipeline.class)
+public class ContentPipelineImpl implements ContentPipeline {
+
+    @Reference(cardinality = ReferenceCardinality.MULTIPLE,
+               policyOption   = ReferencePolicyOption.GREEDY)
+    private volatile List&lt;ContentProcessor&gt; processors;
+
+    public String runAll(String input) {
+        String result = input;
+        for (ContentProcessor p : processors) {
+            result = p.process(result);
+        }
+        return result;
+    }
+}
+
+// Any other bundle can add behaviour just by registering this interface:
+@Component(service = ContentProcessor.class)
+public class SpellCheckProcessor implements ContentProcessor {
+    public String process(String input) { /* check spelling */ return input; }
+}</code></pre>
+
+      <h2>Immediate components — the component that nobody calls</h2>
+      <p>By default OSGi is <strong>lazy</strong>: a component only activates the first time another component asks for its service via <code class="inline">@Reference</code>. This is efficient, but it breaks for components that run proactively — things like event listeners and scheduled jobs.</p>
+      <p>Think about it: if nothing ever calls <code class="inline">@Reference ResourceChangeListener</code>, the listener never starts. It can never listen for events it never started for. Nothing works. This is the bug.</p>
+      <pre data-code><span class="filename">immediate = true forces the component to activate on bundle start</span><code>@Component(
+    service   = ResourceChangeListener.class,
+    immediate = true,      // ← start immediately, don't wait to be referenced
+    property  = {
+        ResourceChangeListener.PATHS   + "=/content/academy",
+        ResourceChangeListener.CHANGES + "=ADDED",
+        ResourceChangeListener.CHANGES + "=CHANGED"
+    }
+)
+public class PageChangeListener implements ResourceChangeListener {
+
+    private static final Logger log = LoggerFactory.getLogger(PageChangeListener.class);
+
+    @Override
+    public void onChange(List&lt;ResourceChange&gt; changes) {
+        for (ResourceChange change : changes) {
+            log.info("Content changed at: {}", change.getPath());
+            // trigger re-indexing, send notification, fire a job, etc.
+        }
+    }
+}</code></pre>
+
+      <div class="callout alert alert-primary">
+        <span class="label">Rule of thumb</span>
+        If your component doesn't offer a service that anything else references, add <code class="inline">immediate = true</code>. If you forget it, the component appears in <code class="inline">/system/console/components</code> as <code class="inline">satisfied</code> (all dependencies are met) but it never actually starts — one of the more confusing AEM debugging situations.
+      </div>
+
+      <h2>Always separate the interface from the implementation</h2>
+      <p>Every service example in this curriculum has two files: a plain interface and a separate <code class="inline">@Component</code>-annotated implementation. This feels like extra work. Here is exactly why it matters:</p>
+      <ul>
+        <li><strong>Swappability.</strong> Any code consuming <code class="inline">GreetingService</code> via <code class="inline">@Reference</code> never imports <code class="inline">GreetingServiceImpl</code>. If you replace the implementation with a completely different class, zero consumer code changes.</li>
+        <li><strong>Testability.</strong> In a unit test (module 14) you register a fake <code class="inline">GreetingService</code> that returns predictable values. Because consumers only see the interface, the fake works identically to the real implementation from the consumer's perspective.</li>
+        <li><strong>Multiple implementations.</strong> You can register two classes against the same interface (one for author, one for publish, say) and use OSGi's service ranking to control which one wins — something impossible if you put <code class="inline">@Component</code> on a concrete class with no interface.</li>
+      </ul>
+
+      <h2>Configuration as code: .cfg.json files</h2>
+      <p>The Felix console is handy for experimenting. But any value you change there:</p>
+      <ul>
+        <li>Only exists on that one AEM instance</li>
+        <li>Is not checked into version control</li>
+        <li>Will be overwritten the next time someone deploys</li>
+      </ul>
+      <p>The correct approach is to commit your configuration as a <code class="inline">.cfg.json</code> file inside <code class="inline">ui.config</code>. The naming convention is the component's fully-qualified class name (its OSGi PID):</p>
+      <pre data-code><span class="filename">/aem-academy/ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/config/biz.netcentric.academy.osgiexample.GreetingServiceImpl.cfg.json <em>(academy.ui.config)</em></span><code>{
     "prefix": "Hello there"
 }</code></pre>
-      <p>This is just JSON matching the property names declared on your <code class="inline">@ObjectClassDefinition</code> annotation type — no Java involved, and it deploys as part of the same <code class="inline">mvn clean install -PautoInstallSinglePackage</code> you already run for everything else, since <code class="inline">ui.config</code> is bundled into the <code class="inline">all</code> package alongside <code class="inline">core</code> and <code class="inline">ui.apps</code>.</p>
+      <p>The key names in the JSON match the method names on your <code class="inline">@ObjectClassDefinition</code> annotation type. The file deploys as part of the normal <code class="inline">mvn clean install -PautoInstallSinglePackage</code> build because <code class="inline">ui.config</code> is bundled into the <code class="inline">all</code> package alongside everything else.</p>
+      <pre data-code><span class="filename">how to find the correct PID if you're unsure</span><code>1. Deploy your service (the one with @Designate)
+2. Open /system/console/configMgr
+3. Find your service by its @ObjectClassDefinition name attribute
+4. The PID is shown in brackets next to the name — that's your filename.</code></pre>
 
-      <h2>Run modes</h2>
-      <p>AEM resolves configuration differently per environment using <strong>run modes</strong> — labels like <code class="inline">author</code>, <code class="inline">publish</code>, or custom ones like <code class="inline">dev</code> that an instance is started with. A configuration folder can be scoped to one or more run modes by suffixing it:</p>
-      <pre data-code><span class="filename">run-mode-scoped config folders</span><code>ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/
-├── config/                    applies everywhere
-├── config.author/              applies only on author instances
-├── config.publish/             applies only on publish instances
-└── config.author.dev/          applies only on author instances also running the "dev" run mode</code></pre>
-      <p>At startup, AEM resolves the most specific folder matching the instance's actual active run modes — a value in <code class="inline">config.author</code> overrides the same PID's value in <code class="inline">config</code> on an author instance, while publish instances never see it at all. This is the standard way to point at a different external API endpoint, log level, or feature flag per environment without branching any code.</p>
+      <h2>Run modes: different settings per environment</h2>
+      <p>Every AEM instance starts with one or more <strong>run modes</strong> — labels that describe what kind of instance it is. The standard ones are <code class="inline">author</code> and <code class="inline">publish</code>, but you can add custom ones like <code class="inline">dev</code> or <code class="inline">staging</code>.</p>
+      <p>Configuration folders inside <code class="inline">ui.config</code> can be scoped to run modes by using a special naming convention:</p>
+      <pre data-code><span class="filename">run-mode-scoped config folder structure</span><code>ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/
+│
+├── config/                         ← applies on ALL instances
+│   └── biz.netcentric...Impl.cfg.json   (e.g. prefix = "Hello")
+│
+├── config.author/                  ← applies ONLY on author instances
+│   └── biz.netcentric...Impl.cfg.json   (e.g. prefix = "Author Hello")
+│
+├── config.publish/                 ← applies ONLY on publish instances
+│   └── biz.netcentric...Impl.cfg.json   (e.g. prefix = "Publish Hello")
+│
+└── config.author.dev/              ← applies ONLY on author + dev run mode
+    └── biz.netcentric...Impl.cfg.json   (e.g. prefix = "Dev Hello")</code></pre>
+      <p>At startup, AEM picks the <em>most specific</em> folder that matches the instance's active run modes. An author instance running in dev mode will prefer <code class="inline">config.author.dev</code> over <code class="inline">config.author</code> over <code class="inline">config</code>.</p>
+
+      <div class="callout alert alert-primary">
+        <span class="label">Real-world use cases for run modes</span>
+        <ul style="margin:0.5em 0 0 1em;padding:0">
+          <li>Point at a local mock API on dev, a staging API on QA, a real API on production — same code, different <code class="inline">apiUrl</code> property</li>
+          <li>Enable verbose logging on author, suppress it on publish</li>
+          <li>Disable certain features (like sending real emails) on non-production environments</li>
+        </ul>
+      </div>
 
       <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>
-        Editing a configuration by hand in <code class="inline">/system/console/configMgr</code> to "just fix it quickly" on an environment. It works until the next deployment silently overwrites it with whatever's checked into <code class="inline">ui.config</code> — if a value needs to be different, it belongs in a run-mode-scoped <code class="inline">.cfg.json</code> file, not a manual console edit.
+        A value edited in <code class="inline">/system/console/configMgr</code> on one environment "just to fix it quickly" will be silently overwritten the next time a deployment runs. If a value needs to be different per environment, it belongs in a run-mode folder in <code class="inline">ui.config</code> — full stop.
       </div>
 
       <div class="try-it alert alert-success">
-        <span class="label">Try it</span>
-        Give one of your own OSGi services an extra configurable property using <code class="inline">@Designate</code> — a sensible default, plus a way to override it — then deploy two different values for it via <code class="inline">config.author</code> and <code class="inline">config.publish</code> and confirm each instance picks up its own value.
+        <span class="label">Try it — configuration that changes per environment</span>
+        <ol style="margin:0;padding-left:1.2em;">
+          <li>Add a second property <code class="inline">String apiEndpoint() default "https://api.example.com";</code> to <code class="inline">GreetingConfig</code>.</li>
+          <li>Read it in <code class="inline">GreetingServiceImpl.activate()</code> and log the value.</li>
+          <li>Create <code class="inline">config/biz...GreetingServiceImpl.cfg.json</code> with <code class="inline">"apiEndpoint": "https://api.example.com"</code>.</li>
+          <li>Create <code class="inline">config.author/biz...GreetingServiceImpl.cfg.json</code> with <code class="inline">"apiEndpoint": "https://author-api.example.com"</code>.</li>
+          <li>Deploy and check the log output. Then check <code class="inline">/system/console/configMgr</code> to confirm which value is active.</li>
+        </ol>
       </div>
+
+      
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
         <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
         <ol class="quiz-list">
         <li>
-          <p class="quiz-question">What's the difference between MANDATORY and OPTIONAL reference cardinality?</p>
+          <p class="quiz-question">What does 'MANDATORY' reference cardinality mean, and what happens to the consuming component if no matching service is registered?</p>
         </li>
         <li>
-          <p class="quiz-question">Why do OPTIONAL and MULTIPLE references need to be declared volatile?</p>
+          <p class="quiz-question">Why must OPTIONAL and MULTIPLE references be declared volatile? Explain in plain English, not just 'it's required'.</p>
         </li>
         <li>
-          <p class="quiz-question">What does immediate = true change about when a component activates?</p>
+          <p class="quiz-question">You write an event listener with @Component but it never seems to fire, even though the component shows as 'satisfied' in /system/console/components. What is the most likely cause?</p>
         </li>
         <li>
-          <p class="quiz-question">Why does every service in this curriculum use a separate interface and implementation, rather than @Component directly on a concrete class?</p>
+          <p class="quiz-question">What does immediate = true do, and which types of components almost always need it?</p>
         </li>
         <li>
-          <p class="quiz-question">What naming convention does a .cfg.json configuration file follow?</p>
+          <p class="quiz-question">Give two concrete reasons why splitting a service into an interface and a separate implementation class matters in a real project.</p>
         </li>
         <li>
-          <p class="quiz-question">Where does OSGi configuration live in the project, and how does it get deployed?</p>
+          <p class="quiz-question">What is the naming convention for a .cfg.json file, and where in the project does it live?</p>
         </li>
         <li>
-          <p class="quiz-question">How does AEM decide which run-mode-scoped config folder applies to a given instance at startup?</p>
+          <p class="quiz-question">A colleague edits a log level in /system/console/configMgr. It works. You deploy the next morning and the log level is back to the old value. Explain exactly what happened.</p>
         </li>
         <li>
-          <p class="quiz-question">Why is hand-editing a config in /system/console/configMgr risky long-term?</p>
+          <p class="quiz-question">An AEM instance has run modes 'author' and 'dev' active. You have config folders: config/, config.author/, config.author.dev/. Which one applies, and why?</p>
         </li>
         <li>
-          <p class="quiz-question">What did module 5 build on from an earlier module for OSGi configuration?</p>
+          <p class="quiz-question">You need the same service to point at a mock API on dev but a real API in production. How do you implement this without changing any code and without touching the Felix console manually?</p>
         </li>
         <li>
-          <p class="quiz-question">A config value needs to differ between author and publish. What's the correct way to handle that?</p>
+          <p class="quiz-question">What is the OSGi PID of a service, and how do you find it if you're unsure what to name your .cfg.json file?</p>
         </li>
         </ol>
       </div>
