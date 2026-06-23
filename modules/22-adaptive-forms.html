@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>22 Dynamic Forms / Adaptive Forms — AEM Backend Training</title>
+<meta name="description" content="Adaptive Forms: Foundation vs Core Components, Form Data Model, submit actions, and show/hide rules.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 28 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="adaptive-forms" href="22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="form-fragments" href="23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="forms-implementation" href="24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="analytics-workspaces" href="27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">22-adaptive-forms</span></p>
+
+      <div class="module-meta">
+        <span class="tag badge text-bg-secondary">Adobe Forms</span>
+        <span>40 min read</span>
+      </div>
+
+      <h1 class="page-title">Dynamic Forms / Adaptive Forms</h1>
+      <p class="lede">AEM Adaptive Forms let you build smart, responsive web forms that change based on user input, device, and business rules — without writing front-end JavaScript for every rule. They connect directly to back-end systems via the Form Data Model and live inside AEM the same way pages and components do.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>What an Adaptive Form is and how it differs from a plain HTML form</li>
+          <li>Foundation Components vs Core Components — which to use</li>
+          <li>Form Container, field types, panels, and the Rule Editor</li>
+          <li>What the Form Data Model is and how it connects to external data</li>
+          <li>Submit actions — what happens when a user clicks Submit</li>
+        </ul>
+      </div>
+
+      <h2>What is an Adaptive Form?</h2>
+      <p>An <strong>Adaptive Form</strong> adapts to the device (responsive layout), to user input (show "Spouse income" only if "Married" is selected), to external data (pre-fill a returning customer's address), and to validation rules (check age before allowing submission). Traditional HTML forms are static — you write the HTML, logic, validation, and handler yourself. Adaptive Forms move all of that into AEM's authoring environment, so business analysts configure show/hide rules without touching code.</p>
+
+      <div class="callout alert alert-primary">
+        <span class="label">Analogy</span>
+        A paper form has all questions printed regardless of your situation. A bank teller asks only relevant follow-up questions. Adaptive Forms turn your web form from a paper form into the teller.
+      </div>
+
+      <h2>Foundation vs Core Components</h2>
+      <pre data-code><span class="filename">two generations — know which one your project uses</span><code>Foundation Components (legacy)
+  Based on: JSP templates
+  Resource type: /libs/fd/af/components/
+  Status: no new features — maintenance only
+
+Core Components (current — use for all new projects)
+  Based on: HTL + Sling Models (same pattern as AEM Sites)
+  Resource type: /libs/core/fd/components/
+  Status: actively developed by Adobe</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is not cosmetic — Foundation and Core Components use completely different rendering pipelines. Core Components follow the same Sling Model + HTL pattern you've learned throughout this training, making them consistent with AEM Sites development.</p>
+          <ul>
+            <li><strong>/libs/fd/ vs /libs/core/fd/</strong> — different resource type paths mean a form built with Foundation Components cannot mix in Core Component fields.</li>
+            <li>Adobe has stopped adding features to Foundation Components. Always use Core Components for new projects.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Form Container and field types</h2>
+      <p>Every Adaptive Form starts with one outer Form Container component that holds all other components and carries the submit action, data binding, and prefill service configuration.</p>
+      <pre data-code><span class="filename">common Core Form field resource types</span><code>core/fd/components/form/textinput/v2/textinput      → single-line text
+core/fd/components/form/textarea/v2/textarea        → multi-line text
+core/fd/components/form/numberinput/v1/numberinput  → numeric with min/max
+core/fd/components/form/datepicker/v1/datepicker    → date selector
+core/fd/components/form/dropdown/v1/dropdown        → select from a list
+core/fd/components/form/checkboxgroup/v1/checkboxgroup → multi-select
+core/fd/components/form/radiobutton/v1/radiobutton  → single-select radios
+core/fd/components/form/fileupload/v1/fileupload    → file attachment
+core/fd/components/form/panel/v1/panel              → group fields, target for rules
+core/fd/components/form/wizard/v1/wizard            → multi-step wizard layout</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>These resource types follow the same Sling resolution from module 3 — they're just Core Components that happen to be form fields.</p>
+          <ul>
+            <li>The <strong>panel</strong> is especially important: it groups related fields and is the target for show/hide rules. Hiding a panel hides all fields inside it with one rule, not one rule per field.</li>
+            <li>The <strong>wizard</strong> renders panels as sequential steps, automatically handling Next/Previous navigation and step-level validation.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Form Data Model — connecting to back-end systems</h2>
+      <pre data-code><span class="filename">Form Data Model data source types</span><code>RESTful web services  → any REST API with a Swagger / OpenAPI spec
+SOAP web services     → legacy systems with a WSDL
+OData services        → Microsoft Dynamics, SharePoint, SAP
+Relational databases  → MySQL, PostgreSQL, Oracle via JDBC
+AEM User Profile      → logged-in user's profile properties</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The FDM is a mapping layer — it describes external data in AEM's own terms so the form doesn't need to know whether data lives in a REST API or a database.</p>
+          <ul>
+            <li>A data source is configured once in <strong>Tools → Cloud Services → Data Sources</strong>. Multiple forms can share one FDM, and one FDM can combine multiple data sources.</li>
+            <li>Once an FDM is connected to a form, you bind fields to FDM properties by dragging from the FDM tree in the field's dialog — no code required for standard cases.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Submit actions</h2>
+      <pre data-code><span class="filename">built-in submit actions</span><code>Submit to REST endpoint
+  → POSTs form data as JSON to a configurable URL
+
+Invoke a Form Data Model Service
+  → calls a write operation on your configured FDM
+
+Send Email
+  → sends confirmation email via AEM's Mail Service OSGi config
+
+Store in AEM Repository
+  → writes submission as a content node under /content/forms/fp
+  → useful for review workflows, not for high-volume storage
+
+Custom submit action
+  → implement GuideSubmitAction in Java — full control</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Submit actions are configured on the Form Container's dialog — no code for the standard ones. The custom action is the path requiring Java development (covered in module 24).</p>
+          <ul>
+            <li><strong>Submit to REST endpoint</strong> is the most common integration pattern — AEM posts JSON to your microservice; AEM acts as front-end only.</li>
+            <li><strong>Store in AEM Repository</strong> should not be used as a production database — AEM's JCR is optimised for content management, not high-volume transactional data.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Show/hide rules — the "adaptive" part</h2>
+      <pre data-code><span class="filename">rule examples — configured visually in the Rule Editor, no code required</span><code>// Show/hide
+WHEN field "maritalStatus" has value "Married"
+THEN show panel "SpouseDetails"
+ELSE hide panel "SpouseDetails"
+
+// Compute a value
+WHEN field "annualIncome" changes
+THEN set field "monthlyIncome" = annualIncome / 12
+
+// Validate
+WHEN field "dateOfBirth" changes
+THEN run custom function "calculateAge"
+     IF age &lt; 18 THEN show error "You must be 18 or older"
+
+// Enable/disable
+WHEN checkbox "agreeToTerms" is NOT checked
+THEN disable button "Submit"</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Rules run in the browser — no server round-trips — so conditional logic feels instant even on complex forms.</p>
+          <ul>
+            <li>The Rule Editor generates JavaScript under the hood but authors never see it. Business analysts configure rules; developers only step in for custom functions.</li>
+            <li>Rules target components by their <strong>Name</strong> property. Always give fields meaningful names before writing rules — changing a name later breaks every rule that references it.</li>
+            <li><strong>Custom functions</strong> extend the Rule Editor: write a JavaScript function in a clientlib, register it, and it appears in the Rule Editor's function palette.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="try-it alert alert-success">
+        <span class="label">Try it</span>
+        In AEM Forms (<code>localhost:4502/aem/forms</code>), create an Adaptive Form using the blank Core Components template. Add a dropdown named <code>employmentStatus</code> with options "Employed" / "Self-employed". Add a panel named <code>employerDetails</code> with a text field inside. Open the Rule Editor on the panel and write: show the panel only when <code>employmentStatus</code> equals "Employed". Preview and verify the panel appears and disappears correctly.
+      </div>
+
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What does 'adaptive' mean in Adaptive Forms — give two specific examples of what a form adapts to.</p>
+        </li>
+        <li>
+          <p class="quiz-question">What are the two generations of AEM Forms components, and which should you use for new projects?</p>
+        </li>
+        <li>
+          <p class="quiz-question">Name the Form Container's three key configuration responsibilities.</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is the Form Data Model (FDM) and what problem does it solve?</p>
+        </li>
+        <li>
+          <p class="quiz-question">Name three types of data sources you can connect to a Form Data Model.</p>
+        </li>
+        <li>
+          <p class="quiz-question">An author wants 'Spouse income' to appear only when 'Married' is selected. Which tool do they use, and does it require a developer?</p>
+        </li>
+        <li>
+          <p class="quiz-question">Name four built-in submit actions in AEM Adaptive Forms.</p>
+        </li>
+        <li>
+          <p class="quiz-question">A form rule references a field named 'dob'. A developer renames the field to 'dateOfBirth'. What breaks?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is the difference between a panel and a wizard layout in Adaptive Forms?</p>
+        </li>
+        <li>
+          <p class="quiz-question">Where in the AEM author environment do you navigate to create or manage Adaptive Forms?</p>
+        </li>
+        </ol>
+      </div>
+
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="adaptive-forms">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="21-acs-commons.html"><span class="dir">← Previous</span>ACS Commons</a>
+        <a class="next" href="23-form-fragments.html"><span class="dir">Next →</span>Form Fragments &amp; Sample Code</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

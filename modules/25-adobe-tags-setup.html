@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>25 Adobe Tags — Setup &amp; Concepts — AEM Backend Training</title>
+<meta name="description" content="What Adobe Experience Platform Tags is, the five core concepts, and how to create a Tag Property.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 28 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adaptive-forms" href="22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="form-fragments" href="23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="forms-implementation" href="24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="adobe-tags-setup" href="25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="analytics-workspaces" href="27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">25-adobe-tags-setup</span></p>
+
+      <div class="module-meta">
+        <span class="tag badge text-bg-secondary">Adobe Analytics</span>
+        <span>35 min read</span>
+      </div>
+
+      <h1 class="page-title">Adobe Tags — Setup &amp; Concepts</h1>
+      <p class="lede">Adobe Experience Platform Tags (formerly Adobe Launch, formerly Adobe DTM) is a tag management system: a platform for deploying and managing marketing JavaScript without a code deploy for every change. For AEM developers it's the standard integration point for Adobe Analytics, Adobe Target, and any third-party tracking.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>What a tag management system is and the problem it solves</li>
+          <li>The five core concepts: Properties, Extensions, Data Elements, Rules, Environments</li>
+          <li>How to create and configure a Tag Property step by step</li>
+          <li>The publishing workflow from Development to Production</li>
+          <li>How AEM Sites integrates Tags via Cloud Services</li>
+        </ul>
+      </div>
+
+      <h2>What problem does Adobe Tags solve?</h2>
+      <pre data-code><span class="filename">before and after tag management</span><code>WITHOUT a TMS:
+  Every tracking script → developer ticket → code deploy → 1-2 day turnaround
+  Config change to Google Analytics → another deploy
+  New A/B test event → back to the developer queue
+
+WITH Adobe Tags:
+  ONE embed script on every page (added once, never changed)
+  Everything else is configured in the Tags UI — no deploys needed
+  Marketing team can add/change tracking in minutes, not days</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The core value: <strong>one deploy</strong> by a developer (the embed code), then unlimited changes by the marketing team without touching the site's codebase.</p>
+          <ul>
+            <li>The embed code is a small JavaScript snippet loading the Tags library from Adobe's CDN. When a page loads, the Tags library executes all configured rules.</li>
+            <li>For AEM developers: add the embed code once via Cloud Services config, set up the Adobe Client Data Layer — then the implementation team works in the Tags UI from that point forward.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>The five core concepts</h2>
+      <pre data-code><span class="filename">Adobe Tags terminology — with AEM developer analogies</span><code>PROPERTY
+  Container for everything belonging to one website.
+  ≈ An AEM project: isolated config per site.
+
+EXTENSIONS
+  Plugins that add capabilities.
+  Examples: Adobe Analytics, Core, Adobe Target, Hotjar, Google Analytics.
+  ≈ OSGi bundles: install/remove independently.
+
+DATA ELEMENTS
+  Named variables referencing page data.
+  Example: "Page Name" → document.title
+           "User ID"   → digitalData.user.userId
+  ≈ Sling Model @ValueMapValue: reads data by name.
+
+RULES
+  Event → Condition → Action logic.
+  Example: Page Loaded → (always) → Send Analytics page view
+  ≈ ResourceChangeListener: trigger + condition + action.
+
+ENVIRONMENTS
+  Dev / Staging / Production — separate embed codes, separate workflows.
+  ≈ OSGi run-mode config folders: different config per environment.</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The AEM analogies make the learning curve shorter — the patterns are identical even though the tools are different.</p>
+          <ul>
+            <li><strong>Data Elements</strong> are the most important concept to get right. A well-named Data Element ("Page Name") used across 20 Rules is far more maintainable than hardcoding <code>document.title</code> in 20 places.</li>
+            <li><strong>Rules</strong> are evaluated in the order they're listed and can be given a priority number. Order matters when multiple rules fire on the same event.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Creating a Tag Property — step by step</h2>
+      <pre data-code><span class="filename">walkthrough in Adobe Experience Platform Data Collection UI</span><code>1. https://experience.adobe.com/#/data-collection/ → Tags → New Property
+   Name: "Academy Training Site"
+   Platform: Web
+   Domain: academy.netcentric.com
+
+2. Install the Adobe Analytics extension:
+   Extensions → Catalog → "Adobe Analytics" → Install
+   Report Suite ID:  dev-academy-report-suite   ← use a DEV suite, not production
+   Tracking Server:  your-company.sc.omtrdc.net
+   Character Set:    UTF-8
+
+3. Create your first Data Element:
+   Data Elements → Add Data Element
+   Name:            "Page Name"
+   Extension:       Core
+   Data Element Type: JavaScript Variable
+   Variable name:   digitalData.page.pageInfo.pageName</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The Tags UI is where all configuration lives — not in AEM. AEM only provides the mechanism to load the embed code.</p>
+          <ul>
+            <li><strong>Use a DEV report suite</strong> for the development Tags environment. Development data pollutes production reports — always separate them.</li>
+            <li><strong>Tracking Server</strong> (<code>your-company.sc.omtrdc.net</code>) is the Analytics server receiving beacons. Ask your Analytics admin for the correct value — it's specific to your organisation.</li>
+            <li><code>digitalData.page.pageInfo.pageName</code> references the Adobe Client Data Layer (ACDL) that AEM Core Components populate automatically. Module 26 covers this in detail.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Creating Rules</h2>
+      <pre data-code><span class="filename">rule: send a page view beacon to Analytics</span><code>RULE NAME: "Send Page View"
+
+EVENT:
+  Extension: Core
+  Type: Library Loaded (Page Top)
+  → fires when the Tags library loads on every page
+
+CONDITIONS:
+  (none — fires on every page)
+
+ACTIONS:
+  1. Adobe Analytics — Set Variables
+     eVar1   = %Page Name%      ← %...% references a Data Element
+     prop1   = %User Agent%
+     events  = event1
+
+  2. Adobe Analytics — Send Beacon
+     Tracking Type: Page View (s.t())</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Always: Set Variables first, then Send Beacon. Never merge them — keeping them separate lets you insert conditions between setting and sending.</p>
+          <ul>
+            <li><code>%Page Name%</code> — the curly-brace syntax resolves a Data Element by name. At runtime, Tags substitutes the Data Element's current value.</li>
+            <li><code>eVar1</code>, <code>prop1</code>, <code>events</code> — Adobe Analytics variables. eVars persist across pages (like a session cookie); props are per-hit only; events are counters for specific actions. Your Analytics admin assigns which variable maps to which data.</li>
+            <li><code>s.t()</code> = page view (increments Page Views metric). <code>s.tl()</code> = link tracking for clicks and custom events that should not be counted as page views.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Environments and publishing workflow</h2>
+      <pre data-code><span class="filename">publishing flow from development to production</span><code>DEVELOPMENT
+  Embed: https://assets.adobedtm.com/...dev.js
+  Changes appear immediately after saving — no publish step needed.
+  Use: local dev, rapid iteration.
+
+STAGING
+  Embed: https://assets.adobedtm.com/...staging.min.js
+  Requires: Submit → Approve → Build to Staging.
+  Use: QA against production content.
+
+PRODUCTION
+  Embed: https://assets.adobedtm.com/...min.js
+  Requires: Promote → Approve → Build to Production.
+  Use: live site only.
+
+AEM maps:
+  Author instance     → Development embed  (via Cloud Services run-mode config)
+  Non-prod publish    → Staging embed
+  Production publish  → Production embed</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Never load the Development embed in production — it's unminified, larger, and may contain in-progress rules not approved for end users.</p>
+          <ul>
+            <li>Changing <em>what the embed URL does</em> (adding rules, updating Data Elements) doesn't require an AEM deployment. Changing <em>which embed URL AEM loads</em> (switching from Staging to Production) does — it's an AEM Cloud Services config change.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>AEM Cloud Services integration</h2>
+      <pre data-code><span class="filename">where Tags embed URLs live in AEM</span><code>Tools → Cloud Services → Adobe Experience Platform Launch
+  → Creates config at /conf/&lt;site&gt;/settings/cloudconfigs/launch/jcr:content
+    Properties:
+      production.uri  = "https://assets.adobedtm.com/...launch-prod.min.js"
+      staging.uri     = "https://assets.adobedtm.com/...launch-staging.min.js"
+      development.uri = "https://assets.adobedtm.com/...launch-dev.js"
+
+AEM Core Components' Page component reads this config and injects:
+  &lt;script src="{correct-uri-for-current-run-mode}"&gt;&lt;/script&gt;
+  in &lt;head&gt; automatically — no template editing required.</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is a Context-Aware Configuration (module 15) — each site in AEM can have a different Tags property. The Page component reads it automatically when it extends Core Components.</p>
+          <ul>
+            <li>Assign the config to your site by setting <code>sling:configRef</code> on <code>/content/academy</code> pointing to <code>/conf/academy</code>, or via Page Properties → Cloud Services tab on the root page.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="try-it alert alert-success">
+        <span class="label">Try it</span>
+        In Adobe Experience Platform Data Collection, create a Tag Property, install the Adobe Analytics extension, and create one Data Element "Page Name" reading <code>document.title</code>. Create a Rule: Library Loaded → Set Variables (eVar1 = %Page Name%) + Send Beacon. Copy the Development embed URL for use in module 26.
+      </div>
+
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What was Adobe Tags called before it was renamed, and what is its full current official name?</p>
+        </li>
+        <li>
+          <p class="quiz-question">In one sentence, explain the core value of a tag management system for a marketing team.</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is a Tag Property, and how many should you create for a single website?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is an Extension in Adobe Tags — give two examples.</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is a Data Element? Draw an analogy to something from AEM development.</p>
+        </li>
+        <li>
+          <p class="quiz-question">Name the three parts of a Rule in Adobe Tags.</p>
+        </li>
+        <li>
+          <p class="quiz-question">What are the three publishing Environments in Adobe Tags, and why do they matter?</p>
+        </li>
+        <li>
+          <p class="quiz-question">How does AEM Sites include the Tags embed code on every page without template changes?</p>
+        </li>
+        <li>
+          <p class="quiz-question">In a Set Variables action, eVar1 = %Page Name%. What does %Page Name% mean at runtime?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is the difference between s.t() and s.tl() in Adobe Analytics?</p>
+        </li>
+        </ol>
+      </div>
+
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="adobe-tags-setup">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="24-forms-implementation.html"><span class="dir">← Previous</span>Implementing Adaptive Forms</a>
+        <a class="next" href="26-adobe-tags-implement.html"><span class="dir">Next →</span>Implementing Adobe Tags in AEM</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

@@ -18,7 +18,7 @@
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </button>
   <span class="brand"><span class="node-icon">◆</span> /content/training</span>
-  <span class="progress-pill" data-progress-pill>0 / 22 modules</span>
+  <span class="progress-pill" data-progress-pill>0 / 28 modules</span>
 </header>
 
 <div class="shell">
@@ -48,6 +48,18 @@
       <li><a class="tree-node" data-module-id="dispatcher-deployment" href="modules/19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="groovy-console" href="modules/20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
       <li><a class="tree-node" data-module-id="acs-commons" href="modules/21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adaptive-forms" href="modules/22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="form-fragments" href="modules/23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="forms-implementation" href="modules/24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="modules/25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="modules/26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="analytics-workspaces" href="modules/27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adaptive-forms" href="modules/22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="form-fragments" href="modules/23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="forms-implementation" href="modules/24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="modules/25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="modules/26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="analytics-workspaces" href="modules/27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
     </ul>
     <p class="legend">Filled circle = module marked complete.</p>
   </nav>
@@ -59,265 +71,243 @@
       <p class="sub">A short curriculum for junior backend engineers joining an AEM project. It starts where AEM itself starts — the content repository — and builds outward through Sling, OSGi, and the rest of the stack. The navigation on the left is laid out exactly like a real JCR tree, on purpose: you'll be reading paths like this in CRXDE Lite by the end of module two.</p>
       <div class="progress-track">
         <div class="progress-bar"><span data-progress-bar style="width:0%"></span></div>
-        <p class="progress-label" data-progress-label>0 of 22 modules complete</p>
+        <p class="progress-label" data-progress-label>0 of 28 modules complete</p>
       </div>
+
     </section>
 
     <section class="curriculum">
-      <p class="tree-root">Modules</p>
-
       <article class="module-card card shadow-sm">
         <span class="idx">00</span>
         <div class="body">
           <h3><a href="modules/00-java-primer.html">Java Primer for AEM</a></h3>
-          <p>A condensed Java refresher (34 slides, cut from 74) with five exercises that build, deploy, and run against a real AEM instance instead of a standalone Java project.</p>
+          <p>The minimum Java you need before the AEM concepts make sense. Interfaces, dependency injection mindset, and how the build chain connects.</p>
           <div class="meta-row">
-            <span>45 min</span><span>·</span><span>Prerequisite</span>
+            <span>45 min</span><span>·</span><span>Java</span>
             <span class="status available badge rounded-pill" data-status-for="java-primer">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">01</span>
         <div class="body">
-          <h3><a href="modules/01-architecture-overview.html">Architecture Overview</a></h3>
-          <p>The three layers every AEM developer needs in their head: the repository, the resource framework, and the runtime that wires it together.</p>
+          <h3><a href="modules/01-architecture-overview.html">AEM Architecture Overview</a></h3>
+          <p>The ten-thousand-foot view. Content repository, Sling, OSGi, and how they relate — so that nothing from module two onward comes as a surprise.</p>
           <div class="meta-row">
-            <span>25 min</span><span>·</span><span>Foundations</span>
+            <span>20 min</span><span>·</span><span>Architecture</span>
             <span class="status available badge rounded-pill" data-status-for="arch-overview">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">02</span>
         <div class="body">
-          <h3><a href="modules/02-jcr-repository.html">JCR &amp; the Content Repository</a></h3>
-          <p>Nodes, properties, and paths — how content is actually stored, and the conventions (<code class="inline">/content</code>, <code class="inline">/apps</code>, <code class="inline">/libs</code>) you'll see on every project.</p>
+          <h3><a href="modules/02-jcr-repository.html">The Content Repository</a></h3>
+          <p>Everything in AEM is a node. Understanding the repository structure is the single most useful thing you can do in the first week.</p>
           <div class="meta-row">
             <span>30 min</span><span>·</span><span>Repository</span>
             <span class="status available badge rounded-pill" data-status-for="jcr-repository">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">03</span>
         <div class="body">
-          <h3><a href="modules/03-sling-framework.html">Sling Framework Fundamentals</a></h3>
-          <p>How a URL becomes a rendered page: resource resolution, selectors, extensions, and script resolution.</p>
+          <h3><a href="modules/03-sling-framework.html">The Sling Framework</a></h3>
+          <p>How a URL becomes a rendered page. Resource resolution, script selection, and the Sling API.</p>
           <div class="meta-row">
-            <span>35 min</span><span>·</span><span>Request handling</span>
+            <span>35 min</span><span>·</span><span>Sling</span>
             <span class="status available badge rounded-pill" data-status-for="sling-framework">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">04</span>
         <div class="body">
-          <h3><a href="modules/04-osgi-services.html">OSGi: Bundles, Services &amp; Components</a></h3>
-          <p>The modular runtime underneath AEM — bundles, service registration, dependency injection, and the Felix console.</p>
+          <h3><a href="modules/04-osgi-services.html">OSGi — Services &amp; Components</a></h3>
+          <p>What OSGi is, why it exists, and how to write an annotated component the runtime will manage for you.</p>
           <div class="meta-row">
-            <span>30 min</span><span>·</span><span>Runtime</span>
+            <span>40 min</span><span>·</span><span>OSGi</span>
             <span class="status available badge rounded-pill" data-status-for="osgi-services">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">05</span>
         <div class="body">
-          <h3><a href="modules/05-osgi-services-config.html">OSGi Services &amp; Configuration</a></h3>
-          <p>Reference cardinality, immediate components, and deploying OSGi configuration as JSON across run modes.</p>
+          <h3><a href="modules/05-osgi-services-config.html">OSGi — Configuration</a></h3>
+          <p>How to supply different config values per environment without touching code.</p>
           <div class="meta-row">
-            <span>30 min</span><span>·</span><span>Runtime · Advanced</span>
+            <span>30 min</span><span>·</span><span>OSGi</span>
             <span class="status available badge rounded-pill" data-status-for="osgi-services-config">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">06</span>
         <div class="body">
           <h3><a href="modules/06-sling-models.html">Sling Models</a></h3>
-          <p>Mapping repository content to typed Java objects for use in templates and services.</p>
+          <p>Turning a JCR node into a typed Java object a template can use. The pattern that makes everything else cleaner.</p>
           <div class="meta-row">
-            <span>25 min</span><span>·</span><span>Content models</span>
+            <span>35 min</span><span>·</span><span>Sling</span>
             <span class="status available badge rounded-pill" data-status-for="sling-models">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">07</span>
         <div class="body">
-          <h3><a href="modules/07-sling-models-advanced.html">Sling Models In Depth</a></h3>
-          <p>Adaptation internals, interface-based models, constructor vs. activation injection, and Resource vs. Request as the adaptable.</p>
+          <h3><a href="modules/07-sling-models-advanced.html">Sling Models — Advanced</a></h3>
+          <p>Constructor injection, interface-based adapters, and reading OSGi services from inside a model.</p>
           <div class="meta-row">
-            <span>30 min</span><span>·</span><span>Content models · Advanced</span>
+            <span>35 min</span><span>·</span><span>Sling</span>
             <span class="status available badge rounded-pill" data-status-for="sling-models-advanced">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">08</span>
         <div class="body">
-          <h3><a href="modules/08-model-composition.html">Extending Core Component Models</a></h3>
-          <p>The full <code class="inline">@Via(type = ResourceSuperType.class)</code> composition pattern, and setting up a project for unit testing.</p>
+          <h3><a href="modules/08-model-composition.html">Model Composition</a></h3>
+          <p>Wrapping Core Component models to extend them without copying their code.</p>
           <div class="meta-row">
-            <span>20 min</span><span>·</span><span>Content models · Advanced</span>
+            <span>30 min</span><span>·</span><span>Sling</span>
             <span class="status available badge rounded-pill" data-status-for="model-composition">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">09</span>
         <div class="body">
-          <h3><a href="modules/09-htl-templating.html">HTL (Sightly) Templating</a></h3>
-          <p>AEM's secure-by-default templating language for the presentation layer.</p>
+          <h3><a href="modules/09-htl-templating.html">HTL Templating</a></h3>
+          <p>AEM's secure templating language. How to use it correctly and what it's protecting you from.</p>
           <div class="meta-row">
-            <span>30 min</span><span>·</span><span>Presentation</span>
+            <span>30 min</span><span>·</span><span>Frontend</span>
             <span class="status available badge rounded-pill" data-status-for="htl-templating">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">10</span>
         <div class="body">
           <h3><a href="modules/10-servlets-apis.html">Servlets &amp; Backend APIs</a></h3>
-          <p>Writing and registering servlets to expose backend endpoints under a resource type.</p>
+          <p>Path-based and resource-type-based servlet registration, and when to reach for each.</p>
           <div class="meta-row">
-            <span>25 min</span><span>·</span><span>APIs</span>
+            <span>35 min</span><span>·</span><span>Backend</span>
             <span class="status available badge rounded-pill" data-status-for="servlets-apis">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">11</span>
         <div class="body">
-          <h3><a href="modules/11-dialogs-components.html">Dialogs, Components &amp; the Touch UI</a></h3>
-          <p>Authoring interfaces: component dialogs, edit/design dialogs, and content policies.</p>
+          <h3><a href="modules/11-dialogs-components.html">Dialogs &amp; Components</a></h3>
+          <p>Author dialogs, the component folder structure, and how saved values reach a Sling Model.</p>
           <div class="meta-row">
-            <span>30 min</span><span>·</span><span>Authoring</span>
+            <span>35 min</span><span>·</span><span>Components</span>
             <span class="status available badge rounded-pill" data-status-for="dialogs-components">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">12</span>
         <div class="body">
-          <h3><a href="modules/12-custom-components.html">Custom Components Workshop</a></h3>
-          <p>Build an extended Image component that reads asset metadata, and a Weather component backed by a free public API — full code, exact Maven paths included.</p>
+          <h3><a href="modules/12-custom-components.html">Custom Components</a></h3>
+          <p>Two complete components built from scratch and walking through every file.</p>
           <div class="meta-row">
-            <span>50 min</span><span>·</span><span>Components workshop</span>
+            <span>50 min</span><span>·</span><span>Components</span>
             <span class="status available badge rounded-pill" data-status-for="custom-components">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">13</span>
         <div class="body">
-          <h3><a href="modules/13-java-pitfalls.html">Java Best Practices &amp; Pitfalls</a></h3>
-          <p>Hash vs. Comparable, interfaces vs. abstract classes, stream pitfalls, and how to actually debug a running AEM instance.</p>
+          <h3><a href="modules/13-java-pitfalls.html">Java Pitfalls in AEM</a></h3>
+          <p>The mistakes that show up on every project. equals/hashCode, streams, null handling, and more.</p>
           <div class="meta-row">
-            <span>35 min</span><span>·</span><span>Java deep dive</span>
+            <span>25 min</span><span>·</span><span>Java</span>
             <span class="status available badge rounded-pill" data-status-for="java-pitfalls">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">14</span>
         <div class="body">
           <h3><a href="modules/14-unit-testing.html">Unit Testing</a></h3>
-          <p>JUnit, Mockito, and AEM Mocks — testing Sling Models, services, and resources without deploying to AEM.</p>
+          <p>JUnit 5, Mockito, and AEM Mocks — testing models and servlets without a running AEM instance.</p>
           <div class="meta-row">
             <span>40 min</span><span>·</span><span>Testing</span>
             <span class="status available badge rounded-pill" data-status-for="unit-testing">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">15</span>
         <div class="body">
-          <h3><a href="modules/15-context-aware-config.html">Context-Aware Configurations</a></h3>
-          <p>Per-site configuration resolved by content hierarchy, plus the WCM IO editor for managing it without CRXDE Lite.</p>
+          <h3><a href="modules/15-context-aware-config.html">Context-Aware Configuration</a></h3>
+          <p>Per-site configuration that changes based on where in the content hierarchy you are.</p>
           <div class="meta-row">
-            <span>30 min</span><span>·</span><span>Configuration</span>
+            <span>30 min</span><span>·</span><span>OSGi</span>
             <span class="status available badge rounded-pill" data-status-for="context-aware-config">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">16</span>
         <div class="body">
-          <h3><a href="modules/16-workflows-events.html">Workflows &amp; Event Handling</a></h3>
-          <p>Automating content lifecycle with workflows, JCR event listeners, and schedulers.</p>
+          <h3><a href="modules/16-workflows-events.html">Workflows &amp; Events</a></h3>
+          <p>Workflow process steps, resource change listeners, and the Sling Scheduler.</p>
           <div class="meta-row">
-            <span>25 min</span><span>·</span><span>Automation</span>
+            <span>35 min</span><span>·</span><span>Workflows</span>
             <span class="status available badge rounded-pill" data-status-for="workflows-events">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">17</span>
         <div class="body">
-          <h3><a href="modules/17-workflow-design.html">Workflow Design &amp; Custom Steps</a></h3>
-          <p>Workflow model vs. instance, the visual editor and stages, and writing a custom step that survives a retry.</p>
+          <h3><a href="modules/17-workflow-design.html">Workflow Design</a></h3>
+          <p>Designing a complete review-and-approval workflow with custom process steps.</p>
           <div class="meta-row">
-            <span>30 min</span><span>·</span><span>Automation · Advanced</span>
+            <span>35 min</span><span>·</span><span>Workflows</span>
             <span class="status available badge rounded-pill" data-status-for="workflow-design">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">18</span>
         <div class="body">
           <h3><a href="modules/18-sling-jobs.html">Sling Jobs</a></h3>
-          <p>Running asynchronous and scheduled work in the background — and finally fixing module 11's Weather component.</p>
+          <p>Reliable, retry-able background processing — the right pattern for heavy async work.</p>
           <div class="meta-row">
-            <span>30 min</span><span>·</span><span>Runtime · Advanced</span>
+            <span>35 min</span><span>·</span><span>Backend</span>
             <span class="status available badge rounded-pill" data-status-for="sling-jobs">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">19</span>
         <div class="body">
           <h3><a href="modules/19-dispatcher-deployment.html">Dispatcher, Caching &amp; Deployment</a></h3>
-          <p>The layer between AEM and the internet — caching rules, invalidation, and the author/publish pipeline.</p>
+          <p>What the Dispatcher is, how caching works, and how the filter allow-list keeps the server safe.</p>
           <div class="meta-row">
-            <span>30 min</span><span>·</span><span>Operations</span>
+            <span>35 min</span><span>·</span><span>Operations</span>
             <span class="status available badge rounded-pill" data-status-for="dispatcher-deployment">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">20</span>
         <div class="body">
           <h3><a href="modules/20-groovy-console.html">Groovy Console</a></h3>
-          <p>Writing one-off content migration scripts safely, without building and deploying a full OSGi bundle.</p>
+          <p>The fastest tool for ad-hoc repository work and migration scripts.</p>
           <div class="meta-row">
             <span>20 min</span><span>·</span><span>Tooling</span>
             <span class="status available badge rounded-pill" data-status-for="groovy-console">Available</span>
           </div>
         </div>
       </article>
-
       <article class="module-card card shadow-sm">
         <span class="idx">21</span>
         <div class="body">
@@ -326,6 +316,72 @@
           <div class="meta-row">
             <span>20 min</span><span>·</span><span>Tooling</span>
             <span class="status available badge rounded-pill" data-status-for="acs-commons">Available</span>
+          </div>
+        </div>
+      </article>
+      <article class="module-card card shadow-sm">
+        <span class="idx">22</span>
+        <div class="body">
+          <h3><a href="modules/22-adaptive-forms.html">Dynamic &amp; Adaptive Forms</a></h3>
+          <p>What Adaptive Forms are, how they adapt to users and devices, and how the Form Data Model connects them to back-end systems.</p>
+          <div class="meta-row">
+            <span>40 min</span><span>·</span><span>Adobe Forms</span>
+            <span class="status available badge rounded-pill" data-status-for="adaptive-forms">Available</span>
+          </div>
+        </div>
+      </article>
+      <article class="module-card card shadow-sm">
+        <span class="idx">23</span>
+        <div class="body">
+          <h3><a href="modules/23-form-fragments.html">Form Fragments &amp; Sample Code</a></h3>
+          <p>Reusable form sections, JSON schema binding, and a complete working adaptive form with annotated code.</p>
+          <div class="meta-row">
+            <span>35 min</span><span>·</span><span>Adobe Forms</span>
+            <span class="status available badge rounded-pill" data-status-for="form-fragments">Available</span>
+          </div>
+        </div>
+      </article>
+      <article class="module-card card shadow-sm">
+        <span class="idx">24</span>
+        <div class="body">
+          <h3><a href="modules/24-forms-implementation.html">Implementing Adaptive Forms</a></h3>
+          <p>Step-by-step: embedding forms in Sites pages, custom submit actions, REST data sources, and custom validation.</p>
+          <div class="meta-row">
+            <span>45 min</span><span>·</span><span>Adobe Forms</span>
+            <span class="status available badge rounded-pill" data-status-for="forms-implementation">Available</span>
+          </div>
+        </div>
+      </article>
+      <article class="module-card card shadow-sm">
+        <span class="idx">25</span>
+        <div class="body">
+          <h3><a href="modules/25-adobe-tags-setup.html">Adobe Tags — Setup &amp; Concepts</a></h3>
+          <p>What Adobe Experience Platform Tags (formerly Launch) is, and how to create and configure a Tag property.</p>
+          <div class="meta-row">
+            <span>35 min</span><span>·</span><span>Adobe Analytics</span>
+            <span class="status available badge rounded-pill" data-status-for="adobe-tags-setup">Available</span>
+          </div>
+        </div>
+      </article>
+      <article class="module-card card shadow-sm">
+        <span class="idx">26</span>
+        <div class="body">
+          <h3><a href="modules/26-adobe-tags-implement.html">Implementing Adobe Tags in AEM</a></h3>
+          <p>Wiring the Adobe Client Data Layer to Tags, creating Data Elements and Rules, and testing the full pipeline.</p>
+          <div class="meta-row">
+            <span>40 min</span><span>·</span><span>Adobe Analytics</span>
+            <span class="status available badge rounded-pill" data-status-for="adobe-tags-implement">Available</span>
+          </div>
+        </div>
+      </article>
+      <article class="module-card card shadow-sm">
+        <span class="idx">27</span>
+        <div class="body">
+          <h3><a href="modules/27-analytics-workspaces.html">Adobe Analytics Workspaces</a></h3>
+          <p>Navigating Analysis Workspace: dimensions, metrics, segments, visualisations, and sharing reports.</p>
+          <div class="meta-row">
+            <span>30 min</span><span>·</span><span>Adobe Analytics</span>
+            <span class="status available badge rounded-pill" data-status-for="analytics-workspaces">Available</span>
           </div>
         </div>
       </article>

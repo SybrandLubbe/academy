@@ -25,7 +25,13 @@
     "sling-jobs",
     "dispatcher-deployment",
     "groovy-console",
-    "acs-commons"
+    "acs-commons",
+    "adaptive-forms",
+    "form-fragments",
+    "forms-implementation",
+    "adobe-tags-setup",
+    "adobe-tags-implement",
+    "analytics-workspaces"
   ];
 
   function getProgress() {

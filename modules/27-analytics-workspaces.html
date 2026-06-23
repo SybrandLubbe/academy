@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>27 Adobe Analytics Workspaces — AEM Backend Training</title>
+<meta name="description" content="Analysis Workspace: dimensions, metrics, segments, visualisations, attribution models, and sharing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 28 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adaptive-forms" href="22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="form-fragments" href="23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="forms-implementation" href="24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="analytics-workspaces" href="27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">27-analytics-workspaces</span></p>
+
+      <div class="module-meta">
+        <span class="tag badge text-bg-secondary">Adobe Analytics</span>
+        <span>30 min read</span>
+      </div>
+
+      <h1 class="page-title">Adobe Analytics Workspaces</h1>
+      <p class="lede">Adobe Analytics is where all that tracking data becomes useful. Analysis Workspace is the primary analysis environment — a drag-and-drop canvas for building reports, discovering patterns, and sharing findings. This module gives you enough to be useful in a client meeting and to know when to call a dedicated analyst.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>Core vocabulary: Report Suites, Dimensions, Metrics, Segments</li>
+          <li>Navigating Analysis Workspace and building a Freeform Table</li>
+          <li>The most useful visualisations and when to use each</li>
+          <li>Attribution models — why the same data gives different numbers</li>
+          <li>Segments — filtering data without changing it</li>
+          <li>Scheduling and sharing reports with stakeholders</li>
+        </ul>
+      </div>
+
+      <h2>Core vocabulary</h2>
+      <pre data-code><span class="filename">fundamental Analytics concepts — know these before any client meeting</span><code>REPORT SUITE
+  The data silo where your site's tracking data lands.
+  Separate suite per brand. Always have: 1 prod + 1 dev suite.
+
+DIMENSION    "What" — a categorical variable
+  Page Name, Browser, Country, Marketing Channel, eVar1 (custom)
+  A dimension has values: Page Name → "Home", "Checkout", "About Us"
+
+METRIC       "How many" — a number
+  Page Views, Visits, Unique Visitors, Revenue, event1 (custom)
+
+SEGMENT      "Who" — a filter applied to a report
+  "Mobile Users", "Visitors who purchased", "Sessions from Germany"
+
+PAGE VIEW    One page load
+VISIT        A session (30-min inactivity timeout)
+VISITOR      A unique person (cookie-based); can have many Visits</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>These four concepts (Dimension, Metric, Segment, Report Suite) are the building blocks of every Workspace report.</p>
+          <ul>
+            <li><strong>Dimension vs Metric</strong>: dimensions are rows ("Page Name"), metrics are columns ("Page Views"). All Freeform Tables follow this pattern.</li>
+            <li><strong>Visits vs Visitors vs Page Views</strong> — the most frequently confused trio. Page Views counts loads. Visits counts sessions. Visitors counts unique people. One visitor can have many visits; one visit can have many page views.</li>
+            <li><strong>eVar vs standard dimension</strong> — eVars are custom dimensions you populate via Tags. Standard dimensions (Browser, Country) are populated automatically by Analytics.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Navigating Analysis Workspace</h2>
+      <pre data-code><span class="filename">Workspace layout — main areas</span><code>https://experience.adobe.com/analytics → Workspace → Create Project → Blank
+
+LEFT SIDEBAR TABS:
+  📊 Components     → all Dimensions, Metrics, Segments, Date Ranges
+  📋 Panels         → drag onto canvas to structure a report
+  📈 Visualisations → drag charts onto panels or Freeform Tables
+
+CANVAS:
+  Freeform Table    → drag Dimensions to rows, Metrics to columns
+  Date picker       → top right of each Panel
+
+TOOLBAR:
+  Share             → live link or scheduled email
+  Download          → CSV, PDF, Excel</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Workspace is entirely drag-and-drop — the sidebar categories are the key to finding what you need quickly.</p>
+          <ul>
+            <li><strong>Freeform Table</strong> is the default building block. Most other visualisations are derived from a Freeform Table.</li>
+            <li>Use the search box in the Components tab — a large implementation may have hundreds of custom eVars and events. Searching by label is far faster than scrolling.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Building a Freeform Table</h2>
+      <pre data-code><span class="filename">step-by-step: top 10 pages in last 30 days</span><code>1. Drag "Freeform Table" visualisation onto the canvas
+2. From Components → Dimensions:
+   Drag "Page" dimension to the table row area
+   → 10 rows appear, ordered by most viewed
+3. From Components → Metrics:
+   Drag "Page Views" to first column
+   Drag "Unique Visitors" to add a second column
+4. Date range (panel header, top right): "Last 30 days"
+5. Sort by Page Views (click column header)
+
+BREAKDOWN:
+  Right-click any row → Breakdown → choose second dimension
+  e.g. break "Home" by "Browser" → which browsers did Home visitors use?
+
+ROW FILTER:
+  Funnel icon on a row → filter rows by dimension value
+  e.g. show only pages whose names contain "checkout"</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Every element in a Freeform Table is interactive — right-clicking a row reveals breakdowns, visualisations, and filter options.</p>
+          <ul>
+            <li><strong>Breakdown</strong> adds a second dimension inside a row, answering "among people who viewed X, what Y did they use?" — replacing two separate reports.</li>
+            <li>Tables <strong>automatically recalculate</strong> when you change the date range or apply a segment — there's no "run query" button.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Visualisations — which to use</h2>
+      <pre data-code><span class="filename">six visualisations and their use cases</span><code>LINE CHART
+  Trends over time (daily page views, weekly sessions)
+  "Is engagement going up or down over the quarter?"
+
+BAR / HORIZONTAL BAR
+  Comparing values across categories
+  "Which 5 pages had the most traffic this month?"
+
+DONUT
+  Part-to-whole (channel mix, device type breakdown)
+  "What % of visits came from organic vs paid?"
+
+FALLOUT
+  Step-by-step conversion funnel — did sessions touch each step IN ORDER?
+  "What % reached checkout after viewing a product?"
+
+FLOW
+  Path analysis — where did users go before/after a specific page?
+  "What did people do after leaving the About Us page?"
+
+COHORT TABLE
+  Retention over time — of users acquired in period X, how many returned in Y?</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Choosing the right visualisation is half of good data communication — a line chart for category comparisons gives the wrong impression.</p>
+          <ul>
+            <li><strong>Fallout</strong> counts sessions that touched each step in order, but not necessarily consecutively — a user can visit 50 pages between Step 1 and Step 2 and still count. For strict consecutive steps, use "Sequential" segments.</li>
+            <li><strong>Flow</strong> fans out in both directions: what came before and what came after a specific page. Excellent for discovering unexpected user paths that lead to conversion.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Attribution models</h2>
+      <pre data-code><span class="filename">why the same conversion can produce completely different channel credit numbers</span><code>User journey: Organic Search → Email → Direct → £500 Purchase
+
+LAST TOUCH (Analytics default):
+  100% to "Direct"      — email gets zero credit
+
+FIRST TOUCH:
+  100% to "Organic"     — direct gets zero credit
+
+LINEAR:
+  33% each              — all touchpoints share equally
+
+TIME DECAY:
+  ~50% Direct, ~30% Email, ~20% Organic
+  — more credit to channels closer to conversion
+
+ALGORITHMIC (Attribution IQ):
+  ML model trained on your conversion data</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Attribution is why two analysts can report different conversion numbers from the same data — neither is wrong; they're answering different questions.</p>
+          <ul>
+            <li>Change the model on any metric: click the metric name in a Freeform Table → Attribution Model. This changes that column only, in that report — it doesn't affect raw data.</li>
+            <li>When a stakeholder says "email underperforms," ask which model they used. Email almost always looks better under Linear or Time Decay than Last Touch, because it typically assists conversions rather than closing them.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Segments — filtering without changing data</h2>
+      <pre data-code><span class="filename">creating and applying segments</span><code>CREATE:
+  Components → Segments → + → New Segment
+  Name: "Mobile Users"
+  Container: Hit
+  Rule: Mobile Device Type equals "Mobile Phone"
+
+APPLY TO PANEL:
+  Drag segment onto Panel header
+  → All tables and charts in that panel show Mobile Users only
+
+APPLY TO A SINGLE COLUMN:
+  Drag onto a Freeform Table column header
+  → That column = Mobile Users; others unchanged
+
+COMPARE TWO SEGMENTS:
+  Drag TWO segments onto a Panel header
+  → Panel auto-splits for side-by-side comparison
+
+SEQUENTIAL SEGMENT:
+  Visitors who viewed a product page AND THEN visited checkout
+  Container: Visitor
+  Step 1: Page contains "product"
+  THEN (not AND):
+  Step 2: Page contains "checkout"</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Segments are non-destructive — they filter the view without changing the underlying data. Apply, remove, and change freely.</p>
+          <ul>
+            <li><strong>Container level</strong> — Hit filters individual page views; Visit includes all hits from a matching session; Visitor includes all sessions from users who ever matched. Container dramatically changes what data is included.</li>
+            <li><strong>THEN vs AND</strong>: AND means both conditions in any order; THEN means Condition 1 must precede Condition 2. Always use THEN for funnel analysis.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Scheduling and sharing</h2>
+      <pre data-code><span class="filename">sharing options</span><code>SHARE → WORKSPACE USERS (live):
+  Recipient sees live data, can interact.
+  Requires an Adobe Analytics licence.
+
+SCHEDULE → SEND FILE:
+  Format: CSV / PDF / Excel
+  Frequency: Daily / Weekly / Monthly
+  Recipients: email addresses (no licence needed to receive)
+  → Snapshot — data frozen at send time.
+
+CURATE PROJECT:
+  Choose which components are visible to recipients.
+  Hides unused eVars and events — reduces confusion for non-analysts.
+  Best for: handing a project to a client who wants self-service.</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Curation removes cognitive overload for non-analysts by showing only the dimensions, metrics, and segments relevant to their question.</p>
+          <ul>
+            <li><strong>Scheduled PDF</strong> is the most common executive deliverable. Set date range to "Previous Week" for automated weekly reports — it recalculates automatically each send.</li>
+            <li><strong>Virtual Report Suites (VRS)</strong> are the enterprise self-service solution: a filtered view of the main suite with curated components, given to a team so they see only their product area's data.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="try-it alert alert-success">
+        <span class="label">Try it — build a real report</span>
+        Create a Workspace project with three panels:
+        <ol style="margin:0.5em 0 0 1.2em;padding:0">
+          <li><strong>Traffic overview</strong> — Line chart of Page Views + Visits, last 30 days.</li>
+          <li><strong>Top pages</strong> — Freeform Table: Page dimension + Page Views metric. Break down the top 3 pages by Device Type.</li>
+          <li><strong>Mobile vs Desktop</strong> — Apply "Mobile Users" and "Desktop Users" segments to the same panel. Add Unique Visitors to each.</li>
+        </ol>
+        Share via a read-only link with a colleague.
+      </div>
+
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">What is a Report Suite, and why should dev and production use separate suites?</p>
+        </li>
+        <li>
+          <p class="quiz-question">Explain the difference between a Dimension and a Metric. Give one real example of each.</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is a Segment in Workspace, and how is it different from filtering a single table column?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is the difference between a Visit, a Visitor, and a Page View?</p>
+        </li>
+        <li>
+          <p class="quiz-question">You want to see which pages lost the most traffic compared to last month. Which visualisation do you use?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What does a Fallout visualisation measure, and what is the common misconception about how it counts steps?</p>
+        </li>
+        <li>
+          <p class="quiz-question">An analyst reports email drives 2% of conversions; another says 35%. Both are right. How?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is the difference between AND and THEN when building a sequential segment?</p>
+        </li>
+        <li>
+          <p class="quiz-question">An executive with no Analytics licence needs a weekly performance summary. What sharing approach do you use?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is a Virtual Report Suite, and when would you create one?</p>
+        </li>
+        </ol>
+      </div>
+
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="analytics-workspaces">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="26-adobe-tags-implement.html"><span class="dir">← Previous</span>Implementing Adobe Tags in AEM</a>
+        <a class="next" href="../index.html"><span class="dir">Next →</span>Back to Curriculum</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

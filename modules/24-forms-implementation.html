@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>24 Implementing Adaptive Forms — AEM Backend Training</title>
+<meta name="description" content="Maven setup, embedding a form in Sites, custom submit actions, REST data sources, and custom validators.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 28 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adaptive-forms" href="22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="form-fragments" href="23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="forms-implementation" href="24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="analytics-workspaces" href="27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">24-forms-implementation</span></p>
+
+      <div class="module-meta">
+        <span class="tag badge text-bg-secondary">Adobe Forms</span>
+        <span>45 min read</span>
+      </div>
+
+      <h1 class="page-title">Implementing Adaptive Forms</h1>
+      <p class="lede">AEM Forms is a separate add-on to AEM Sites. This module covers everything a developer needs to ship a form: setting up the Maven dependency, embedding the form in a Sites page, writing a custom submit action, connecting a REST data source, and adding custom validation.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>The Maven dependency and scope required for AEM Forms development</li>
+          <li>Two ways to embed a form in an AEM Sites page</li>
+          <li>Writing a custom submit action — full working code</li>
+          <li>Configuring a REST data source and Form Data Model step by step</li>
+          <li>Adding a custom JavaScript validator</li>
+        </ul>
+      </div>
+
+      <h2>Prerequisite: AEM Forms add-on</h2>
+      <p>AEM Forms requires a separate add-on package on your AEM instance, and a Forms API Maven dependency in your project. Check your project lead before starting — it affects licensing and instance setup.</p>
+      <pre data-code><span class="filename">/aem-academy/core/pom.xml — add inside &lt;dependencies&gt; <em>(academy.core)</em></span><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.adobe.aem&lt;/groupId&gt;
+    &lt;artifactId&gt;aem-forms-sdk-api&lt;/artifactId&gt;
+    &lt;version&gt;6.5.14.0&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;         &lt;!-- NEVER bundle — already in AEM --&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;com.adobe.aem&lt;/groupId&gt;
+    &lt;artifactId&gt;core-forms-components-core&lt;/artifactId&gt;
+    &lt;version&gt;3.0.6&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Both use <code>&lt;scope&gt;provided&lt;/scope&gt;</code> — compile against them for IDE type info, but exclude from the final bundle.</p>
+          <ul>
+            <li>Bundling provided-scope JARs causes class conflicts at runtime because AEM already has them. The build may succeed but AEM will log class-loading errors.</li>
+            <li>The version must match your installed AEM Forms add-on. A mismatch causes <code>NoClassDefFoundError</code> at runtime — check the add-on version in <code>/system/console/bundles</code>.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Embedding a form in a Sites page</h2>
+      <pre data-code><span class="filename">option 1 — Adaptive Forms embed component (recommended)</span><code>Drag the "Adaptive Forms - Embed" component onto your Sites page.
+Component resource type:
+  core/fd/components/formsportal/embeddedform/v1/embeddedform
+
+The form renders inline in the page DOM — shares the page's CSS and scripts.
+Authors choose which form to embed via the component's dialog (DAM path).</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The embedded component is the recommended approach — the form shares the page's theme and navigation, and AEM handles all script inclusion.</p>
+        </div>
+      </details>
+
+      <pre data-code><span class="filename">option 2 — iframe (when the consuming app is not AEM)</span><code>&lt;iframe
+    src="/content/dam/formsanddocuments/loan-application/jcr:content?wcmmode=disabled"
+    width="100%" height="600" frameborder="0"
+    title="Loan Application Form"&gt;
+&lt;/iframe&gt;</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The iframe isolates the form from the parent page — useful when the consumer is a React SPA or external portal that can't use the AEM component.</p>
+          <ul>
+            <li><code>?wcmmode=disabled</code> — loads the form in publish mode even on the author instance, bypassing the page editor's authoring overlays.</li>
+            <li>Cross-frame communication (e.g. scrolling the parent page on submit) requires JavaScript <code>postMessage</code> — extra work compared to the embedded approach.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Custom submit action</h2>
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/forms/LoanSubmitAction.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.forms;
+
+import com.adobe.aemds.guide.model.GuideSubmitInfo;
+import com.adobe.aemds.guide.service.GuideSubmitAction;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import java.io.IOException;
+import javax.servlet.ServletException;
+
+@Component(
+    service  = GuideSubmitAction.class,    // AEM Forms discovers this automatically
+    property = "guideDataModel=basic"      // compatible with JSON schema forms
+)
+public class LoanSubmitAction implements GuideSubmitAction {
+
+    @Reference
+    private LoanService loanService;       // your business logic — keep the action thin
+
+    @Override
+    public String getServiceDescription() {
+        return "Submit Loan to Core Banking";  // appears in Form Container dialog
+    }
+
+    @Override
+    public void submitAction(
+            SlingHttpServletRequest request,
+            SlingHttpServletResponse response,
+            GuideSubmitInfo submitInfo) throws IOException, ServletException {
+
+        String jsonData        = submitInfo.getData();
+        String applicationRef  = loanService.submitApplication(jsonData);
+        String thankYouPage    = submitInfo.getAdaptiveForm().getValueOf("thankYouPage");
+        response.sendRedirect(request.getContextPath() + thankYouPage + "?ref=" + applicationRef);
+    }
+}</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A custom submit action is a standard OSGi component — modules 4 and 5 apply. The Forms-specific parts are the interface and the registration property.</p>
+          <ul>
+            <li><code>@Component(service = GuideSubmitAction.class)</code> — registers in the OSGi registry. AEM Forms' engine looks up all active <code>GuideSubmitAction</code> services and lists them in the Form Container dialog by their <code>getServiceDescription()</code> string.</li>
+            <li><code>property = "guideDataModel=basic"</code> — makes this action available for JSON schema and schema-less forms. Use <code>xsd</code> for XSD-schema forms.</li>
+            <li><code>GuideSubmitInfo</code> — wraps the current submission: form definition, submitted JSON string, attached files. Never parse the raw request body yourself — use this API.</li>
+            <li>Keep the submit action thin — delegate business logic to <code>loanService</code>. This keeps the action testable and the service reusable.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>REST data source — step by step</h2>
+      <pre data-code><span class="filename">five steps to connect a REST API to a Form Data Model</span><code>Step 1 — prepare a Swagger 2.0 or OpenAPI 3.0 spec for your REST API.
+         Upload it to DAM: /content/dam/formsanddocuments/api-specs/customers.yaml
+
+Step 2 — create a Data Source in Tools → Cloud Services → Data Sources
+         Type: RESTful Web Service
+         Swagger File: /content/dam/.../customers.yaml
+         Authentication: Basic / OAuth2 / API Key / None
+         Base URL: https://api.mycompany.com/v1
+
+Step 3 — create a Form Data Model in AEM Forms → Data Integrations
+         Select data source: CustomerAPI
+         Expose operations:
+           Read:  GET /customers/{id}   → "Read Customer"
+           Write: POST /applications    → "Submit Application"
+
+Step 4 — bind the FDM to your form via Form Container → Data Model tab
+
+Step 5 — bind individual fields to FDM properties via each field's dialog</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is entirely configuration-driven for standard REST integration — no Java code needed.</p>
+          <ul>
+            <li>Step 2 stores credentials encrypted in a Cloud Services config node. Use run-mode folders (<code>config.author</code> / <code>config.publish</code>) to point different environments at different API endpoints — the same pattern from module 5.</li>
+            <li>If your API has no Swagger spec, you write a custom Java <code>DataIntegrationService</code> — significantly more work.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Custom JavaScript validator</h2>
+      <pre data-code><span class="filename">clientlib validator — category must be "fd.af.validator"</span><code>// /ui.apps/.../clientlib-validators/js/validators.js
+window.guideValidator = window.guideValidator || {};
+
+/**
+ * Validates a South African 13-digit ID number (Luhn checksum).
+ * Available in the Rule Editor's "Custom Functions" palette.
+ */
+window.guideValidator.validateSAId = function(value, field) {
+    if (!value || value.length !== 13) {
+        return "SA ID must be 13 digits";  // string = error message
+    }
+    var digits = value.split("").map(Number);
+    var sum = digits.reduce(function(acc, d, i) {
+        return i % 2 === 0 ? acc + d : acc + (d * 2 &gt; 9 ? d * 2 - 9 : d * 2);
+    }, 0);
+    return (sum % 10 === 0) ? true : "Invalid SA ID — checksum failed";
+    //                         ↑ true = valid      ↑ string = error
+};</code></pre>
+
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Custom validators are JavaScript functions in a specific clientlib category — discovered automatically by AEM Forms without any additional registration.</p>
+          <ul>
+            <li><code>window.guideValidator</code> — the namespace AEM Forms' Rule Editor scans for custom functions. Any function registered here becomes available as a "Custom Function" in the Rule Editor.</li>
+            <li>Return <code>true</code> for valid input, or a <strong>string error message</strong> for invalid input. AEM Forms displays the string as the field's validation error. No separate error display code needed.</li>
+            <li>The clientlib must have category <code>"fd.af.validator"</code> — a different category means AEM Forms ignores the file entirely.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="try-it alert alert-success">
+        <span class="label">Try it — full pipeline</span>
+        <ol style="margin:0;padding-left:1.2em;">
+          <li>Create a submit action that logs submitted JSON at INFO level: <code>log.info("Submitted: {}", submitInfo.getData())</code>.</li>
+          <li>Deploy, confirm ACTIVE in <code>/system/console/components</code>.</li>
+          <li>Set this action on an Adaptive Form, fill it, and submit via preview (<code>?wcmmode=disabled</code>).</li>
+          <li>Tail <code>crx-quickstart/logs/error.log</code> and verify your JSON appears.</li>
+        </ol>
+      </div>
+
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
+        <ol class="quiz-list">
+        <li>
+          <p class="quiz-question">Why must the AEM Forms SDK API dependency use <scope>provided</scope> in pom.xml?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What is the difference between the 'embeddedform' and iframe approaches for showing a form on a Sites page?</p>
+        </li>
+        <li>
+          <p class="quiz-question">Which Java interface must a custom submit action implement?</p>
+        </li>
+        <li>
+          <p class="quiz-question">How does AEM Forms discover custom submit actions registered in the OSGi bundle?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What does GuideSubmitInfo give you access to inside a submit action's method?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What file format must your REST API provide before you can connect it as a Form Data Model data source?</p>
+        </li>
+        <li>
+          <p class="quiz-question">Walk through the five steps to connect a REST API to a Form Data Model (one sentence each).</p>
+        </li>
+        <li>
+          <p class="quiz-question">What clientlib category must a custom JavaScript validator's clientlib use?</p>
+        </li>
+        <li>
+          <p class="quiz-question">What should a custom JavaScript validator return on success? What should it return on failure?</p>
+        </li>
+        <li>
+          <p class="quiz-question">You deploy a custom submit action but it doesn't appear in the Form Container dialog. What is the first thing you check?</p>
+        </li>
+        </ol>
+      </div>
+
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="forms-implementation">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="23-form-fragments.html"><span class="dir">← Previous</span>Form Fragments &amp; Sample Code</a>
+        <a class="next" href="25-adobe-tags-setup.html"><span class="dir">Next →</span>Adobe Tags — Setup &amp; Concepts</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>
