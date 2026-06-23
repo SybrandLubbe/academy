@@ -82,6 +82,17 @@
   teaser.html                the HTL render script (module 9)
   _cq_dialog/.content.xml    the author dialog
   _cq_template/.content.xml  default content when dragged onto a page (optional)</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This folder layout is the physical structure of an AEM component on disk — what you create in <code>ui.apps</code> and what ends up in the repository after deployment.</p>
+          <ul>
+            <li><code>.content.xml</code> at the root — the component definition. Without this file, AEM doesn't recognise the folder as a component; it's just a directory.</li>
+            <li><code>teaser.html</code> — the render script. The filename must match the component's folder name for Sling's default script resolution to find it automatically.</li>
+            <li><code>_cq_dialog/.content.xml</code> — the author dialog. The <code>_cq_dialog</code> folder name is a fixed AEM convention — renaming it means the dialog won't appear in the page editor.</li>
+          </ul>
+        </div>
+      </details>
 
       <p>The component definition itself — the file that makes a folder an actual AEM component at all, rather than just an HTL script sitting somewhere — sets its title, which group it appears under in the author's component browser, and (optionally) which existing component it extends:</p>
       <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/teaser/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -90,6 +101,17 @@
     jcr:primaryType="cq:Component"
     jcr:title="Teaser"
     componentGroup="Academy Training"/&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This XML file is what makes a folder an AEM component. It's the simplest possible component definition.</p>
+          <ul>
+            <li><code>jcr:primaryType="cq:Component"</code> — the node type that marks this folder as a component. AEM scans the repository for nodes of this type to build the component registry.</li>
+            <li><code>jcr:title="Teaser"</code> — the label shown in the page editor's "Insert Component" browser and in the component browser. Keep it short and descriptive.</li>
+            <li><code>componentGroup="Academy Training"</code> — groups this component with others of the same group in the browser. More importantly, template policies (module 11's activation section) allow/deny entire groups — so getting the group name right is essential for authors being able to use the component.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">componentGroup</code> matters more than it looks: it's both how the component is organized in the author's "Insert component" browser, and — as you'll see below — the thing a template's policy has to explicitly allow before an author can use the component at all.</p>
 
       <h2>The dialog is just more repository content</h2>
@@ -119,6 +141,17 @@
         &lt;/items&gt;
     &lt;/content&gt;
 &lt;/jcr:root&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is the XML that defines the author dialog — the form that appears when an author clicks "Edit" on a component. It's just a tree of nodes in the repository, rendered by Granite UI.</p>
+          <ul>
+            <li><code>sling:resourceType="cq/gui/components/authoring/dialog"</code> — marks this node as a dialog container. Granite UI reads this resourceType to know how to render the form wrapper (with OK/Cancel buttons, etc.).</li>
+            <li><code>sling:resourceType="granite/ui/components/coral/foundation/form/textfield"</code> — each field's resourceType determines what UI element renders. <code>textfield</code> renders a text input, <code>pathfield</code> renders a repository browser, <code>checkbox</code> renders a toggle.</li>
+            <li><code>name="./jcr:title"</code> — the <code>./</code> prefix means "relative to this component's content node." When the author saves the dialog, AEM writes the value to the <code>jcr:title</code> property on the component's content node — the same property your Sling Model reads with <code>@ValueMapValue</code>.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="callout alert alert-primary">
         <span class="label">Mental model</span>
@@ -145,6 +178,17 @@
         &lt;/items&gt;
     &lt;/field&gt;
 &lt;/links&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Multifield is the most complex standard dialog field — it allows authors to create a repeating list of grouped values.</p>
+          <ul>
+            <li><code>sling:resourceType=".../multifield"</code> — renders a repeating group with Add/Remove/Reorder controls. Each repetition is stored as a child node under a <code>links</code> child node of the component's content node.</li>
+            <li><code>sling:resourceType=".../container"</code> for the inner <code>field</code> — each repetition is itself a form container, holding multiple sub-fields (link text + href, for example). The container groups these into one logical "row."</li>
+            <li>Why it's complex: the stored data structure is a tree (a <code>links</code> child node containing numbered child nodes, each with its own properties), not a flat list. Reading this in a Sling Model requires <code>@ChildResource</code> combined with adapting each child to a sub-model.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>Design dialog vs. content policy</h2>
       <p>Older, non-editable templates used a <strong>design dialog</strong> (<code class="inline">cq:design_dialog</code>) to capture settings shared across an entire site design under <code class="inline">/etc/designs</code> — one set of values applied everywhere that design was active. Modern editable templates replaced this with <strong>content policies</strong> under <code class="inline">/conf/.../policies</code>: the same idea of author-locked, component-level settings, but scoped to a specific template-and-component pairing rather than a whole site. If your project uses editable templates (almost all new projects do), policies are what control things like which components a paragraph system allows, or a teaser's permitted image ratio.</p>

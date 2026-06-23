@@ -166,6 +166,17 @@ public class ImageMetadataModel {
         return width != null || format != null;
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This model demonstrates <strong>extending a Core Component</strong> and using the AEM Asset API to read metadata from DAM assets.</p>
+          <ul>
+            <li><code>implements Image</code> — the Core Components <code>Image</code> interface. By implementing this interface, the model can be used anywhere a Core Image model is expected, and inherits the interface contract for properties like <code>getSrc()</code> and <code>getAlt()</code>.</li>
+            <li><code>@Via(type = ResourceSuperType.class)</code> — injects the Core Components' own Image model for this resource, giving you <code>src</code>, <code>alt</code>, and link resolution without reimplementing them.</li>
+            <li><code>asset.getMetadataValue("tiff:ImageWidth")</code> — reads standard EXIF/TIFF metadata from the DAM asset. The <code>tiff:</code> namespace prefix is standard EXIF nomenclature — <code>tiff:ImageWidth</code>, <code>tiff:ImageLength</code>, <code>tiff:Model</code> (camera model) are common fields.</li>
+          </ul>
+        </div>
+      </details>
 
       <p><code class="inline">@Self @Via(type = ResourceSuperType.class)</code> is the key line: it adapts the same resource to the core Image component's own model first, then hands you that fully-built object to read from — rather than re-implementing image rendering yourself. Module 8 already covered this composition pattern in depth; this is it in practice.</p>
 
@@ -178,6 +189,16 @@ public class ImageMetadataModel {
     jcr:title="Image with Metadata"
     componentGroup="Academy Training"
     sling:resourceSuperType="core/wcm/components/image/v3/image"/&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The component definition for ImageMetadata — the XML that registers it as a component and declares it inherits from Core Image.</p>
+          <ul>
+            <li><code>sling:resourceSuperType="core/wcm/components/image/v3/image"</code> — this line is why the component has a dialog without any <code>_cq_dialog</code> folder of its own. Sling's script resolution walks up the super type chain — finding no dialog here, it uses the Core Image's dialog. Authors get the full image picker with no extra work.</li>
+            <li>This also means Sling's render script resolution falls back to Core Image's scripts for anything you don't override — the component inherits responsive image breakpoints, lazy loading, and the empty placeholder in the editor.</li>
+          </ul>
+        </div>
+      </details>
 
       <h3>Step 3 — the render script</h3>
       <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/imagemetadata/imagemetadata.html <em>(academy.ui.apps)</em></span><code>&lt;div data-sly-use.metadata="biz.netcentric.academy.components.imagemetadata.ImageMetadataModel"&gt;
@@ -197,6 +218,16 @@ public class ImageMetadataModel {
         &lt;/div&gt;
     &lt;/dl&gt;
 &lt;/div&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The HTL template for the ImageMetadata component — notice how thin it is, because all logic lives in the model.</p>
+          <ul>
+            <li><code>data-sly-use.metadata="...ImageMetadataModel"</code> — adapts the resource to the model. All image src/alt resolution and all metadata reading happens inside the model's <code>@PostConstruct</code>.</li>
+            <li><code>data-sly-test="${metadata.hasMetadata}"</code> — the entire metadata block is absent from the HTML if the asset has no EXIF data (e.g. a manually cropped screenshot). The template makes zero decisions about when this is or isn't relevant — that logic is in <code>hasMetadata()</code>.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="callout alert alert-primary">
         <span class="label">Mental model</span>
@@ -205,6 +236,12 @@ public class ImageMetadataModel {
 
       <h3>Step 4 — build, deploy, and activate it</h3>
       <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Build and deploy. Verify the ImageMetadata component is ACTIVE before testing in the page editor. The activation step (allowing the component in a template policy) is separate from deployment.</p>
+        </div>
+      </details>
       <p>Module 11 covered the full activation flow in detail — Template Editor → the layout container's <strong>Policy</strong> → allow the <code class="inline">Academy Training</code> component group — go back there if you need the step-by-step version. The one thing worth calling out specifically here: even though this component inherits its <em>dialog</em> from the core Image component, it does not inherit being <em>allowed</em>. <code class="inline">academy/components/imagemetadata</code> is its own distinct resource type with its own entry in the policy's component list, separate from the standard Image component — allow it explicitly, the same as any other new component.</p>
       <p>Once it's allowed and deployed, open any page in the AEM editor, drag the new <strong>Image with Metadata</strong> component from the component browser (it sits in the "Academy Training" group) into a paragraph system, and pick any asset from <code class="inline">/content/dam</code> the same way you would with a normal Image component. If the asset has EXIF/TIFF metadata (most camera photos do; a plain screenshot usually won't), the dimensions, format, and camera model appear underneath it.</p>
 
@@ -341,6 +378,17 @@ public class WeatherModel {
         return temperature != null;
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>WeatherModel demonstrates a real-world model that calls an external API — deliberately showing the right structure alongside a pattern to avoid.</p>
+          <ul>
+            <li><code>@ValueMapValue private String city</code> and <code>private String country</code> — the author's input from the dialog. These are the only things the model reads from the repository.</li>
+            <li><code>@PostConstruct protected void init()</code> — this is where the HTTP calls happen in the educational example. The comment in the module explicitly flags this as a pattern to understand and then improve with Sling Jobs (module 18).</li>
+            <li>The separate <code>geocode()</code> and <code>fetchCurrentWeather()</code> private methods keep the <code>init()</code> method short and each concern independently readable.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>
@@ -354,6 +402,16 @@ public class WeatherModel {
     jcr:primaryType="cq:Component"
     jcr:title="Weather"
     componentGroup="Academy Training"/&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The Weather component definition — minimal because it has its own dialog and doesn't inherit from any core component.</p>
+          <ul>
+            <li>No <code>sling:resourceSuperType</code> here — this component stands alone with its own dialog and its own render script. Authors see a simple "City" and "Country" text field dialog, not the complex image picker from Core Components.</li>
+            <li><code>componentGroup="Academy Training"</code> — same group as the ImageMetadata component. Template policies allow the group, unlocking both components at once.</li>
+          </ul>
+        </div>
+      </details>
 
       <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/weather/_cq_dialog/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
@@ -380,6 +438,16 @@ public class WeatherModel {
         &lt;/items&gt;
     &lt;/content&gt;
 &lt;/jcr:root&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The Weather component's dialog — two simple textfields, one required (city) and one optional (country).</p>
+          <ul>
+            <li>Both fields use <code>name="./city"</code> and <code>name="./country"</code> — the <code>./</code> prefix writes values to the component's own content node. These are the exact property names <code>@ValueMapValue private String city</code> reads in the model.</li>
+            <li>The dialog has no <code>required</code> attribute on the country field — an empty string is a valid value, and the model handles disambiguation when country is absent.</li>
+          </ul>
+        </div>
+      </details>
 
       <h3>Step 3 — the render script</h3>
       <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/weather/weather.html <em>(academy.ui.apps)</em></span><code>&lt;div data-sly-use.weather="biz.netcentric.academy.components.weather.WeatherModel" class="academy-weather"&gt;
@@ -389,9 +457,25 @@ public class WeatherModel {
         &lt;p&gt;${weather.temperature}&amp;deg;C &amp;middot; wind ${weather.windspeed} km/h&lt;/p&gt;
     &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The Weather component's render template — again deliberately thin, reflecting the principle that templates only do layout.</p>
+          <ul>
+            <li><code>data-sly-test="${weather.error}"</code> renders the error block when <code>getError()</code> returns a non-empty string — handling API failures gracefully rather than crashing silently.</li>
+            <li><code>data-sly-test="${weather.available}"</code> gates the full weather display on the model having successfully fetched data. This means partially failed states (city found, weather fetch failed) don't render broken HTML.</li>
+          </ul>
+        </div>
+      </details>
 
       <h3>Step 4 — build, deploy, and activate it</h3>
       <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Build and deploy. Remember: deployment makes the component available in the system, but the template policy step makes it available to authors in the page editor.</p>
+        </div>
+      </details>
       <p>Same activation step as the Image component above: allow the <code class="inline">Academy Training</code> group in the template's policy (module 11 has the full walkthrough) before it shows up for authors. Weather is a standalone component with its own dialog rather than an inherited one, so once it's allowed, drag it onto a page, open its dialog, and enter a city — "Lisbon" with country "Portugal" is a safe first test. Save the dialog and the live conditions should render within a second or two.</p>
 
       <div class="try-it alert alert-success">

@@ -135,6 +135,18 @@ public class WeatherRefreshJobExecutor implements JobExecutor {
         return 0; // delegate to the geocode/fetch helpers from module 12
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A complete Sling Job executor — the implementation that runs when a job is dequeued. Notice the security and resource management patterns.</p>
+          <ul>
+            <li><code>implements JobExecutor</code> — the interface with one method, <code>process(Job job, JobExecutionContext context)</code>. AEM calls this when a job with the matching topic is pulled from the queue.</li>
+            <li><code>ResourceResolverFactory.SUBSERVICE, "academy-weather-writer"</code> — accesses the repository using a <em>service user</em>, not the admin user. This is the required security pattern for background jobs — using admin credentials in production code is a security misconfiguration. The service user must be configured in <code>ui.config</code> with minimal required permissions.</li>
+            <li><code>context.result().succeeded()</code> vs <code>context.result().failed()</code> — the return value tells the job queue whether to mark the job done or retry it (according to the queue's <code>queue.retries</code> config). Always return a result — letting the method end without returning causes the job to be retried indefinitely.</li>
+            <li><code>job.getProperty("city", String.class)</code> — reads the custom properties passed when <code>jobManager.addJob(topic, properties)</code> was called. Job properties are persisted to the repository, so they survive an AEM restart.</li>
+          </ul>
+        </div>
+      </details>
       <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>
         <code class="inline">getServiceResourceResolver(...)</code> requires a <strong>service user mapping</strong> to be configured first (an OSGi config that grants the named subservice — <code class="inline">academy-weather-writer</code> here — permission to log in as a service user with appropriate ACLs). It's a separate piece of setup from the job itself, and forgetting it is the most common reason a background job fails with a login exception that looks unrelated to the actual business logic.
@@ -151,6 +163,18 @@ public void requestRefresh(String city, String cachePath) {
     props.put("cachePath", cachePath);
     jobManager.addJob("academy/weather/refresh", props);
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Triggering a one-off job — the "fire and forget" pattern for handing heavy work off from a synchronous request thread.</p>
+          <ul>
+            <li><code>@Reference private JobManager jobManager</code> — the OSGi service that manages the job queue. Inject it wherever you need to add jobs.</li>
+            <li><code>jobManager.addJob("academy/weather/refresh", props)</code> — adds the job to the queue immediately. The first argument is the <em>topic</em> — a slash-separated string that must match the <code>JobConsumer.PROPERTY_TOPICS</code> property on your executor. Think of it as a message queue topic name.</li>
+            <li>The <code>props</code> map carries the data the executor needs. Properties must be serializable to basic types (String, int, boolean, arrays thereof) — complex objects are not supported.</li>
+            <li>After this line returns, the method continues immediately. The job runs asynchronously on a background thread managed by the queue — the calling thread is not blocked.</li>
+          </ul>
+        </div>
+      </details>
       <p>Register a <strong>scheduled</strong> job once, typically from a component's <code class="inline">@Activate</code> method, to have it run repeatedly without anything triggering it each time:</p>
       <pre data-code><span class="filename">registering a recurring job</span><code>@Activate
 protected void activate() {
@@ -164,6 +188,18 @@ protected void activate() {
             .cron("0 */15 * * * ?")  // every 15 minutes
             .add();
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Registering a recurring scheduled job — the production-correct alternative to a synchronous call in <code>@PostConstruct</code> for periodic work like weather cache refresh.</p>
+          <ul>
+            <li><code>jobManager.createJob(topic).properties(props).schedule().cron("0 */15 * * * ?").add()</code> — creates a durable scheduled job. Unlike the Sling Scheduler (which uses in-memory Quartz), a scheduled Sling Job persists to the repository — if AEM restarts between executions, the schedule survives.</li>
+            <li><code>cron("0 */15 * * * ?")</code> — every 15 minutes. <code>*/15</code> means "every N minutes." The schedule is stored with the job definition.</li>
+            <li>Calling this in <code>@Activate</code> means the schedule is registered when the component starts. The corresponding <code>@Deactivate</code> should call <code>scheduler.unschedule("academy-weather-refresh")</code> to remove it.</li>
+            <li>The executor processes the job asynchronously — <code>@Activate</code> returns immediately; the first execution happens at the next scheduled time.</li>
+          </ul>
+        </div>
+      </details>
       <p>With this in place, <code class="inline">WeatherModel</code> from module 12 could be rewritten to simply read <code class="inline">temperature</code> off the cache resource — no outbound HTTP call on the render path at all, and a page that loads instantly regardless of whether Open-Meteo is having a slow day.</p>
 
       <h2>Queue configuration</h2>
@@ -176,6 +212,18 @@ protected void activate() {
     "queue.retries": 3,
     "queue.retrydelay": 2000
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The queue configuration file that controls how jobs on the <code>academy/weather/*</code> topic are processed.</p>
+          <ul>
+            <li><code>"queue.topics": ["academy/weather/*"]</code> — the wildcard <code>*</code> means this queue handles any topic starting with <code>academy/weather/</code>. Multiple executors with different sub-topics can share one queue configuration.</li>
+            <li><code>"queue.type": "UNORDERED"</code> — jobs can run in parallel. Use <code>ORDERED</code> if later jobs must wait for earlier ones to complete (e.g. sequential pipeline steps).</li>
+            <li><code>"queue.maxparallel": 5</code> — up to 5 weather refresh jobs can execute simultaneously. Set this based on the external API's rate limit — hammering an API with 50 concurrent calls will get you rate-limited.</li>
+            <li><code>"queue.retries": 3</code> and <code>"queue.retrydelay": 2000</code> — if <code>process()</code> returns <code>failed()</code>, the framework retries up to 3 times with a 2-second delay between attempts. Useful for transient network failures.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">queue.type</code> matters most: <code class="inline">UNORDERED</code> processes jobs in parallel with no guaranteed order (fine here — one city's refresh doesn't depend on another's), while <code class="inline">ORDERED</code> processes jobs on the same topic strictly one at a time, which you'd want if later jobs depend on earlier ones having finished. <code class="inline">queue.retries</code> and <code class="inline">queue.retrydelay</code> control what happens when <code class="inline">process()</code> returns a failed result — exactly the safety net that makes jobs more durable than the plain scheduler from module 16.</p>
 
       <div class="try-it alert alert-success">

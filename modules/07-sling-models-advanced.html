@@ -102,6 +102,17 @@
 
 8. It returns the populated instance, or null if any required field
    couldn't be filled.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This sequence removes the mystery from <code>adaptTo()</code>. Every step in this chain is a standard OSGi mechanism — not framework magic.</p>
+          <ul>
+            <li><strong>Step 2 — AdapterFactories</strong>: the OSGi service registry contains "adapter factories" — services that know how to convert one type into another. <code>resource.adaptTo(ValueMap.class)</code> uses a different factory than <code>resource.adaptTo(TeaserModel.class)</code> — both use the same lookup mechanism.</li>
+            <li><strong>Step 4 — @Model annotation scan</strong>: the Sling Models AdapterFactory reads your class's <code>@Model</code> annotation to verify the source type matches and to find the injection metadata.</li>
+            <li><strong>Step 8 — null return</strong>: the factory never throws an exception for a failed injection. It returns null, which is why null-checking the result of <code>adaptTo()</code> is always required in production code.</li>
+          </ul>
+        </div>
+      </details>
       <p>The takeaway: <code class="inline">adaptTo()</code> is not magic. It is a lookup in the OSGi service registry, the same registry you learned about in module 4. There is nothing special about Sling Models — they use the same wiring mechanism as everything else in AEM.</p>
 
       <h2>Resource vs. SlingHttpServletRequest as adaptable</h2>
@@ -147,6 +158,17 @@ private ProductModel productModel;  // ← null! No request available.
 
 // Always ask: "Do I actually NEED request data?"
 // If not → use Resource.class</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This code shows the most common Sling Models mistake and exactly why it fails. The comments in the code are the explanation — read them carefully.</p>
+          <ul>
+            <li>When <code>@ChildResource</code> tries to adapt a child node to <code>ProductModel</code>, it calls <code>childResource.adaptTo(ProductModel.class)</code>. It passes a <code>Resource</code> object, not a <code>SlingHttpServletRequest</code>. But the model declared it only accepts <code>SlingHttpServletRequest</code> — so the AdapterFactory refuses and returns null.</li>
+            <li>No error is logged at default log levels. The field is silently null. This can take hours to debug without knowing to check the <code>adaptables</code> declaration.</li>
+            <li>The fix is always the same: use <code>adaptables = Resource.class</code> unless you genuinely need a request-specific value.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>Constructor injection vs. field injection</h2>
       <p>In module 6, all injection happened through fields annotated with <code class="inline">@ValueMapValue</code>, etc. Sling Models also supports injecting through the constructor, which many teams now prefer. Here is the same model both ways so you can compare:</p>
@@ -169,6 +191,17 @@ public class ProductModel {
 
     public String getDisplayPrice() { return displayPrice; }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Field injection is the most common style you'll see in existing AEM codebases. It's familiar but has a subtle limitation.</p>
+          <ul>
+            <li><code>@ValueMapValue private String name</code> — Sling Models sets this field using reflection after the object is constructed. The field cannot be <code>final</code> because Sling needs to write to it post-construction.</li>
+            <li><code>@PostConstruct</code> is necessary because the field values don't exist yet when the constructor runs — <code>displayPrice</code> must be built after <code>price</code> is already injected.</li>
+            <li>There is a brief window between construction and the <code>@PostConstruct</code> call where fields like <code>name</code> and <code>price</code> are their Java defaults (<code>null</code>/0.0). This window creates risk if the model is ever used before <code>@PostConstruct</code> completes.</li>
+          </ul>
+        </div>
+      </details>
       <pre data-code><span class="filename">constructor injection — same model, different style</span><code>@Model(adaptables = Resource.class)
 public class ProductModel {
 
@@ -185,6 +218,18 @@ public class ProductModel {
 
     public String getDisplayPrice() { return displayPrice; }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Constructor injection eliminates the "injected-after-construction" window and makes fields immutable.</p>
+          <ul>
+            <li><code>@Inject</code> on the constructor — tells Sling Models to use this constructor rather than the no-arg default. Sling reads the parameter annotations and injects each value before calling the constructor body.</li>
+            <li><code>private final String displayPrice</code> — the field is <code>final</code> because it's assigned exactly once, in the constructor, and never changed afterward. Final fields are inherently thread-safe and prevent accidental mutation.</li>
+            <li>No <code>@PostConstruct</code> needed — the derivation logic (<code>String.format</code>) happens inside the constructor, where both <code>name</code> and <code>price</code> are guaranteed to be available as parameters.</li>
+            <li>Unit testing benefit: you can write <code>new ProductModel("Widget", 9.99)</code> directly in a test without any Sling Models infrastructure.</li>
+          </ul>
+        </div>
+      </details>
       <p>Constructor injection has a clear advantage: fields become <code class="inline">final</code>. A final field can only be set once — in the constructor — so the model is fully valid the instant it exists. There is no window where a field is null before <code class="inline">@PostConstruct</code> runs. It is also much easier to unit test (module 14) because you can just call <code class="inline">new ProductModel("Widget", 9.99)</code> directly without needing Sling's injection machinery at all.</p>
 
       <h2>Interface-based vs. class-based models</h2>
@@ -209,6 +254,17 @@ public class TeaserImpl implements Teaser {
 
 // Callers adapt to the interface:
 Teaser teaser = resource.adaptTo(Teaser.class);   // ← TeaserImpl is wired in automatically</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Interface-based models are the professional standard — splitting the contract from the implementation opens up composition and testing patterns that class-based models can't support.</p>
+          <ul>
+            <li><code>public interface Teaser</code> — the contract. This is what callers see and depend on. It can be placed in a shared API bundle so other modules can depend on it without depending on your implementation.</li>
+            <li><code>adapters = Teaser.class</code> in <code>@Model</code> — registers <code>TeaserImpl</code> in the adapter registry keyed by <code>Teaser.class</code>. Callers do <code>resource.adaptTo(Teaser.class)</code>, not <code>resource.adaptTo(TeaserImpl.class)</code> — they never import the implementation.</li>
+            <li>This is exactly how Core Components work: you adapt to <code>com.adobe.cq.wcm.core.components.models.Teaser</code> (the interface), not to their internal implementation class. Module 8 builds directly on this.</li>
+          </ul>
+        </div>
+      </details>
       <p>Why bother? Two concrete reasons:</p>
       <ul>
         <li><strong>Composition across Core Components.</strong> Module 8 shows how to wrap a Core Component's model inside your own. That only works because Core Components publish <em>interfaces</em> — you adapt to <code class="inline">com.adobe.cq.wcm.core.components.models.Teaser</code>, not to an internal class you don't control.</li>
@@ -233,6 +289,18 @@ Teaser teaser = resource.adaptTo(Teaser.class);   // ← TeaserImpl is wired in 
         &lt;!-- render image --&gt;
     &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This shows the full picture of a model being used inside an HTL template — every comment in the code is part of the explanation.</p>
+          <ul>
+            <li><code>data-sly-use.teaser="..."</code> — the fully-qualified class name triggers adaptation. The result is bound to <code>teaser</code> for the rest of the template scope.</li>
+            <li><code>${teaser.title}</code> calls <code>model.getTitle()</code>. HTL uses Java introspection to map property names to getters.</li>
+            <li><code>data-sly-test="${teaser.shortDescription}"</code> — removes the element entirely from the output (not just hides it with CSS) if <code>getShortDescription()</code> returns null or an empty string. This is cleaner HTML for screen readers and crawlers.</li>
+            <li>If adaptation fails (model returns null), every <code>${teaser.xxx}</code> expression evaluates to an empty string — the template renders as blank with no error thrown.</li>
+          </ul>
+        </div>
+      </details>
       <p>If the model is null (adaptation failed) the <code class="inline">data-sly-use</code> silently binds an empty object and all the expressions evaluate to empty strings. This means a broken model often looks like a blank component rather than an error — which is why checking logs and enabling debug logging on <code class="inline">org.apache.sling.models.impl</code> is so important.</p>
 
       <h2>05 · OSGi Services in a Model</h2>
@@ -256,6 +324,17 @@ public class WeatherModel {
 
     public String getTemperature() { return temperature; }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This shows how a Sling Model consumes an OSGi service — despite never being an OSGi component itself.</p>
+          <ul>
+            <li><code>@OSGiService</code> — looks up the OSGi service registry for the requested type, exactly like <code>@Reference</code> does in an OSGi component. The different annotation name is purely because Sling Models isn't itself an OSGi component — the underlying registry lookup is identical.</li>
+            <li>If no <code>WeatherService</code> is registered when a request triggers adaptation of this model, the injection fails. Because <code>weatherService</code> is required (no <code>@Optional</code>), the whole model returns null — the template renders blank, potentially with no obvious error.</li>
+            <li>The design principle here: the model's job is to read content and orchestrate. The service's job is to do actual work (geocoding, HTTP calls). Keeping these separate means you can unit test the service independently and mock it when testing the model.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">@OSGiService</code> does exactly the same lookup in the OSGi registry as <code class="inline">@Reference</code> does in a component — the only reason it's a different annotation is that a model isn't itself managed by OSGi. If no matching service is registered and the field is required, adaptation returns null (the usual culprit when a model seems to fail for no reason).</p>
 
       <h2>06 · OSGi Configurations in a Model</h2>
@@ -277,6 +356,17 @@ public class WeatherModel {
         String defaultCountry = config.defaultCountry();  // e.g. "DE" for German site
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This shows how a model reads content-level configuration (values that differ per site on the same instance, not per environment).</p>
+          <ul>
+            <li><code>@Self private ConfigurationBuilder configurationBuilder</code> — <code>@Self</code> injects the <em>adaptable itself</em> (the Resource), but typed as a different object. Sling's Context-Aware Configuration framework registers an adapter from <code>Resource</code> to <code>ConfigurationBuilder</code>, so this works via the same adaptation mechanism as everything else.</li>
+            <li><code>configurationBuilder.as(WeatherConfig.class)</code> — resolves the configuration for the current content path. It walks up the content hierarchy looking for a <code>sling:configRef</code> pointer that leads to the right <code>/conf</code> tree. Different sites can have different values for the same <code>WeatherConfig</code> interface.</li>
+            <li>This is different from OSGi config (<code>@Designate</code>) which is instance-wide. CA Config is <em>content-aware</em> — the value changes based on where in the repository you are.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>07 · Sling Models Best Practices</h2>
       <p>These six habits are the difference between a model that stays clean as the project grows and one that becomes a maintenance nightmare:</p>

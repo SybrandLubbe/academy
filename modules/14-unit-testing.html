@@ -93,6 +93,17 @@ public final class UsernameValidator {
         return !"admin".equalsIgnoreCase(username);
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p><code>UsernameValidator</code> is designed to be testable — it's a pure function with no dependencies on AEM or OSGi.</p>
+          <ul>
+            <li><code>public final class</code> — declaring the class final prevents subclassing, which is appropriate for a utility class with only static methods. It signals that this class is not designed to be extended.</li>
+            <li><code>private UsernameValidator()</code> — a private constructor prevents instantiation. This is the standard pattern for utility classes that only contain static methods — you call <code>UsernameValidator.isValid(name)</code>, not <code>new UsernameValidator().isValid(name)</code>.</li>
+            <li><code>!"admin".equalsIgnoreCase(username)</code> — calling <code>equals</code> on the string literal rather than the variable protects against NullPointerException. <code>"admin".equalsIgnoreCase(null)</code> returns false safely; <code>username.equalsIgnoreCase("admin")</code> would throw NPE if username is null.</li>
+          </ul>
+        </div>
+      </details>
       <p>Test classes live in a parallel <code class="inline">src/test/java</code> folder, mirroring the same package:</p>
       <pre data-code><span class="filename">/aem-academy/core/src/test/java/biz/netcentric/academy/_04/UsernameValidatorTest.java <em>(academy.core)</em></span><code>package biz.netcentric.academy._04;
 
@@ -122,6 +133,17 @@ class UsernameValidatorTest {
         assertTrue(UsernameValidator.isValid(username) == expectedValid);
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This test class demonstrates two testing patterns: a basic <code>@Test</code> and the far more powerful <code>@ParameterizedTest</code>.</p>
+          <ul>
+            <li><code>@ParameterizedTest</code> with <code>@CsvSource</code> — runs the same test method multiple times, once per row of CSV data. Each row provides different input and expected output. This gives you 5 test cases in the space of one method — much cleaner than writing 5 near-identical <code>@Test</code> methods.</li>
+            <li>The CSV format: each string is one row, comma-separated values map to method parameters in order. <code>"null"</code> is automatically converted to Java <code>null</code> by JUnit.</li>
+            <li><code>assertFalse</code> / <code>assertTrue</code> — JUnit assertion methods. They fail the test if the condition isn't met, with a descriptive failure message. Never use <code>if (!condition) throw ...</code> — use assertion methods so the test framework can report results correctly.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">@ParameterizedTest</code> with <code class="inline">@CsvSource</code> runs the same test body once per row — covering "a normal name," "the reserved name," and "the reserved name in different casing" without three near-identical test methods. Run these with <code class="inline">mvn test</code> from the <code class="inline">core</code> module, or directly from your IDE's test runner — no AEM instance involved at all.</p>
 
       <h2>Mockito: testing against a mocked dependency</h2>
@@ -153,6 +175,18 @@ class GreetingServiceMockTest {
         verify(greetingService).greet("Maria");
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A Mockito test that verifies service behavior without any AEM infrastructure — the fastest kind of test to write and run.</p>
+          <ul>
+            <li><code>@ExtendWith(MockitoExtension.class)</code> — activates Mockito's JUnit 5 integration. This processes <code>@Mock</code> and <code>@InjectMocks</code> annotations automatically before each test.</li>
+            <li><code>@Mock private GreetingService greetingService</code> — creates a fake implementation of <code>GreetingService</code>. By default, all methods return zero-values (<code>null</code>, 0, false). This only works because <code>GreetingService</code> is an interface — another reason the interface/implementation split is essential.</li>
+            <li><code>when(greetingService.greet("world")).thenReturn("Hello, world!")</code> — programs the mock to return a specific value for a specific input. Tests stay deterministic and don't depend on real implementation logic.</li>
+            <li><code>verify(greetingService).greet("world")</code> — asserts that the mock's <code>greet</code> method was called exactly once with the argument <code>"world"</code>. This verifies interaction, not just return values.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">when(...).thenReturn(...)</code> programs the mock's behavior; <code class="inline">verify(...)</code> confirms a method was actually called, which matters when you're testing that a consumer used a dependency correctly rather than testing the dependency's own return value.</p>
 
       <h2>AEM Mocks: testing against Resource and OSGi services</h2>
@@ -202,6 +236,18 @@ class ChildPagesModelTest {
         assertEquals(List.of("Apple Page", "Banana Page"), titles);
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>An AEM Mocks test for a Sling Model — the step up from plain Mockito when your code actually touches Resources and the Sling APIs.</p>
+          <ul>
+            <li><code>AemContext context = new AemContext()</code> — creates an in-memory Sling + AEM environment with a real ResourceResolver, real Sling Models injection machinery, and real OSGi service registry. No AEM server required.</li>
+            <li><code>context.addModelsForClasses(ChildPagesModel.class)</code> — registers the model with the mock Sling Models framework. Without this, <code>adaptTo()</code> returns null even with a valid resource.</li>
+            <li><code>context.create().resource("/content/academy", ...)</code> — creates in-memory JCR nodes with the specified properties. This is the content that <code>@ValueMapValue</code> will read when the model is adapted.</li>
+            <li><code>resource.adaptTo(ChildPagesModel.class)</code> — runs through the complete real Sling Models injection process against the in-memory content. If it returns null, the test setup is wrong — not the model logic.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">context.addModelsForClasses(...)</code> is the line easiest to forget — without it, <code class="inline">AemContext</code> has no idea your <code class="inline">@Model</code> class exists, and <code class="inline">adaptTo()</code> silently returns <code class="inline">null</code>, the same failure mode module 6's pitfall callout warned about.</p>
 
       <h3>Mocking services</h3>
@@ -236,6 +282,17 @@ class GreetingServletTest {
         assertEquals("Hello, Maria!", context.response().getOutputAsString());
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Testing a servlet with OSGi service injection — combining AemContext with Mockito for a full integration-style unit test.</p>
+          <ul>
+            <li><code>context.registerService(GreetingService.class, mockGreetingService)</code> — registers the Mockito mock in the in-memory OSGi service registry. When the test calls <code>context.registerInjectActivateService(servlet)</code>, the framework injects this mock into the servlet's <code>@Reference GreetingService</code> field.</li>
+            <li><code>context.registerInjectActivateService(servlet)</code> — the equivalent of deploying to AEM. It processes all <code>@Reference</code> fields on the servlet using the registered mock services, then calls any <code>@Activate</code> method.</li>
+            <li>This test proves the full chain works: the servlet activates, injects the service, calls it with the right argument, and writes the expected response.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">context.registerService(...)</code> puts a fake implementation in the mock OSGi registry; <code class="inline">context.registerInjectActivateService(servlet)</code> then performs real field injection on the servlet's <code class="inline">@Reference</code> field, exactly as the real OSGi runtime would. This is the same reason module 7 recommended interface-based services and models — without the <code class="inline">GreetingService</code> interface, none of this would be mockable at all.</p>
 
       <h2>Best practices</h2>

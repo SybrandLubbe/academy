@@ -89,12 +89,35 @@
         /statfileslevel "3"
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The top-level structure of a Dispatcher farm configuration. Each section has a distinct, non-overlapping responsibility.</p>
+          <ul>
+            <li><code>/cache/rules</code> — the allow-list for caching. Only URLs matching these patterns will be stored on the Dispatcher's disk. Denying everything by default and selectively allowing prevents accidentally caching personalized or sensitive content.</li>
+            <li><code>/cache/invalidate</code> — the allow-list for invalidation. When a replication event arrives, only URLs matching these patterns are flushed from the cache. Typically matches <code>*.html</code> — invalidating images on every content change would cause an expensive full re-fetch.</li>
+            <li><code>/filter</code> — the security allow-list. Completely separate from caching. A URL blocked by <code>/filter</code> never reaches AEM regardless of cache state.</li>
+            <li><code>/statfileslevel</code> — controls how deep the <code>.stat</code> file mechanism looks when invalidating content. Higher values give more granular invalidation but use more filesystem resources.</li>
+          </ul>
+        </div>
+      </details>
       <p>Each section has one job: <code class="inline">/cache/rules</code> decides what's allowed to be cached at all, <code class="inline">/cache/invalidate</code> decides what gets thrown out when content changes, and <code class="inline">/filter</code> decides what's allowed to reach AEM in the first place — a security concern, not a caching one.</p>
 
       <h2>Caching rules</h2>
       <p>A typical rule set allows most paths but explicitly denies anything carrying a query string, since query strings usually mean personalized or parameterized output that shouldn't be cached for everyone:</p>
       <pre data-code><span class="filename">/cache/rules</span><code>/0001 { /glob "*"   /type "allow" }
 /0002 { /glob "*?*" /type "deny"  }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The two cache rules shown implement the most common baseline caching policy.</p>
+          <ul>
+            <li><code>/0001 { /glob "*" /type "allow" }</code> — allow everything to be cached by default. Rules are evaluated in numeric order; <code>/0001</code> runs first.</li>
+            <li><code>/0002 { /glob "*?*" /type "deny" }</code> — deny anything containing a <code>?</code> character (query strings). <code>/0002</code> runs after <code>/0001</code>, so it takes priority for URLs with query strings. URLs with query parameters typically serve personalized or dynamic content that should never be cached for all users.</li>
+            <li>The <code>/glob</code> pattern uses simple shell-style wildcards: <code>*</code> matches any sequence of characters. More specific globs are used for excluding selectors like <code>.nocache.</code> or certain paths like <code>/content/usergenerated/*</code>.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">statfileslevel</code> controls how deep the dispatcher checks a folder's <code class="inline">.stat</code> file timestamp to decide whether cached content under that path still needs revalidating — it's usually the first thing worth checking when cache invalidation seems to be "not reaching" some nested path.</p>
 
       <h2>Invalidation: how a publish actually clears the cache</h2>
@@ -105,6 +128,17 @@
       <pre data-code><span class="filename">/filter</span><code>/0001 { /type "deny"  /url "*" }
 /0002 { /type "allow" /url "/content/academy/*.html" }
 /0003 { /type "allow" /url "/content/academy/*.json" /method "GET" }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The security filter — a deny-by-default allow-list. This is a security mechanism, not a caching one.</p>
+          <ul>
+            <li><code>/0001 { /type "deny" /url "*" }</code> — deny everything first. This is the most important rule. Without it, all other allow rules are meaningless because the default without any deny would be to allow everything.</li>
+            <li><code>/0002 { /type "allow" /url "/content/academy/*.html" }</code> — explicitly allow only HTML pages under the project's content path. Requests for <code>/system/console</code>, <code>/crx/de</code>, and any other admin path are blocked by the default deny above.</li>
+            <li><code>/method "GET"</code> on rule <code>/0003</code> — restricts the JSON allow rule to GET requests only. Even if a URL pattern matches, POST/PUT/DELETE through the Dispatcher are blocked unless explicitly allowed. This prevents unintended write access through the public-facing Dispatcher.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>

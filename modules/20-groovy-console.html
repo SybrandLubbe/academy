@@ -80,6 +80,17 @@ String message = "Hello, " + name + "!";
 
 // Groovy
 def message = "Hello, ${name}!"</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A side-by-side comparison showing the key Groovy syntax differences that matter in AEM Groovy Console scripts.</p>
+          <ul>
+            <li><code>def message</code> — Groovy's type inference keyword. You don't need to write <code>String message</code> — Groovy infers the type from the right-hand side. The variable is still statically typed at compile time.</li>
+            <li><code>"Hello, ${name}!"</code> — Groovy's string interpolation. Double-quoted strings support <code>${expression}</code> substitution. Single-quoted strings in Groovy are always literal (no interpolation). This eliminates the <code>"Hello, " + name + "!"</code> concatenation noise from Java.</li>
+            <li>Semicolons are optional in Groovy — the language uses newlines as statement terminators in most cases. The Java version still works; Groovy just doesn't require it.</li>
+          </ul>
+        </div>
+      </details>
       <p>Closures (Groovy's lambdas) read similarly to Java streams but with looser syntax — <code class="inline">resources.each { resource -&gt; println resource.path }</code> instead of a full stream pipeline. For a one-off script, that's genuinely all the Groovy-specific syntax you need; the actual content logic is the same AEM APIs you've used throughout this curriculum.</p>
 
       <h2>Installing the Groovy Console</h2>
@@ -114,6 +125,18 @@ if (!dryRun) {
 }
 
 println "Done. Dry run: ${dryRun}, updated: ${updated}"</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A complete Groovy Console script showing the safe "dry run first" pattern for content migrations.</p>
+          <ul>
+            <li><code>def dryRun = true</code> — the guard variable. With this set to <code>true</code>, the script prints what it <em>would</em> do but commits nothing. Always run with <code>dryRun = true</code> first and read the output carefully before changing it to <code>false</code>. One wrong <code>rootPath</code> with <code>dryRun = false</code> can corrupt thousands of content nodes.</li>
+            <li><code>resourceResolver</code> — the Groovy Console pre-binds this variable automatically. It's a <code>ResourceResolver</code> with admin-level access to the entire repository.</li>
+            <li><code>content.adaptTo(ModifiableValueMap.class)</code> — adapts the resource to a <em>writable</em> value map. The standard <code>ValueMap</code> is read-only. <code>ModifiableValueMap</code> allows <code>.put(key, value)</code> to set properties.</li>
+            <li><code>resourceResolver.commit()</code> — persists all pending changes to the JCR. Without this call, all <code>.put()</code> calls are staged in memory and discarded when the script ends. The commit is intentionally inside the <code>if (!dryRun)</code> block so dry-run mode never touches the repository.</li>
+          </ul>
+        </div>
+      </details>
       <p>Run it once with <code class="inline">dryRun = true</code> and read the output carefully before flipping it to <code class="inline">false</code> — this single habit is what separates a safe content migration from an afternoon spent restoring from backup.</p>
 
       <div class="try-it alert alert-success">

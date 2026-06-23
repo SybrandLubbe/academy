@@ -84,6 +84,17 @@
     jcr:title = "About Us"
     sling:resourceType = "my-site/components/page"
     jcr:createdBy = "jdoe"</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This shows how a single AEM <strong>page</strong> is actually stored as two separate nodes in the repository — something that trips up almost every new developer.</p>
+          <ul>
+            <li><code>cq:Page</code> — the outer container node. It represents the page's existence in the hierarchy but stores almost no data itself. Think of it as the folder.</li>
+            <li><code>jcr:content [cq:PageContent]</code> — the <em>inner</em> node where all the actual data lives: the title, the resource type, the author info, and any component content nested beneath it. When your Sling Model reads <code>jcr:title</code>, it reads it from here, not from the <code>cq:Page</code> node above.</li>
+            <li><code>sling:resourceType</code> — the property that tells AEM which component (under <code>/apps</code>) handles rendering this page. Without this, Sling doesn't know how to render the node.</li>
+          </ul>
+        </div>
+      </details>
 
       <p>The outer node (<code class="inline">cq:Page</code>) is mostly a container — it exists so AEM has something stable to version and reference. The actual content — title, components, properties an author sets in a dialog — lives under <code class="inline">jcr:content</code>. This split trips up almost every new developer at least once: if you're looking for a page's title in code and querying the wrong node, you'll get nothing back.</p>
 
@@ -110,6 +121,18 @@
 /etc        → legacy location for some configs/design content (older projects)
 /var        → runtime/internal data: audit logs, workflow instances
 /home       → user and group nodes (authentication/authorization)</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The four top-level JCR paths have distinct, deliberately separated roles. Knowing which is which prevents misplacing files during development.</p>
+          <ul>
+            <li><code>/content</code> — runtime data only: pages authors create, uploaded assets, and experience fragments. If it can be deleted without losing code, it lives here.</li>
+            <li><code>/apps</code> — project code only: component definitions, HTL render scripts, dialog XML, clientlibs, and OSGi configs as <code>.cfg.json</code> files. Always under version control.</li>
+            <li><code>/libs</code> — Adobe's built-in code. Read-only in practice — the upgrade process overwrites it. Use overlays under <code>/apps</code> to customise anything here.</li>
+            <li><code>/conf</code> — configuration that travels with content: editable template definitions, content policies, and cloud service configs. Introduced in AEM 6.2 to replace some uses of <code>/apps</code> for mutable config.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="callout alert alert-primary">
         <span class="label">Mental model</span>

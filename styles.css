@@ -653,6 +653,76 @@ footer.site-footer {
   * { transition: none !important; }
 }
 
+/* ---------- Code Explanation (expandable below code blocks) ---------- */
+
+.code-explain {
+  margin-top: -2px;
+  border: 1px solid #d1fae5;
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  background: #f0fdf4;
+  overflow: hidden;
+}
+
+.code-explain summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 7px 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #16a34a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.code-explain summary::-webkit-details-marker { display: none; }
+.code-explain summary::marker { content: ""; }
+.code-explain summary::before {
+  content: "▸";
+  font-size: 9px;
+  transition: transform .15s;
+}
+.code-explain[open] summary::before { content: "▾"; }
+.code-explain[open] summary {
+  border-bottom: 1px solid #d1fae5;
+  color: #15803d;
+}
+
+.code-explain-body {
+  padding: 14px 16px 14px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #1f2937;
+}
+
+.code-explain-body p { margin: 0 0 0.7em; }
+.code-explain-body p:last-child { margin-bottom: 0; }
+
+.code-explain-body ul {
+  margin: 0.5em 0 0.7em;
+  padding-left: 1.1em;
+}
+
+.code-explain-body ul:last-child { margin-bottom: 0; }
+
+.code-explain-body li { margin-bottom: 0.5em; }
+
+.code-explain-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: #dcfce7;
+  color: #14532d;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.code-explain-body strong { color: #111827; }
+
 /* ---------- Knowledge Check (trainer quiz) ---------- */
 
 .knowledge-check {

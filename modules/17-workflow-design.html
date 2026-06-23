@@ -123,6 +123,18 @@ public class AcademyApprovalStep implements WorkflowProcess {
         return true;
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A more complete workflow step implementation showing how steps read configuration, access the payload, and pass data forward to later steps.</p>
+          <ul>
+            <li><code>args.get("PROCESS_ARGS", String.class)</code> — reads the "Process Arguments" text configured on this step inside the Workflow Model Editor's step dialog. This lets authors parameterize the step without changing code — different workflow models can use the same step class with different arguments.</li>
+            <li><code>workItem.getWorkflowData().getPayload()</code> — the content path (e.g. a page path) this workflow instance is acting on. Every step in the workflow sees the same payload.</li>
+            <li><code>workItem.getWorkflow().getWorkflowData().getMetaDataMap().put("approvedBy", ...)</code> — writes a value to the workflow instance's metadata map. Steps further down the workflow can read this value to make routing decisions (e.g. an OR-split that checks if approval was given).</li>
+            <li>The implementation is deliberately idempotent — calling it twice produces the same result as calling it once. AEM can retry failed steps, so non-idempotent steps (like "send email") need extra guards to prevent double execution.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">args.get(...)</code> reads metadata configured on the step itself inside the visual editor (an architect can set <code class="inline">requiredApproverRole</code> per workflow model without touching code), and writing into <code class="inline">getMetaDataMap()</code> is how one step hands data forward to whatever runs after it.</p>
 
       <h3>Best practices for custom steps</h3>

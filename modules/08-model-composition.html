@@ -116,6 +116,18 @@ public class AcademyTeaserModel {
         return badgeLabel;
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This model "wraps" the Core Components Teaser model instead of reimplementing it from scratch — one of the most important patterns in real AEM projects.</p>
+          <ul>
+            <li><code>@Via(type = ResourceSuperType.class)</code> — tells Sling Models: "before injecting into this field, first adapt the resource to whatever model the component's <code>sling:resourceSuperType</code> registers." Because the Core Teaser component registers <code>com.adobe.cq.wcm.core.components.models.Teaser</code>, this injects a fully populated Core Teaser model.</li>
+            <li><code>@Self</code> — injects the adaptable (the Resource itself), then the <code>@Via</code> instruction redirects the adaptation target. Without <code>@Via</code>, <code>@Self</code> would just inject the resource.</li>
+            <li>The result: <code>getTeaserTitle()</code> delegates to the Core model — you inherit years of tested link resolution, image handling, and edit-mode placeholder behaviour. You only add the <code>badgeLabel</code> field that's specific to your project.</li>
+            <li><code>defaultInjectionStrategy = OPTIONAL</code> — the <code>coreTeaser</code> field may be null if the resource has no resourceSuperType set. The null check in <code>getTeaserTitle()</code> guards against this.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">coreTeaser</code> is a fully populated instance of the Core Components' own <code class="inline">Teaser</code> model — every field it already knows how to compute (title fallback logic, link resolution, image handling) is available immediately, without reimplementing any of it. Your model only adds what's actually new: <code class="inline">badgeLabel</code> here, asset metadata in module 12's image example.</p>
 
       <div class="callout alert alert-primary">
@@ -128,6 +140,16 @@ public class AcademyTeaserModel {
       <pre data-code><span class="filename">composing by interface inheritance</span><code>public interface AcademyTeaser extends Teaser {
     String getBadgeLabel();
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>An alternative composition approach where your interface <em>extends</em> the Core Component's interface rather than wrapping it in an implementation field.</p>
+          <ul>
+            <li><code>public interface AcademyTeaser extends Teaser</code> — Java interface inheritance. Your interface inherits all methods from <code>Teaser</code> (the Core Components interface) and adds <code>getBadgeLabel()</code>. Callers who hold an <code>AcademyTeaser</code> can call both your methods and all Core Teaser methods through one typed reference.</li>
+            <li>Choose this over the wrapping approach when you want callers to see your model as a drop-in replacement for the Core Teaser — they can use it wherever a <code>Teaser</code> is expected. Choose wrapping when you want full control and might diverge from the Core interface.</li>
+          </ul>
+        </div>
+      </details>
       <p>Wrapping (the first example) gives you more control — you can change what a getter returns, add validation, or omit a method from the core model entirely. Interface inheritance is more honest about the relationship when your component is genuinely "a Teaser, plus one more field" with no overridden behavior. Reach for wrapping by default; reach for interface inheritance when you're confident you'll never want to diverge from the parent's behavior.</p>
 
       <h2>Setting up for unit testing</h2>
@@ -142,6 +164,17 @@ public class AcademyTeaserModel {
     &lt;artifactId&gt;mockito-core&lt;/artifactId&gt;
     &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>These Maven dependencies unlock AEM Mocks — the test infrastructure that lets you run Sling Model tests without a running AEM instance.</p>
+          <ul>
+            <li><code>io.wcm.testing.aem-mock.junit5</code> — provides the <code>AemContext</code> test extension. It creates a fully functional in-memory Sling + AEM environment with real ResourceResolver, real Sling Models injection, and real OSGi service registry — all in pure JUnit with no AEM server required.</li>
+            <li><code>mockito-core</code> — the standard Java mocking library. Used to create fake implementations of OSGi services that return predictable values in tests.</li>
+            <li><code>&lt;scope&gt;test&lt;/scope&gt;</code> — these JARs are only on the classpath during <code>mvn test</code>. They're never packaged into the deployed bundle.</li>
+          </ul>
+        </div>
+      </details>
       <p>If your project was generated from the standard AEM Project Archetype, both are very likely already there — check before adding them again. Test classes themselves live in a parallel folder to your main source, under <code class="inline">src/test/java</code> instead of <code class="inline">src/main/java</code>, mirroring the same package structure. Module 14 picks up exactly here.</p>
 
       <div class="try-it alert alert-success">

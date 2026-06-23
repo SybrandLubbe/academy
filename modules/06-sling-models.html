@@ -84,12 +84,34 @@
     &lt;h2&gt;${properties.jcr:title}&lt;/h2&gt;
     &lt;p&gt;${properties.description}&lt;/p&gt;
 &lt;/div&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This shows the <strong>problem</strong> Sling Models solve. Reading properties directly in HTL is not wrong, but it doesn't scale.</p>
+          <ul>
+            <li><code>${properties.jcr:title}</code> — accesses the <code>properties</code> object that HTL automatically exposes (the node's ValueMap). This works for simple cases but forces the template to know property names, deal with missing values, format types, and contain presentation logic.</li>
+            <li>The comment "this is not the template's job" is the key design principle: templates should only decide what to show and how to lay it out. Deciding <em>what the data is</em> and preparing it is the model's job.</li>
+            <li>This approach also cannot be unit tested — you'd need a running AEM instance to verify it works.</li>
+          </ul>
+        </div>
+      </details>
       <p>This is fragile. The template has to know property names, deal with type coercions, handle missing values, and truncate long text — all presentation logic tangled up with data access. And none of it is unit-testable.</p>
       <p>With a Sling Model, the template becomes clean:</p>
       <pre data-code><span class="filename">with a model — the template only does presentation</span><code>&lt;div data-sly-use.teaser="biz.netcentric.academy._05.TeaserModel"&gt;
     &lt;h2&gt;${teaser.title}&lt;/h2&gt;
     &lt;p&gt;${teaser.shortDescription}&lt;/p&gt;
 &lt;/div&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The clean version — with a Sling Model, the template only makes presentation decisions.</p>
+          <ul>
+            <li><code>data-sly-use.teaser="biz.netcentric.academy._05.TeaserModel"</code> — this single attribute does everything: it calls <code>resource.adaptTo(TeaserModel.class)</code>, runs all injection, calls <code>@PostConstruct</code>, and binds the result to the name <code>teaser</code>.</li>
+            <li><code>${teaser.title}</code> — calls <code>model.getTitle()</code>. HTL automatically maps property access to getter methods — <code>title</code> maps to <code>getTitle()</code>, <code>shortDescription</code> maps to <code>getShortDescription()</code>.</li>
+            <li>The template has no knowledge of the <code>jcr:title</code> property name, the 80-character truncation, or null handling — all of that is encapsulated in the model.</li>
+          </ul>
+        </div>
+      </details>
       <p>The model handles all the data-reading. The template only handles presentation. This is exactly the same Model-View principle you'd use in any other MVC framework — Sling Models are AEM's "M."</p>
 
       <h2>Overview — what is "adaptation"?</h2>
@@ -103,6 +125,16 @@ TeaserModel model = resource.adaptTo(TeaserModel.class);
 // The exact same mechanism, also using adaptTo:
 ValueMap props = resource.adaptTo(ValueMap.class);  // built into Sling
 Page page = resource.adaptTo(Page.class);           // built into AEM</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This code reveals that "adaptation" isn't special Sling Models magic — it's a general Sling mechanism you already use.</p>
+          <ul>
+            <li><code>resource.adaptTo(TeaserModel.class)</code> — calls the same generic adaptation mechanism as <code>resource.adaptTo(ValueMap.class)</code> or <code>resource.adaptTo(Page.class)</code>. Sling Models registers an <code>AdapterFactory</code> that intercepts calls where the target type has a <code>@Model</code> annotation.</li>
+            <li>The return value is either a fully populated instance or <code>null</code> — never an exception. <code>null</code> means a required field couldn't be injected. This silent failure is important to understand because it can cause blank rendering with no error in the logs at default log levels.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>01 · Sling Models &amp; Adaptation — your first model</h2>
       <p>Let's build <code class="inline">TeaserModel</code> step by step and explain every annotation as we add it:</p>
@@ -149,6 +181,20 @@ public class TeaserModel {
     public String getShortDescription() { return shortDescription; }
     public boolean hasImage()           { return image != null; }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is a full working Sling Model. Each annotation does a specific, distinct job — understanding what each one does independently is more useful than memorizing the whole class.</p>
+          <ul>
+            <li><code>@Model(adaptables = Resource.class)</code> — registers this class as an adapter for <code>Resource</code>. Only <code>Resource</code> objects can be adapted to this model; using a <code>SlingHttpServletRequest</code> would fail.</li>
+            <li><code>resourceType = "academy/components/teaser"</code> — tells AEM which component's content this model belongs to. Not strictly required but enables HTL to find the model automatically by resource type.</li>
+            <li><code>defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL</code> — makes all fields optional by default. Without this, a missing <code>title</code> property on the content node would cause the entire model to return <code>null</code>.</li>
+            <li><code>@Exporter(name = "jackson", extensions = "json")</code> — registers a <code>.model.json</code> endpoint for this model using Jackson (a JSON library). Every public getter becomes a JSON field.</li>
+            <li><code>@ValueMapValue</code> — reads the JCR property whose name matches the Java field name from the content node's ValueMap.</li>
+            <li><code>@ChildResource</code> — resolves a <em>child node</em> named "image" as a <code>Resource</code> object. If you want to adapt it to another model, change the field type to that model's interface.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>02 · Injecting Content into a Model — the injectors explained</h2>
       <p>Each annotation on a field tells Sling Models exactly <em>where</em> to pull the value from. Here are the five you'll use on almost every model:</p>
@@ -195,6 +241,17 @@ private String title;
 // Every field is optional unless explicitly marked @Required
 @Model(defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class TeaserModel { ... }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The injection strategy choice is a design decision that affects how a model behaves when content is incomplete.</p>
+          <ul>
+            <li><strong>REQUIRED (default, no annotation)</strong> — a missing property causes the whole model to fail. Use this for fields that are truly mandatory — a model that returns a half-baked object is worse than one that returns null and lets the template handle it cleanly.</li>
+            <li><strong><code>@Optional</code> on a field</strong> — this one field is optional; the model will still return a populated instance even if this property is missing. Use for genuinely optional content like an image or a subtitle.</li>
+            <li><strong><code>defaultInjectionStrategy = OPTIONAL</code> on the class</strong> — all fields are optional unless individually marked <code>@Required</code>. Use this when most fields are optional and you don't want to annotate every single one.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="callout pitfall alert alert-warning">
         <span class="label">debugging null from adaptTo()</span>
@@ -215,6 +272,17 @@ protected void init() {
     // Never do I/O (HTTP calls, heavy queries) here — module 12 shows why
     this.displayTitle = title != null ? title.toUpperCase() : "No Title";
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p><code>@PostConstruct</code> is the bridge between "data is injected" and "data is ready to use."</p>
+          <ul>
+            <li>The method annotated with <code>@PostConstruct</code> is called <em>after</em> every <code>@ValueMapValue</code>, <code>@ChildResource</code>, and <code>@OSGiService</code> field has been populated. Only here are you guaranteed all fields exist.</li>
+            <li>Using it for pure data transformation (truncation, concatenation, type conversion) is correct. Using it for I/O (HTTP calls, database queries) is a mistake — it blocks the render thread on every page load. Module 18 shows the correct pattern for that.</li>
+            <li>The method can be <code>protected void</code> or <code>private void</code>. It doesn't matter what you name it — the annotation is what Sling Models looks for.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>Exposing a model as JSON</h2>
       <p>Adding <code class="inline">@Exporter(name = "jackson", extensions = "json")</code> to a model (as <code class="inline">TeaserModel</code> has) means any request to the resource with the <code class="inline">.model.json</code> selector will return the model's getters as JSON — no servlet required.</p>
@@ -228,6 +296,17 @@ Response:
 }
 
 Only properties with public getters appear. Private fields are never exposed.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This shows what the <code>@Exporter</code> annotation actually produces — a free JSON API endpoint for any Sling Model resource, with zero additional code.</p>
+          <ul>
+            <li>The URL pattern <code>&lt;resource-path&gt;.model.json</code> is registered automatically by the framework when the bundle activates. No servlet registration, no <code>web.xml</code>, no routing config needed.</li>
+            <li>Only methods following the JavaBean getter convention (<code>getXxx()</code> or <code>isXxx()</code> for booleans) are serialized. Private fields are never directly accessible.</li>
+            <li>This is commonly used to feed client-side JavaScript components — the HTML renders a container div and a <code>data-path</code> attribute, and JavaScript fetches <code>.model.json</code> to hydrate it.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="try-it alert alert-success">
         <span class="label">Try it</span>

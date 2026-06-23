@@ -107,6 +107,18 @@ public class AcademyTaggingStep implements WorkflowProcess {
         // resolve payloadPath, add a "needs-review" tag, save
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A custom workflow process step — the code that runs when AEM executes a step in a workflow model.</p>
+          <ul>
+            <li><code>implements WorkflowProcess</code> — the single-method interface that workflow steps must implement. AEM calls <code>execute(workItem, workflowSession, args)</code> when this step is reached.</li>
+            <li><code>process.label = "Academy Tagging Step"</code> — this OSGi property is what appears in the Workflow Model Editor's "Choose a Process" dialog. Without it, the step can't be selected by authors when building workflow models.</li>
+            <li><code>workItem.getWorkflowData().getPayload()</code> — retrieves the content path the workflow is acting on (e.g. <code>/content/academy/en/about</code>). Everything the step does should be scoped to this path.</li>
+            <li><code>workflowSession.getModel(workItem.getWorkflow().getWorkflowModel().getId())</code> — access to metadata passed from earlier steps. Steps communicate through the workflow's MetaDataMap rather than through method parameters.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>Reacting to changes with ResourceChangeListener</h2>
       <p>This is the modern replacement for the older JCR <code class="inline">ObservationListener</code> API — a simpler interface scoped to specific paths and change types:</p>
@@ -134,6 +146,17 @@ public class AcademyChangeListener implements ResourceChangeListener {
                 System.out.println(change.getType() + ": " + change.getPath()));
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A resource change listener — code that fires automatically whenever content changes in the specified repository path.</p>
+          <ul>
+            <li><code>immediate = true</code> — critical. Without this, the component only starts when something injects it via <code>@Reference</code>. Nothing ever references a listener, so without <code>immediate = true</code> it never starts and never listens.</li>
+            <li><code>ResourceChangeListener.PATHS + "=/content/academy"</code> — scopes the listener to a subtree. Without scoping, the listener fires on every change across the entire repository — unacceptable performance impact in production.</li>
+            <li><code>onChange(List&lt;ResourceChange&gt; changes)</code> — receives a batch of changes. Keep this method fast. If you need to do heavy work (reindexing, calling an API, sending notifications), hand off to a Sling Job (<code>jobManager.addJob(...)</code>) rather than doing the work inline on this thread.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>Scheduled jobs</h2>
       <p>For work that runs on a clock rather than in response to anything, the Sling Scheduler accepts a cron-like expression and calls your code directly. This is a fragment to add inside an existing <code class="inline">@Component</code> class (with a <code class="inline">@Reference private Scheduler scheduler;</code> field) — not a full file on its own:</p>
@@ -144,6 +167,18 @@ protected void activate() {
             .name("academy-nightly-report")
             .canRunConcurrently(false));
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A scheduled task registered programmatically in <code>@Activate</code> using the Sling Scheduler API.</p>
+          <ul>
+            <li><code>scheduler.schedule(this, ...)</code> — registers the current object (which implements <code>Runnable</code>) as a scheduled task. <code>this</code> is passed as the task to run, not as a callback — the scheduler will call <code>this.run()</code>.</li>
+            <li><code>.expression("0 0 2 * * ?")</code> — a Quartz cron expression: second=0, minute=0, hour=2, day=any, month=any, weekday=any → runs at 2am every day. The <code>?</code> is required in the weekday position when the day-of-month is already specified.</li>
+            <li><code>.canRunConcurrently(false)</code> — prevents a second execution from starting while a previous one is still running. Essential for long-running tasks like a nightly report that might occasionally take longer than the scheduled interval.</li>
+            <li>Registering in <code>@Activate</code> means the schedule is set up every time the component starts. The corresponding <code>@Deactivate</code> should unschedule it to prevent orphaned tasks.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>

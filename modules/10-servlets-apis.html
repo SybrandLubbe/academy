@@ -84,6 +84,17 @@
                 "sling.servlet.methods=GET"
         }
 )</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Path-based servlet registration is the simpler of the two approaches — useful for utility endpoints that aren't tied to specific content.</p>
+          <ul>
+            <li><code>sling.servlet.paths=/bin/academy/hello</code> — registers this servlet against a fixed URL path. Any GET request to that exact URL is routed here, regardless of what content node (if any) lives at that path in the repository.</li>
+            <li>The <code>/bin/</code> prefix is a convention for non-content API endpoints. The Dispatcher is typically configured to block paths that don't start with <code>/content/</code> or <code>/bin/</code>, so using this prefix ensures the endpoint is reachable through the Dispatcher.</li>
+            <li><code>sling.servlet.methods=GET</code> — restricts this servlet to GET requests. Without this, the servlet registers for all HTTP methods, which is usually not what you want for a read-only endpoint.</li>
+          </ul>
+        </div>
+      </details>
       <p>The AEM-native alternative ties a servlet to a resource type instead, the same mechanism module 3 used for rendering scripts:</p>
       <pre data-code><span class="filename">resourceType-based</span><code>@Component(
         service = Servlet.class,
@@ -94,6 +105,17 @@
                 "sling.servlet.methods=GET"
         }
 )</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>ResourceType-based registration is the AEM-native way to create endpoints — it ties the servlet to a specific type of content rather than a URL.</p>
+          <ul>
+            <li><code>sling.servlet.resourceTypes=academy/components/search</code> — this servlet only handles requests where the resolved content node has <code>sling:resourceType="academy/components/search"</code>. This means the same servlet handles every search component instance, regardless of where in the content tree it lives.</li>
+            <li><code>sling.servlet.selectors=results</code> — narrows the registration to requests using the <code>.results.</code> selector. A plain <code>.html</code> request to the same component renders the HTL template; a <code>.results.json</code> request routes to this servlet.</li>
+            <li><code>sling.servlet.extensions=json</code> — combined with the selector, this means only <code>.results.json</code> requests hit this servlet. Other extensions (like <code>.html</code>) are handled normally.</li>
+          </ul>
+        </div>
+      </details>
       <p>A resourceType-based servlet only answers requests against resources of that type, inherits and can be overlaid exactly like a render script, and stays conceptually attached to actual content instead of a hand-picked URL. Reach for it whenever the endpoint is naturally "an action on this kind of resource" rather than a standalone utility.</p>
 
       <h2>When you don't need a servlet at all</h2>
@@ -104,6 +126,16 @@
       <pre data-code><span class="filename">reading parameters</span><code>String query = request.getRequestParameter("q") != null
         ? request.getRequestParameter("q").getString()
         : null;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Sling's own parameter reading API is safer than the standard servlet API for AEM use.</p>
+          <ul>
+            <li><code>request.getRequestParameter("q")</code> — Sling's encoding-aware version of parameter reading. Unlike <code>request.getParameter("q")</code> (the standard Servlet API), this method handles character encoding correctly across all platforms, avoiding subtle character corruption bugs with non-ASCII input.</li>
+            <li>The null check before calling <code>.getString()</code> is necessary — if the parameter isn't present in the request, <code>getRequestParameter()</code> returns null, and calling <code>null.getString()</code> would throw a NullPointerException.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>Returning JSON cleanly</h2>
       <p>String concatenation worked for the Primer's single-field error responses, but it breaks down fast once a response has nested or repeated data — a stray unescaped character and the response is no longer valid JSON. Build it with a JSON library instead:</p>
@@ -124,6 +156,16 @@ JsonObjectBuilder responseBody = Json.createObjectBuilder()
 
 response.setContentType("application/json");
 response.getWriter().write(responseBody.build().toString());</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Using the <code>javax.json</code> API (built into AEM's JVM) to build a structured JSON response safely.</p>
+          <ul>
+            <li><code>Json.createArrayBuilder()</code> and <code>Json.createObjectBuilder()</code> — the builder pattern ensures every string value is properly JSON-escaped. Building JSON by string concatenation is dangerous — a title containing a quote character would break the JSON structure or, worse, enable JSON injection attacks.</li>
+            <li>The result is a well-formed JSON array where each element is an object with <code>title</code> and <code>path</code> fields. The builder API handles all escaping, quoting, and structural characters automatically.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">javax.json</code> ships with AEM, so this needs no extra dependency.</p>
 
       <h2>CSRF protection on state-changing requests</h2>

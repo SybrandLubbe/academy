@@ -94,6 +94,18 @@ public @interface WeatherConfig {
     @Property(label = "Cache duration (minutes)")
     int cacheDurationMinutes() default 30;
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is a Context-Aware Configuration annotation type — similar in syntax to an OSGi <code>@ObjectClassDefinition @interface</code>, but for content-level configuration.</p>
+          <ul>
+            <li><code>@Configuration(label = "...")</code> — marks this annotation type as a CA Config schema. CA Config's framework discovers it automatically at runtime without any additional registration.</li>
+            <li><code>public @interface WeatherConfig</code> — again the <code>@interface</code> keyword declares an annotation type. CA Config repurposes this Java syntax as a type-safe schema definition. Each method becomes a property: its name is the key, its return type is the value type, and <code>default</code> is the fallback.</li>
+            <li><code>@Property(label = "...")</code> — metadata that drives the CA Config Editor UI (if the WCM IO CA Config Editor is installed), similar to how <code>@AttributeDefinition</code> drives the Felix console form.</li>
+            <li>Unlike OSGi configuration (which is per-instance), CA Config values are stored under <code>/conf</code> and resolved based on the content hierarchy — different sites on the same AEM instance get different values.</li>
+          </ul>
+        </div>
+      </details>
       <p>No <code class="inline">@Component</code> or <code class="inline">@Designate</code> is needed here — CA Config's own framework discovers <code class="inline">@Configuration</code>-annotated interfaces automatically; there's nothing to register by hand.</p>
 
       <h2>Reading a configuration</h2>
@@ -108,6 +120,17 @@ private String resolveDefaultCountry() {
     WeatherConfig config = configurationBuilder.as(WeatherConfig.class);
     return config.defaultCountry();
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Reading a CA Config value inside a Sling Model — the key difference from OSGi config is that the value is resolved based on <em>where the content is</em>, not which instance we're on.</p>
+          <ul>
+            <li><code>@Self private ConfigurationBuilder configurationBuilder</code> — <code>@Self</code> injects the adaptable (the Resource), but typed as <code>ConfigurationBuilder</code>. This works because Sling's CA Config framework registers an AdapterFactory from <code>Resource</code> to <code>ConfigurationBuilder</code>.</li>
+            <li><code>configurationBuilder.as(WeatherConfig.class)</code> — walks up the content hierarchy from the current resource path, finds the nearest <code>sling:configRef</code> pointer to a <code>/conf</code> tree, and reads <code>WeatherConfig</code> from that tree. If no config is found in the hierarchy, it returns the annotation's <code>default</code> values.</li>
+            <li>The result: a German-language site can have <code>defaultCountry = "Germany"</code> while a Portuguese site has <code>defaultCountry = "Portugal"</code> — same AEM instance, same code, different values.</li>
+          </ul>
+        </div>
+      </details>
       <p>If module 12's <code class="inline">WeatherModel</code> used this instead of leaving the country blank, every site under a given <code class="inline">/conf</code> configuration could default to its own country without a single line of branching code in the model itself.</p>
 
       <h2>Context-aware resources, briefly</h2>
@@ -128,6 +151,17 @@ void resolvesDefaultCountryFromCaConfig() {
 
     assertEquals("Germany", config.defaultCountry());
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Testing a model that depends on CA Config requires special AemContext setup — the CA Config plugin is not loaded by default.</p>
+          <ul>
+            <li><code>new AemContext(ContextPlugins.CACONFIG)</code> — loads the CA Config plugin into the in-memory AEM environment. Without this, <code>configurationBuilder.as(WeatherConfig.class)</code> returns an object with only default values regardless of what you write into <code>/conf</code>.</li>
+            <li><code>context.create().resource("/conf/academy/sling:configs/biz...WeatherConfig", "defaultCountry", "Germany")</code> — writes a CA Config node at the path CA Config expects (under <code>/conf/&lt;site&gt;/sling:configs/&lt;fully-qualified-interface-name&gt;</code>).</li>
+            <li>The test verifies the full CA Config resolution chain: content path → <code>sling:configRef</code> → <code>/conf</code> tree → config node → typed value via <code>WeatherConfig.defaultCountry()</code>.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>WCM IO Context-Aware Configuration Editor</h2>
       <p>Out of the box, CA Config values can only be edited as raw repository content under <code class="inline">/conf</code> — fine for a developer in CRXDE Lite, unworkable for the content authors and administrators who actually need to change a tracking ID. The <a href="https://github.com/wcm-io/io.wcm.caconfig.editor" target="_blank" rel="noopener">WCM IO Context-Aware Configuration Editor</a> is a free, open-source tool that adds a proper UI for this.</p>

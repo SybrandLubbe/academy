@@ -112,6 +112,17 @@
       <pre data-code><span class="filename">JCR paths</span><code>/apps/your-project/      → your code: components, templates, OSGi configs, clientlibs
 /libs/                   → out-of-the-box AEM code — never modify this directly
 /content/your-project/   → the actual authored content (pages, assets)</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This diagram shows the three top-level paths every AEM developer works with every day. Understanding which path is for what prevents the most common class of beginner mistakes.</p>
+          <ul>
+            <li><code>/apps/your-project/</code> — your custom code: components (HTL scripts + dialogs), clientlibraries, and OSGi config files. This path survives AEM upgrades because it's yours.</li>
+            <li><code>/libs/</code> — Adobe's built-in code. <strong>Never modify this directly.</strong> It is overwritten on every AEM upgrade, hotfix, or service pack installation. Any change you make here disappears silently.</li>
+            <li><code>/content/your-project/</code> — the actual page and asset content authors create. This is the data; <code>/apps</code> is the code that renders it.</li>
+          </ul>
+        </div>
+      </details>
 
       <p>The rule that trips up almost everyone at first: <strong>never edit anything under <code class="inline">/libs</code></strong>. It's overwritten on every product upgrade. If you need to change out-of-the-box behavior, you overlay it — recreate the path under <code class="inline">/apps</code> and AEM's resource resolution will prefer your version. You'll see exactly how that resolution works in module 3.</p>
 

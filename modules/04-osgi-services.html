@@ -93,6 +93,17 @@ Bundle-Version: 1.0.0
 Export-Package: biz.netcentric.academy.core.services;version="1.0.0"
 Import-Package: org.apache.sling.api;version="[2.0,3)",
                 org.osgi.service.component.annotations;version="[1.4,2)"</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is the <strong>OSGi bundle manifest</strong> — the metadata that makes a JAR file an OSGi bundle rather than an ordinary JAR. You never write this by hand; the bnd Maven plugin generates it from your source code annotations during the build.</p>
+          <ul>
+            <li><code>Export-Package</code> — lists the Java packages this bundle makes available to other bundles. Only exported packages can be referenced by other bundles' code. Packages not listed here are private to this bundle.</li>
+            <li><code>Import-Package</code> — lists every package this bundle needs from other bundles, with version ranges. OSGi checks these at deploy time. If any import isn't satisfied by an active bundle, this bundle won't reach the <code>ACTIVE</code> state.</li>
+            <li>Version ranges like <code>[2.0,3)</code> mean "2.0 or later, but less than 3.0" — square bracket = inclusive, round bracket = exclusive.</li>
+          </ul>
+        </div>
+      </details>
       <p>When you run <code class="inline">mvn clean install -PautoInstallSinglePackage</code>, Maven uses the <strong>bnd plugin</strong> to scan your classes and generate this manifest automatically. You configure what gets exported in <code class="inline">bnd.bnd</code>, but you rarely need to touch it.</p>
 
       <h2>The bundle lifecycle — what the Felix console is telling you</h2>
@@ -108,6 +119,18 @@ ACTIVE      ← this is what you want. Your code is live.
 STOPPING    → @Deactivate methods running (on uninstall or AEM shutdown)
      ↓
 RESOLVED</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Every OSGi bundle moves through these states in order. Knowing what each state means tells you exactly where a deployment is stuck when something isn't working.</p>
+          <ul>
+            <li><code>INSTALLED</code> — the JAR was uploaded but package-level dependencies (from <code>Import-Package</code>) haven't been checked yet.</li>
+            <li><code>RESOLVED</code> — all <code>Import-Package</code> dependencies are satisfied. The class loader can find everything. But no code is running yet.</li>
+            <li><code>ACTIVE</code> — this is the target state. All <code>@Activate</code> methods have run, all <code>@Reference</code> fields are injected, and the component is live and serving requests.</li>
+            <li>If a bundle is stuck at <code>RESOLVED</code> instead of <code>ACTIVE</code>, it typically means an <code>@Reference</code> field has no active provider — go to <code>/system/console/components</code> to see which service is missing.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="callout pitfall alert alert-warning">
         <span class="label">Bundle stuck at INSTALLED or RESOLVED?</span>
@@ -134,6 +157,16 @@ RESOLVED</code></pre>
 public interface GreetingService {
     String greet(String name);
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A plain Java <strong>interface</strong> with no framework annotations. This is the public contract — the only thing consumers ever import from your service layer.</p>
+          <ul>
+            <li>Having no annotations here is deliberate. An interface is just a Java contract; OSGi doesn't need to know about it at this level. The framework annotations go on the implementation class only.</li>
+            <li>By depending only on this interface (never on <code>GreetingServiceImpl</code> directly), every consumer is automatically isolated from implementation details. When you need to add logging, caching, or a completely different backend, you change the implementation and nothing else needs to change.</li>
+          </ul>
+        </div>
+      </details>
 
       <p><strong>Step 2:</strong> Write the implementation. The <code class="inline">@Component</code> annotation is what makes OSGi aware of this class, and <code class="inline">service = GreetingService.class</code> is what registers it in the service registry under that interface.</p>
       <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/osgiexample/GreetingServiceImpl.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.osgiexample;
@@ -148,6 +181,16 @@ public class GreetingServiceImpl implements GreetingService {
         return "Hello, " + name + "!";
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is the OSGi <strong>service implementation</strong> — the class that actually runs. The annotations are what connect it to the OSGi runtime.</p>
+          <ul>
+            <li><code>@Component(service = GreetingService.class)</code> — the most important annotation here. <code>@Component</code> alone just manages the lifecycle (start/stop). The <code>service</code> attribute is what publishes this class in the OSGi service registry, keyed by the <code>GreetingService</code> interface. Without <code>service = ...</code>, the component activates but nothing can find it via <code>@Reference</code>.</li>
+            <li><code>implements GreetingService</code> — Java compile-time enforcement that this class really does satisfy the interface contract. OSGi doesn't check this at runtime; the Java compiler does.</li>
+          </ul>
+        </div>
+      </details>
 
       <p><strong>Step 3:</strong> Consume the service somewhere. <code class="inline">@Reference</code> tells OSGi: "find me whoever registered as <code class="inline">GreetingService</code> and inject it here before this component starts."</p>
       <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/osgiexample/GreetingServlet.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.osgiexample;
@@ -180,6 +223,16 @@ public class GreetingServlet extends SlingSafeMethodsServlet {
         resp.getWriter().write(greetingService.greet("world"));
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This servlet demonstrates <strong>OSGi dependency injection</strong> — consuming a service without knowing its implementation.</p>
+          <ul>
+            <li><code>@Reference private GreetingService greetingService</code> — OSGi looks up the registry at component activation time, finds the active <code>GreetingService</code> implementation (our <code>GreetingServiceImpl</code>), and injects it. The servlet never calls <code>new GreetingServiceImpl()</code>. If no implementation is active, this servlet won't activate either — preventing a NullPointerException at runtime.</li>
+            <li><code>sling.servlet.paths=/bin/academy/osgi-greet</code> — registering by path (rather than resourceType) is suitable for utility endpoints like this that aren't tied to a specific content type. The path prefix <code>/bin/</code> is conventionally used for non-content endpoints in AEM.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="callout alert alert-primary">
         <span class="label">Why @Reference instead of "new GreetingServiceImpl()"?</span>
@@ -197,6 +250,17 @@ public class GreetingServlet extends SlingSafeMethodsServlet {
    the component activates → state moves to ACTIVE
 8. Your service is now in the registry. Any component with @Reference GreetingService
    gets it injected.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This sequence shows everything that happens between running <code>mvn clean install</code> and your code being live in AEM. Understanding this removes the mystery from build problems.</p>
+          <ul>
+            <li>Steps 1–3: Maven compiles Java and the <strong>bnd plugin</strong> scans your <code>@Component</code> and <code>@Reference</code> annotations. It generates an <code>OSGI-INF/</code> folder of XML descriptor files — these are what OSGi actually reads, not your annotations directly. Your annotations are just a convenient source format.</li>
+            <li>Steps 5–6: The content package is installed to AEM via HTTP (the <code>autoInstallSinglePackage</code> profile). AEM's embedded Felix OSGi runtime loads the bundle.</li>
+            <li>Step 7: Felix checks every <code>@Reference</code> field. Only when all are satisfied does the component move to <code>ACTIVE</code>. This is why a missing dependency causes a component to silently not start rather than throwing an exception.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>Lifecycle hooks: @Activate, @Modified, @Deactivate</h2>
       <p>Sometimes you need to run code when a component starts or stops — opening a database connection, scheduling a background task, or reading configuration values. These three annotations hook into the lifecycle:</p>
@@ -222,6 +286,18 @@ public class GreetingServiceImpl implements GreetingService {
         return prefix + ", " + name + "!";
     }
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>These three lifecycle annotations let a component run code at specific points in its existence. Understanding when they're called prevents subtle bugs.</p>
+          <ul>
+            <li><code>@Activate</code> — called when the component starts AND again when its OSGi configuration changes (if you also add <code>@Modified</code>). Read config values here and store them as fields — don't read config in every method call.</li>
+            <li><code>@Modified</code> — can be placed on the same method as <code>@Activate</code>. If a user changes the configuration in the Felix console, OSGi calls this method with the new config values — without stopping and restarting the whole bundle.</li>
+            <li><code>@Deactivate</code> — called when the bundle stops or when AEM shuts down. Release resources here: close database connections, cancel scheduled tasks, shut down thread pools. Omitting this causes resource leaks.</li>
+            <li><code>private String prefix</code> — storing the config value as a field means it's only read once (on activate), not on every <code>greet()</code> call.</li>
+          </ul>
+        </div>
+      </details>
 
       <h2>Adding configuration to a service</h2>
       <p>Hard-coded values (API keys, timeouts, feature flags) are a problem. The standard OSGi pattern is a <em>configuration annotation type</em>:</p>
@@ -236,6 +312,18 @@ public @interface GreetingConfig {
     @AttributeDefinition(name = "Greeting prefix", description = "Prefix added before every greeting")
     String prefix() default "Hello";
 }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is an <strong>OSGi configuration annotation type</strong>. In Java, <code>@interface</code> declares an annotation type — here, OSGi repurposes this syntax as a configuration schema.</p>
+          <ul>
+            <li><code>@ObjectClassDefinition</code> — marks this annotation type as an OSGi configuration descriptor. The <code>name</code> attribute becomes the human-readable label in the Felix console (<code>/system/console/configMgr</code>).</li>
+            <li><code>@AttributeDefinition</code> — metadata for each configuration property: its label in the UI, an optional description, and constraints like min/max values.</li>
+            <li><code>String prefix() default "Hello"</code> — each method in the <code>@interface</code> becomes a configuration property. The method name is the property key, the return type is the value type, and <code>default</code> is the fallback if no config is deployed.</li>
+            <li>The <code>public @interface</code> syntax looks unusual but it's standard Java. The bnd plugin reads it and generates the OSGi metatype XML that makes the Felix console form appear.</li>
+          </ul>
+        </div>
+      </details>
       <p>Add <code class="inline">@Designate(ocd = GreetingConfig.class)</code> to your implementation (as shown above) and the configuration type is automatically picked up. You can now edit the prefix at <code class="inline">/system/console/configMgr</code> without touching code or redeploying.</p>
 
       <h2>Where to look when things break</h2>

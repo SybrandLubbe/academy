@@ -84,6 +84,16 @@
     &lt;h2&gt;${teaser.title}&lt;/h2&gt;
     &lt;p&gt;${teaser.shortDescription}&lt;/p&gt;
 &lt;/div&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is the simplest possible HTL template — one model, two properties. Every element of this template has a specific purpose.</p>
+          <ul>
+            <li><code>data-sly-use.teaser="..."</code> — the fully qualified class name triggers <code>resource.adaptTo(TeaserModel.class)</code>. Without this, there is no model and no data. The name <code>teaser</code> is chosen by you — it's the variable name for the rest of this template's scope.</li>
+            <li><code>${teaser.title}</code> — HTL calls <code>model.getTitle()</code> and HTML-escapes the result automatically. You cannot disable this escaping without explicitly declaring an unsafe context — which protects against XSS without any extra effort.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">${ }</code> expressions are deliberately limited: you can read a property (<code class="inline">teaser.title</code>), index into a list or map, and use a handful of operators — but you can't call a method with arguments. Any logic that needs parameters belongs in the model, not the template.</p>
 
       <h2>Conditionals and loops</h2>
@@ -95,12 +105,33 @@
 &lt;ul data-sly-list.item="${teaser.relatedLinks}"&gt;
     &lt;li&gt;${item.index}: ${item.title}&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Two of the most used HTL block elements — conditional rendering and iteration — shown together.</p>
+          <ul>
+            <li><code>data-sly-test="${teaser.hasImage}"</code> — if the expression is falsy (false, null, empty string, zero), the entire element and its children are removed from the output. Not hidden — completely removed. This is different from <code>display:none</code>, which leaves the HTML in the DOM.</li>
+            <li><code>data-sly-list.item="${teaser.relatedLinks}"</code> — iterates over a collection. <code>item</code> is your chosen variable name for each element. HTL automatically provides <code>item.index</code> (0-based), <code>item.count</code> (1-based), <code>item.first</code>, and <code>item.last</code> on the loop variable — no manual counter needed.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">data-sly-test</code> removes the element entirely when the expression is falsy — not just hides it with CSS. <code class="inline">data-sly-list</code> repeats the element once per item and gives you loop helpers like <code class="inline">item.index</code>, <code class="inline">item.count</code>, and <code class="inline">item.first</code>/<code class="inline">item.last</code> for free. <code class="inline">data-sly-repeat</code> works the same way but keeps the wrapping element itself in the output once per item, rather than only its children.</p>
 
       <h2>Context-aware escaping</h2>
       <p>HTL looks at <em>where</em> an expression sits in the markup and escapes its output accordingly: inside text content it HTML-escapes, inside an <code class="inline">href</code> it URI-escapes, inside a <code class="inline">&lt;script&gt;</code> block it applies JavaScript string escaping. You don't choose the escaping — HTL infers it from context, which is exactly what removes the human error JSP was prone to.</p>
       <p>You can override the inferred context explicitly when needed, for example forcing URI escaping on a value HTL can't otherwise classify:</p>
       <pre data-code><span class="filename">explicit context</span><code>&lt;a href="${teaser.linkPath @ context='uri'}"&gt;Read more&lt;/a&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>HTL's automatic context-aware escaping is powerful, but sometimes you need to tell it exactly which escaping rules to apply.</p>
+          <ul>
+            <li><code>@ context='uri'</code> — overrides HTL's auto-detected context. In a <code>href</code> attribute, HTL normally detects the context as "URI" automatically. Explicit context annotations are needed when the auto-detection gets it wrong, or when you want to document the intent clearly.</li>
+            <li>Other useful contexts: <code>html</code> (allow raw HTML — use with extreme care), <code>scriptString</code> (inside a JavaScript string), <code>styleToken</code> (for CSS class names), and <code>unsafe</code> (disables all escaping — almost never the right choice).</li>
+            <li>Never use <code>context='unsafe'</code> just to "make something work" — it disables the XSS protection that is HTL's entire reason for existing.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="callout pitfall alert alert-warning">
         <span class="label">Common pitfall</span>
@@ -110,11 +141,31 @@
       <h2>Including vs. rendering another resource</h2>
       <p><code class="inline">data-sly-resource</code> renders a child resource through the full Sling resolution pipeline from module 3 — selectors, resourceType inheritance, the works — exactly as if that resource had been requested directly:</p>
       <pre data-code><span class="filename">data-sly-resource</span><code>&lt;div data-sly-resource="${'image' @ resourceType='academy/components/image'}"&gt;&lt;/div&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p><code>data-sly-resource</code> renders a child resource through the full Sling resolution pipeline — not just by including a script file.</p>
+          <ul>
+            <li><code>${'image' @ resourceType='academy/components/image'}</code> — resolves the child node named <code>image</code> relative to the current resource, but overrides its <code>sling:resourceType</code> to force it to render as an <code>academy/components/image</code> component. This is useful when the child node doesn't have its own resourceType property.</li>
+            <li>Unlike <code>data-sly-include</code> (which just pastes another script's output), <code>data-sly-resource</code> goes through the full Sling dispatch cycle: it resolves the resource, finds the script, runs its own model, and renders independently. This means the child component has its own edit-mode overlay, its own dialog, and its own model lifecycle.</li>
+          </ul>
+        </div>
+      </details>
       <p><code class="inline">data-sly-include</code> is lighter weight: it pulls in another script's raw markup output within the <em>same</em> component, without a separate resource-resolution pass — useful for splitting one component's markup across files, not for rendering child components.</p>
 
       <h2>Comments</h2>
       <p>A normal HTML comment (<code class="inline">&lt;!-- --&gt;</code>) is sent to the browser like any other markup. An HTL comment is stripped server-side and never leaves AEM:</p>
       <pre data-code><span class="filename">server-side comment</span><code>&lt;!--/* TODO: replace with a real empty-state once design has one */--&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>HTL has its own comment syntax that behaves very differently from standard HTML comments.</p>
+          <ul>
+            <li><code>&lt;!--/* ... */--&gt;</code> — this comment is completely stripped by the HTL engine on the server. It never reaches the client's browser. Use it for developer notes, TODOs, and documentation that has no business being sent over the wire.</li>
+            <li>A normal HTML comment (<code>&lt;!-- ... --&gt;</code>) is sent to the browser and is visible to anyone who views source — a minor privacy/cleanliness concern. Use normal HTML comments only when the comment is intended for clients (rare).</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="try-it alert alert-success">
         <span class="label">Try it</span>

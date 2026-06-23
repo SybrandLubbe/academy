@@ -95,6 +95,17 @@
 Set&lt;Student&gt; set = new HashSet&lt;&gt;();
 set.add(new Student("s1"));
 set.contains(new Student("s1"));  // false! different hash bucket entirely</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This code demonstrates a classic Java contract violation — implementing <code>equals()</code> without a matching <code>hashCode()</code>.</p>
+          <ul>
+            <li><code>@Override public boolean equals(Object obj)</code> — the Java specification requires that if two objects are <em>equal</em> according to <code>equals()</code>, they must produce the same value from <code>hashCode()</code>. This class breaks that contract.</li>
+            <li>The consequence: a <code>HashSet</code> or <code>HashMap</code> uses <code>hashCode()</code> to decide which bucket to put an object in, then uses <code>equals()</code> to check for exact matches <em>within</em> that bucket. If two equal objects hash to different buckets, they're never compared with <code>equals()</code> — the set thinks they're different even though <code>equals()</code> would say otherwise.</li>
+            <li>The fix: always override both together. Most IDEs generate a correct pair automatically. The <code>Objects.hash(field1, field2, ...)</code> utility method makes it easy.</li>
+          </ul>
+        </div>
+      </details>
       <p>Two "equal" students end up in different hash buckets, so <code class="inline">contains()</code> never even calls <code class="inline">equals()</code> to compare them. The rule is absolute: if you override <code class="inline">equals()</code>, override <code class="inline">hashCode()</code> too, built from the same fields. Most IDEs generate both together for exactly this reason — use that instead of writing either by hand.</p>
 
       <div class="callout pitfall alert alert-warning">
@@ -114,6 +125,17 @@ set.contains(new Student("s1"));  // false! different hash bucket entirely</code
 
 // elsewhere, an alternative order without touching the class:
 students.sort(Comparator.comparing(Student::getFirstName));</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Two approaches to ordering — one built into the class, one external and reusable.</p>
+          <ul>
+            <li><code>implements Comparable&lt;Student&gt;</code> — declares a <em>natural order</em> for this class. Collections.sort(), TreeSet, and TreeMap will use <code>compareTo()</code> automatically. Use this for the ordering that makes the most semantic sense for the type.</li>
+            <li><code>Comparator.comparing(Student::getFirstName)</code> — creates an alternative ordering externally, without modifying the <code>Student</code> class. Use Comparators for secondary sort orders, context-specific orderings, or when you don't control the class.</li>
+            <li>Important: if you use a <code>TreeSet</code>, it uses <code>compareTo()</code> to determine equality (not <code>equals()</code>). Two students with the same surname but different IDs would be considered duplicates by a TreeSet sorted by surname.</li>
+          </ul>
+        </div>
+      </details>
       <p>If <code class="inline">compareTo()</code> returns <code class="inline">0</code> for two objects that <code class="inline">equals()</code> says are <em>not</em> equal, a <code class="inline">TreeSet</code> will silently drop one of them — it uses <code class="inline">compareTo()</code>, not <code class="inline">equals()</code>, to decide what counts as a duplicate. Keep the two consistent unless you have a specific reason not to, and document it loudly if you do.</p>
 
       <h2>Interfaces vs. abstract classes</h2>
@@ -128,11 +150,33 @@ students.sort(Comparator.comparing(Student::getFirstName));</code></pre>
       <pre data-code><span class="filename">IllegalStateException: stream has already been operated upon or closed</span><code>Stream&lt;String&gt; names = list.stream();
 names.forEach(System.out::println);
 names.count();  // throws - the stream was already consumed above</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Streams are single-use — this is one of the most surprising behaviors for developers coming from collections.</p>
+          <ul>
+            <li>A Java <code>Stream</code> is not a data structure. It's a pipeline of operations applied lazily to a source. Once a terminal operation (<code>forEach</code>, <code>count</code>, <code>collect</code>) consumes the stream, the pipeline is closed and the stream is in a terminal state.</li>
+            <li>Attempting to use a consumed stream throws <code>IllegalStateException: stream has already been operated upon or closed</code> — the error message is clear once you know what to look for.</li>
+            <li>The fix: create a new stream from the source each time: <code>list.stream().forEach(...)</code> and <code>list.stream().count()</code> — two separate stream instantiations from the same <code>List</code>.</li>
+          </ul>
+        </div>
+      </details>
       <p>A <code class="inline">null</code> inside a stream pipeline throws a <code class="inline">NullPointerException</code> at the point it's dereferenced, not at the point it entered the stream — which can make the stack trace point somewhere unhelpful. Filter nulls out explicitly rather than assuming a collection has none:</p>
       <pre data-code><span class="filename">filtering nulls before they cause trouble</span><code>list.stream()
         .filter(java.util.Objects::nonNull)
         .map(Student::getSurname)
         .collect(java.util.stream.Collectors.toList());</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A defensive pattern for Stream pipelines that might encounter null values in the source collection.</p>
+          <ul>
+            <li><code>Objects::nonNull</code> — a method reference to <code>Objects.nonNull(obj)</code>, which returns <code>true</code> if the argument is not null. This filter removes any null elements from the stream before they reach <code>map()</code> — where a null would cause a NullPointerException.</li>
+            <li>Always filter nulls at the start of a pipeline, not mid-stream. Filtering early is cleaner and avoids NPEs in <code>map()</code> or <code>sorted()</code> where the error message would be confusing.</li>
+            <li>If null values in the source are a bug rather than expected data, consider using a different approach: fix the null at its source, or use an assertion to fail loudly rather than silently filtering.</li>
+          </ul>
+        </div>
+      </details>
       <p>And avoid mutating variables outside the stream from inside a lambda — it compiles only for effectively-final locals, but the pattern (a counter, a list being built up by a <code class="inline">forEach</code>) is almost always better expressed as a proper collector. If you find yourself reaching for an external mutable variable inside <code class="inline">.forEach()</code>, that's usually a sign the logic belongs in <code class="inline">.map()</code>/<code class="inline">.collect()</code> instead.</p>
 
       <h2>Debugging an AEM instance</h2>
