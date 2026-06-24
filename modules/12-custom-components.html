@@ -258,9 +258,15 @@ public class ImageMetadataModel {
       </div>
 
       <h2>Component 2 — Weather</h2>
-      <p>An author enters a city (and optionally a country, to disambiguate places that share a name), the component geocodes it through <a href="https://open-meteo.com/en/docs/geocoding-api" target="_blank" rel="noopener">Open-Meteo's free geocoding API</a>, then fetches current conditions from <a href="https://open-meteo.com/en/docs" target="_blank" rel="noopener">Open-Meteo's forecast API</a> for those coordinates. No API key is required for either endpoint.</p>
+      <p>This component combines two patterns: a <strong>Sling Model</strong> that renders author-configured weather server-side on page load, and a <strong>Sling Servlet</strong> that any visitor (or the author in preview mode) can call interactively by typing a city name and clicking a button. The result renders in a table — no page reload required. It uses the same free <a href="https://open-meteo.com/en/docs" target="_blank" rel="noopener">Open-Meteo API</a> as before, with more fields and the newer <code>current=</code> parameter format.</p>
 
-      <h3>Step 1 — the Java Sling Model</h3>
+      <div class="callout alert alert-primary">
+        <span class="label">Two layers, one component</span>
+        The Sling Model handles the <em>initial</em> server-rendered state (city from the author dialog). The Servlet handles <em>interactive</em> look-ups after the page loads. Both layers call the same Open-Meteo APIs and return the same fields — the Servlet just returns JSON instead of rendering HTML, letting JavaScript update the table without a full page refresh.
+      </div>
+
+      <h3>Step 1 — Updated Sling Model</h3>
+      <p>The model gains new fields (apparent temperature, humidity, wind direction, precipitation, WMO conditions) by switching from <code>current_weather=true</code> to the newer <code>current=</code> parameter.</p>
       <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/components/weather/WeatherModel.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.components.weather;
 
 import org.apache.sling.api.resource.Resource;
@@ -282,6 +288,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 @Model(
         adaptables = Resource.class,
@@ -291,118 +298,236 @@ import java.nio.charset.StandardCharsets;
 public class WeatherModel {
 
     private static final Logger LOG = LoggerFactory.getLogger(WeatherModel.class);
-    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient(); // package-visible for servlet
 
-    @ValueMapValue
-    private String city;
+    // WMO weather interpretation codes → human-readable label
+    // Full table: https://open-meteo.com/en/docs#weathervariables
+    private static final Map&lt;Integer, String&gt; WMO_CODES = Map.ofEntries(
+        Map.entry(0,  "Clear sky"),
+        Map.entry(1,  "Mainly clear"), Map.entry(2,  "Partly cloudy"), Map.entry(3,  "Overcast"),
+        Map.entry(45, "Foggy"),        Map.entry(48, "Depositing rime fog"),
+        Map.entry(51, "Light drizzle"),Map.entry(53, "Moderate drizzle"),Map.entry(55, "Dense drizzle"),
+        Map.entry(61, "Slight rain"),  Map.entry(63, "Moderate rain"),   Map.entry(65, "Heavy rain"),
+        Map.entry(71, "Slight snow"),  Map.entry(73, "Moderate snow"),   Map.entry(75, "Heavy snow"),
+        Map.entry(80, "Slight showers"),Map.entry(81,"Moderate showers"),Map.entry(82,"Violent showers"),
+        Map.entry(95, "Thunderstorm"),
+        Map.entry(96, "Thunderstorm with hail"), Map.entry(99, "Heavy thunderstorm with hail")
+    );
 
-    @ValueMapValue
-    private String country;
+    @ValueMapValue private String city;
+    @ValueMapValue private String country;
 
+    // ── Weather fields — expanded vs the original ─────────────────────────
     private String resolvedLocation;
     private Double temperature;
-    private Double windspeed;
-    private String error;
+    private Double apparentTemperature;   // "feels like"
+    private Double windSpeed;
+    private Integer windDirection;        // degrees 0-360
+    private Integer humidity;             // percentage
+    private Double  precipitation;        // mm
+    private Integer weatherCode;
+    private String  conditions;           // human-readable WMO description
+    private String  error;
 
     @PostConstruct
     protected void init() {
-        if (city == null || city.isBlank()) {
-            return;
-        }
+        if (city == null || city.isBlank()) return;
         try {
             double[] coords = geocode(city, country);
             fetchCurrentWeather(coords[0], coords[1]);
         } catch (Exception e) {
             LOG.warn("Weather lookup failed for city={}, country={}", city, country, e);
-            error = "Could not load weather for this location.";
+            error = "Could not load weather for \u201c" + city + "\u201d.";
         }
     }
 
-    private double[] geocode(String city, String country) throws IOException, InterruptedException {
-        String query = URLEncoder.encode(city, StandardCharsets.UTF_8);
-        String url = "https://geocoding-api.open-meteo.com/v1/search?name=" + query + "&count=10";
-        JsonObject body = fetchJson(url);
-        JsonArray results = body.getJsonArray("results");
+    // Package-visible so WeatherSearchServlet can reuse both methods
+    double[] geocode(String cityName, String countryName) throws IOException, InterruptedException {
+        String query = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
+        String url   = "https://geocoding-api.open-meteo.com/v1/search?name=" + query + "&count=10";
+        JsonObject body    = fetchJson(url);
+        JsonArray  results = body.getJsonArray("results");
         if (results == null || results.isEmpty()) {
-            throw new IOException("No geocoding results for " + city);
+            throw new IOException("No geocoding results for \"" + cityName + "\"");
         }
 
         JsonObject match = results.getJsonObject(0);
-        if (country != null && !country.isBlank()) {
-            for (int i = 0; i < results.size(); i++) {
+        if (countryName != null &amp;&amp; !countryName.isBlank()) {
+            for (int i = 0; i &lt; results.size(); i++) {
                 JsonObject candidate = results.getJsonObject(i);
-                if (country.equalsIgnoreCase(candidate.getString("country", ""))) {
-                    match = candidate;
-                    break;
+                if (countryName.equalsIgnoreCase(candidate.getString("country", ""))) {
+                    match = candidate; break;
                 }
             }
         }
 
         resolvedLocation = match.getString("name") + ", " + match.getString("country", "");
         return new double[]{
-                match.getJsonNumber("latitude").doubleValue(),
-                match.getJsonNumber("longitude").doubleValue()
+            match.getJsonNumber("latitude").doubleValue(),
+            match.getJsonNumber("longitude").doubleValue()
         };
     }
 
-    private void fetchCurrentWeather(double latitude, double longitude) throws IOException, InterruptedException {
+    void fetchCurrentWeather(double lat, double lon) throws IOException, InterruptedException {
+        // New Open-Meteo current= format — returns more fields than current_weather=true
         String url = String.format(
-                "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&current_weather=true",
-                latitude, longitude);
-        JsonObject body = fetchJson(url);
-        JsonObject current = body.getJsonObject("current_weather");
-        temperature = current.getJsonNumber("temperature").doubleValue();
-        windspeed = current.getJsonNumber("windspeed").doubleValue();
+            "https://api.open-meteo.com/v1/forecast" +
+            "?latitude=%s&amp;longitude=%s" +
+            "&amp;current=temperature_2m,apparent_temperature,wind_speed_10m," +
+            "wind_direction_10m,relative_humidity_2m,weather_code,precipitation",
+            lat, lon);
+        JsonObject body    = fetchJson(url);
+        JsonObject current = body.getJsonObject("current");
+
+        temperature         = current.getJsonNumber("temperature_2m").doubleValue();
+        apparentTemperature = current.getJsonNumber("apparent_temperature").doubleValue();
+        windSpeed           = current.getJsonNumber("wind_speed_10m").doubleValue();
+        windDirection       = current.getInt("wind_direction_10m");
+        humidity            = current.getInt("relative_humidity_2m");
+        weatherCode         = current.getInt("weather_code");
+        precipitation       = current.getJsonNumber("precipitation").doubleValue();
+        conditions          = WMO_CODES.getOrDefault(weatherCode, "Unknown (code " + weatherCode + ")");
     }
 
-    private JsonObject fetchJson(String url) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder(URI.create(url)).GET().build();
-        HttpResponse&lt;String&gt; response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-        return Json.createReader(new StringReader(response.body())).readObject();
+    static JsonObject fetchJson(String url) throws IOException, InterruptedException {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(url)).GET().build();
+        HttpResponse&lt;String&gt; resp = HTTP_CLIENT.send(req, HttpResponse.BodyHandlers.ofString());
+        return Json.createReader(new StringReader(resp.body())).readObject();
     }
 
-    public String getCity() {
-        return city;
+    // ── Public getters ────────────────────────────────────────────────────
+    public String  getCity()                { return city; }
+    public String  getResolvedLocation()    { return resolvedLocation; }
+    public Double  getTemperature()         { return temperature; }
+    public Double  getApparentTemperature() { return apparentTemperature; }
+    public Double  getWindSpeed()           { return windSpeed; }
+    public Integer getWindDirection()       { return windDirection; }
+    public Integer getHumidity()            { return humidity; }
+    public Double  getPrecipitation()       { return precipitation; }
+    public String  getConditions()          { return conditions; }
+    public String  getError()               { return error; }
+    public boolean isAvailable()            { return temperature != null; }
+
+    // Helper map exposed for the Servlet to reuse
+    static Map&lt;Integer, String&gt; getWmoCodes() { return WMO_CODES; }
+}</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The model gains fields and a WMO code map, but the core pattern from modules 6 and 7 is unchanged — <code>@ValueMapValue</code> for dialog input, <code>@PostConstruct</code> for derived values, thin getters for HTL.</p>
+          <ul>
+            <li><code>Map.ofEntries(Map.entry(...))</code> — creates a static, immutable WMO code lookup table. <code>Map.of()</code> supports only up to 10 entries; <code>Map.ofEntries()</code> has no limit. <code>static final</code> means it's allocated once when the class loads, not once per request.</li>
+            <li><code>&amp;current=temperature_2m,apparent_temperature,...</code> — the newer Open-Meteo API parameter. The response is now under <code>"current"</code> (not <code>"current_weather"</code>) with underscore-suffixed keys like <code>temperature_2m</code> (temperature at 2 metres). This format supports many more variables than the legacy endpoint.</li>
+            <li><code>static</code> on <code>HTTP_CLIENT</code>, <code>fetchJson()</code>, <code>geocode()</code>, and <code>fetchCurrentWeather()</code> — the Servlet needs to reuse these without creating a WeatherModel instance (which would need a Resource to adapt from). Making them package-visible statics lets the Servlet call them directly.</li>
+            <li><code>\u201c</code> and <code>\u201d</code> — Unicode for curly quotes in the error message. Using literal curly quotes in Java strings risks encoding issues if the source file is not saved as UTF-8; Unicode escapes are always safe.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 2 — WeatherSearchServlet</h3>
+      <p>This is the AJAX endpoint the JavaScript calls when a user submits the search form. It accepts <code>city</code> and <code>country</code> as GET parameters, calls the same Open-Meteo APIs via the shared methods in <code>WeatherModel</code>, and writes a JSON response. This is the <em>path-based servlet</em> pattern from module 10 — registered at <code>/bin/academy/weather</code>, not tied to any content node.</p>
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/components/weather/WeatherSearchServlet.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.components.weather;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.osgi.service.component.annotations.Component;
+
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.Map;
+
+/**
+ * AJAX endpoint for interactive city lookups.
+ * GET /bin/academy/weather?city=London&amp;country=UK
+ * Returns JSON with current conditions, or {"error":"..."} on failure.
+ */
+@Component(service = Servlet.class,
+           property = {
+               "sling.servlet.paths=/bin/academy/weather",
+               "sling.servlet.methods=GET"
+           })
+public class WeatherSearchServlet extends SlingSafeMethodsServlet {
+
+    @Override
+    protected void doGet(SlingHttpServletRequest request,
+                         SlingHttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
+
+        String city    = request.getParameter("city");
+        String country = request.getParameter("country");
+
+        // ── Input validation — never trust the browser ─────────────────────
+        if (city == null || city.isBlank()) {
+            writeError(response, 400, "city parameter is required");
+            return;
+        }
+        if (city.length() &gt; 100) {
+            writeError(response, 400, "city name too long");
+            return;
+        }
+
+        // ── Geocode + fetch ────────────────────────────────────────────────
+        // Reuse the package-private methods from WeatherModel —
+        // they hold the API logic; this class is just the HTTP wiring.
+        WeatherModel helper = new WeatherModel();
+        try {
+            double[] coords = helper.geocode(city, country);
+            helper.fetchCurrentWeather(coords[0], coords[1]);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            writeError(response, 502, "Weather API call interrupted");
+            return;
+        } catch (Exception e) {
+            writeError(response, 502, "Could not find weather for \u201c" + city + "\u201d");
+            return;
+        }
+
+        // ── Build and write the JSON response ──────────────────────────────
+        JsonObjectBuilder json = Json.createObjectBuilder()
+            .add("location",            helper.getResolvedLocation())
+            .add("temperature",         helper.getTemperature())
+            .add("apparentTemperature", helper.getApparentTemperature())
+            .add("windSpeed",           helper.getWindSpeed())
+            .add("windDirection",       helper.getWindDirection())
+            .add("humidity",            helper.getHumidity())
+            .add("precipitation",       helper.getPrecipitation())
+            .add("conditions",          helper.getConditions());
+
+        response.getWriter().write(json.build().toString());
     }
 
-    public String getResolvedLocation() {
-        return resolvedLocation;
-    }
-
-    public Double getTemperature() {
-        return temperature;
-    }
-
-    public Double getWindspeed() {
-        return windspeed;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public boolean isAvailable() {
-        return temperature != null;
+    // ── Helper: write a JSON error response with the given HTTP status ─────
+    private void writeError(SlingHttpServletResponse response, int status, String message)
+            throws IOException {
+        response.setStatus(status);
+        response.getWriter().write(
+            Json.createObjectBuilder().add("error", message).build().toString()
+        );
     }
 }</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>WeatherModel demonstrates a real-world model that calls an external API — deliberately showing the right structure alongside a pattern to avoid.</p>
+          <p>The Servlet is thin — it validates input, delegates to the model's shared API methods, and formats the response. All business logic stays in <code>WeatherModel</code>.</p>
           <ul>
-            <li><code>@ValueMapValue private String city</code> and <code>private String country</code> — the author's input from the dialog. These are the only things the model reads from the repository.</li>
-            <li><code>@PostConstruct protected void init()</code> — this is where the HTTP calls happen in the educational example. The comment in the module explicitly flags this as a pattern to understand and then improve with Sling Jobs (module 18).</li>
-            <li>The separate <code>geocode()</code> and <code>fetchCurrentWeather()</code> private methods keep the <code>init()</code> method short and each concern independently readable.</li>
+            <li><code>"sling.servlet.paths=/bin/academy/weather"</code> — path-based registration (module 10). Any GET to this URL routes here regardless of content. The <code>/bin/</code> prefix is the AEM convention for non-content endpoints and is typically allowlisted through the Dispatcher.</li>
+            <li><code>response.setContentType("application/json;charset=UTF-8")</code> — tells the browser this response is JSON, not HTML. Without this, some browsers try to render it or download it as a file. Always set it before writing to the response.</li>
+            <li><code>response.setHeader("Cache-Control", "no-cache")</code> — weather data is time-sensitive. Without this, some browsers (and Dispatcher) cache the first response and serve it for subsequent searches, making the user see stale data. <code>no-cache</code> means "always revalidate with the server."</li>
+            <li><strong>Server-side validation first</strong> — <code>if (city == null || city.isBlank())</code> rejects missing inputs with HTTP 400 before calling any API. The browser's <code>required</code> attribute prevents most empty submissions, but a direct <code>curl</code> call bypasses it entirely. Always validate server-side.</li>
+            <li><code>Thread.currentThread().interrupt()</code> — when an <code>InterruptedException</code> is caught, the interrupted flag must be re-set. Not doing this violates the Java threading contract and can cause subtle hangs in thread pools that check for interruption. The <code>return</code> immediately after prevents further processing on an interrupted thread.</li>
+            <li><code>writeError(response, 502, "...")</code> — HTTP 502 (Bad Gateway) correctly signals that this AEM server couldn't reach the upstream weather API, distinguishing it from a 400 (bad client request) or a 500 (AEM bug). Correct status codes let monitoring systems distinguish user errors from infrastructure failures.</li>
           </ul>
         </div>
       </details>
 
-      <div class="callout pitfall alert alert-warning">
-        <span class="label">Common pitfall</span>
-        Making a synchronous outbound HTTP call inside a Sling Model means <em>every single page render</em> waits on a third-party API — slow, fragile if that API has an outage, and an easy way to get rate-limited. This is fine for a training exercise; module 18 (Sling Jobs) shows the production-correct version: a scheduled background job fetches and caches the weather periodically, and the model just reads the cached value.
-      </div>
-
-      <h3>Step 2 — the component definition and dialog</h3>
+      <h3>Step 3 — Component definition</h3>
       <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/weather/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
     xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
@@ -412,14 +537,11 @@ public class WeatherModel {
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>The Weather component definition — minimal because it has its own dialog and doesn't inherit from any core component.</p>
-          <ul>
-            <li>No <code>sling:resourceSuperType</code> here — this component stands alone with its own dialog and its own render script. Authors see a simple "City" and "Country" text field dialog, not the complex image picker from Core Components.</li>
-            <li><code>componentGroup="Academy Training"</code> — same group as the ImageMetadata component. Template policies allow the group, unlocking both components at once.</li>
-          </ul>
+          <p>Unchanged from the original — the component definition has one job (register the component) and needs nothing added for the interactive feature. The clientlib is loaded directly from the HTL template.</p>
         </div>
       </details>
 
+      <h3>Step 4 — Dialog (author city pre-configuration)</h3>
       <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/weather/_cq_dialog/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
     xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
@@ -433,12 +555,12 @@ public class WeatherModel {
                 &lt;items jcr:primaryType="nt:unstructured"&gt;
                     &lt;city jcr:primaryType="nt:unstructured"
                         sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
-                        fieldLabel="City"
-                        required="{Boolean}true"
+                        fieldLabel="Default City (optional)"
+                        fieldDescription="Pre-populates the component on page load. Leave empty if you only want the interactive search form."
                         name="./city"/&gt;
                     &lt;country jcr:primaryType="nt:unstructured"
                         sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
-                        fieldLabel="Country (optional, disambiguates same-named cities)"
+                        fieldLabel="Default Country (optional, disambiguates same-named cities)"
                         name="./country"/&gt;
                 &lt;/items&gt;
             &lt;/column&gt;
@@ -448,46 +570,342 @@ public class WeatherModel {
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>The Weather component's dialog — two simple textfields, one required (city) and one optional (country).</p>
+          <p>The dialog now makes the city optional — authors can leave it empty and let visitors use the search form exclusively, or pre-fill it so the page always shows a default location on load.</p>
           <ul>
-            <li>Both fields use <code>name="./city"</code> and <code>name="./country"</code> — the <code>./</code> prefix writes values to the component's own content node. These are the exact property names <code>@ValueMapValue private String city</code> reads in the model.</li>
-            <li>The dialog has no <code>required</code> attribute on the country field — an empty string is a valid value, and the model handles disambiguation when country is absent.</li>
+            <li><code>fieldDescription</code> on the city field explains the intent. Without it, authors filling in a city and not seeing the search form would be confused. Good dialog descriptions reduce support tickets.</li>
+            <li><code>required="{Boolean}true"</code> has been removed — the component is now useful even without an author-configured city, since the interactive search form is always present.</li>
           </ul>
         </div>
       </details>
 
-      <h3>Step 3 — the render script</h3>
-      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/weather/weather.html <em>(academy.ui.apps)</em></span><code>&lt;div data-sly-use.weather="biz.netcentric.academy.components.weather.WeatherModel" class="academy-weather"&gt;
-    &lt;p data-sly-test="${weather.error}" class="academy-weather-error"&gt;${weather.error}&lt;/p&gt;
-    &lt;div data-sly-test="${weather.available}"&gt;
-        &lt;h3&gt;${weather.resolvedLocation}&lt;/h3&gt;
-        &lt;p&gt;${weather.temperature}&amp;deg;C &amp;middot; wind ${weather.windspeed} km/h&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+      <h3>Step 5 — Clientlib</h3>
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/clientlibs/weather/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    jcr:primaryType="cq:ClientLibraryFolder"
+    categories="[academy.weather]"
+    allowProxy="{Boolean}true"/&gt;</code></pre>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/weather/css.txt</span><code>#base=css
+weather.css</code></pre>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/weather/js.txt</span><code>#base=js
+weather.js</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>The Weather component's render template — again deliberately thin, reflecting the principle that templates only do layout.</p>
           <ul>
-            <li><code>data-sly-test="${weather.error}"</code> renders the error block when <code>getError()</code> returns a non-empty string — handling API failures gracefully rather than crashing silently.</li>
-            <li><code>data-sly-test="${weather.available}"</code> gates the full weather display on the model having successfully fetched data. This means partially failed states (city found, weather fetch failed) don't render broken HTML.</li>
+            <li><code>categories="[academy.weather]"</code> — the square brackets denote an array value in JCR XML. This category name must match exactly what the HTL template calls in <code>data-sly-call="${clientlib.css @ categories='academy.weather'}"</code>.</li>
+            <li><code>allowProxy="{Boolean}true"</code> — required for the JS and CSS to be served at <code>/etc.clientlibs/</code> on the publish instance. Without it, the Dispatcher's default rules block requests to <code>/apps</code>.</li>
           </ul>
         </div>
       </details>
 
-      <h3>Step 4 — build, deploy, and activate it</h3>
+      <h3>Step 6 — CSS</h3>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/weather/css/weather.css</span><code>/* Academy Weather Component — academy.weather clientlib */
+
+.academy-weather { font-family: inherit; max-width: 520px; }
+
+/* ── Search form ─────────────────────────────────────────────────────── */
+.academy-weather__search  { margin-bottom: 1.25rem; }
+.academy-weather__label   {
+  display: block; width: 100%;
+  font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: #6b7280; margin-bottom: 6px;
+}
+
+.academy-weather__form {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end;
+}
+
+.academy-weather__input {
+  flex: 1; min-width: 160px;
+  padding: 9px 12px;
+  border: 1px solid #d1d5db; border-radius: 6px;
+  font-size: 0.9rem; line-height: 1.4;
+  outline: none; transition: border-color .15s, box-shadow .15s;
+}
+.academy-weather__input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+.academy-weather__input--country { flex: 0 1 160px; }
+
+.academy-weather__btn {
+  padding: 9px 20px; white-space: nowrap;
+  background: #2563eb; color: #fff;
+  border: none; border-radius: 6px;
+  font-size: .875rem; font-weight: 600; cursor: pointer;
+  transition: background .15s;
+}
+.academy-weather__btn:hover  { background: #1d4ed8; }
+.academy-weather__btn:active { background: #1e40af; }
+.academy-weather__btn:disabled { background: #93c5fd; cursor: not-allowed; }
+
+/* ── Results table ───────────────────────────────────────────────────── */
+.academy-weather__table {
+  width: 100%; border-collapse: collapse;
+  margin-top: 1rem; font-size: .9rem;
+}
+.academy-weather__table caption {
+  text-align: left; padding-bottom: 8px;
+  font-size: 1rem; font-weight: 700; color: #111827;
+  border-bottom: 2px solid #2563eb; caption-side: top;
+}
+.academy-weather__table thead th {
+  padding: 8px 12px;
+  font-size: .72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: #6b7280;
+  background: #f8fafc; border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+.academy-weather__table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f3f4f6; color: #374151;
+}
+.academy-weather__table td:first-child {
+  font-weight: 600; color: #111827; width: 150px;
+}
+.academy-weather__table tr:last-child td { border-bottom: none; }
+.academy-weather__table tr:hover td     { background: #f8fafc; }
+
+/* ── States ──────────────────────────────────────────────────────────── */
+.academy-weather__loading {
+  color: #6b7280; font-style: italic; padding: 12px 0;
+}
+.academy-weather__error {
+  color: #dc2626; background: #fef2f2;
+  border: 1px solid #fecaca; border-radius: 6px;
+  padding: 10px 14px; font-size: .875rem; margin-top: .75rem;
+}
+
+@media (max-width: 480px) {
+  .academy-weather__input--country { flex-basis: 100%; }
+  .academy-weather__btn            { width: 100%; }
+}</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>All rules are scoped to <code>.academy-weather</code> — no global selectors leak into the rest of the page.</p>
+          <ul>
+            <li><code>caption-side: top</code> — explicitly places the table caption above the table. The default in some browsers is top anyway, but being explicit avoids inconsistencies across browsers.</li>
+            <li><code>.academy-weather__btn:disabled { cursor: not-allowed }</code> — during a fetch request the JavaScript disables the button. The cursor change gives users a visual signal that a request is in progress and clicking again won't help.</li>
+            <li><code>flex: 0 1 160px</code> on the country input — <code>0</code> = don't grow beyond 160px, <code>1</code> = can shrink below 160px (so it wraps correctly on mobile), <code>160px</code> = ideal width. This is more intentional than <code>flex: 0 0 160px</code> which would refuse to shrink.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 7 — JavaScript</h3>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/weather/js/weather.js</span><code>(function () {
+  'use strict';
+
+  /**
+   * For each Weather component on the page:
+   *   1. Listen for form submission.
+   *   2. Call /bin/academy/weather?city=...&amp;country=...
+   *   3. Render the JSON response as a table in the dynamic results area.
+   */
+  document.querySelectorAll('[data-weather-widget]').forEach(function (widget) {
+    var form     = widget.querySelector('[data-weather-form]');
+    var cityIn   = widget.querySelector('[data-weather-city]');
+    var countryIn= widget.querySelector('[data-weather-country]');
+    var results  = widget.querySelector('[data-weather-results]');
+    var btn      = form &amp;&amp; form.querySelector('[data-weather-submit]');
+
+    if (!form || !cityIn || !results) return;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var city    = cityIn.value.trim();
+      var country = countryIn ? countryIn.value.trim() : '';
+
+      if (!city) {
+        results.innerHTML = '&lt;p class="academy-weather__error"&gt;Please enter a city name.&lt;/p&gt;';
+        cityIn.focus();
+        return;
+      }
+
+      // ── Loading state ──────────────────────────────────────────────────
+      results.innerHTML = '&lt;p class="academy-weather__loading"&gt;Fetching weather for ' +
+        escapeHtml(city) + '...&lt;/p&gt;';
+      if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+
+      // ── Fetch from the Sling Servlet ───────────────────────────────────
+      var url = '/bin/academy/weather?city=' + encodeURIComponent(city);
+      if (country) url += '&amp;country=' + encodeURIComponent(country);
+
+      fetch(url, { credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data.error) {
+            results.innerHTML = '&lt;p class="academy-weather__error"&gt;' +
+              escapeHtml(data.error) + '&lt;/p&gt;';
+          } else {
+            results.innerHTML = buildTable(data);
+          }
+        })
+        .catch(function () {
+          results.innerHTML = '&lt;p class="academy-weather__error"&gt;' +
+            'Request failed — check your network connection.&lt;/p&gt;';
+        })
+        .finally(function () {
+          if (btn) { btn.disabled = false; btn.textContent = 'Get Weather'; }
+        });
+    });
+  });
+
+  // ── Build a &lt;table&gt; from the servlet's JSON response ──────────────────
+  function buildTable(data) {
+    var rows = [
+      ['Temperature',    data.temperature         + '\u00b0C'],
+      ['Feels Like',     data.apparentTemperature  + '\u00b0C'],
+      ['Conditions',     data.conditions],
+      ['Wind Speed',     data.windSpeed            + ' km/h'],
+      ['Wind Direction', compassLabel(data.windDirection)],
+      ['Humidity',       data.humidity             + '%'],
+      ['Precipitation',  data.precipitation        + ' mm'],
+    ];
+
+    var html  = '&lt;table class="academy-weather__table"&gt;';
+    html     += '&lt;caption&gt;' + escapeHtml(data.location) + '&lt;/caption&gt;';
+    html     += '&lt;thead&gt;&lt;tr&gt;&lt;th scope="col"&gt;Metric&lt;/th&gt;&lt;th scope="col"&gt;Value&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;';
+    html     += '&lt;tbody&gt;';
+    rows.forEach(function (row) {
+      html += '&lt;tr&gt;&lt;td&gt;' + row[0] + '&lt;/td&gt;&lt;td&gt;' + escapeHtml(String(row[1])) + '&lt;/td&gt;&lt;/tr&gt;';
+    });
+    html += '&lt;/tbody&gt;&lt;/table&gt;';
+    return html;
+  }
+
+  // Convert degrees to a cardinal compass label — e.g. 247 → "247° (WSW)"
+  function compassLabel(deg) {
+    var dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE',
+                'S','SSW','SW','WSW','W','WNW','NW','NNW'];
+    return deg + '\u00b0 (' + dirs[Math.round(deg / 22.5) % 16] + ')';
+  }
+
+  // Prevent XSS when inserting API-returned strings into innerHTML
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&amp;/g, '&amp;amp;')
+      .replace(/&lt;/g,  '&amp;lt;')
+      .replace(/&gt;/g,  '&amp;gt;')
+      .replace(/"/g,  '&amp;quot;');
+  }
+
+}());</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The JavaScript is the bridge between the user's input and the Sling Servlet. It follows the same IIFE + data-attribute pattern used in the navigation component (module 28).</p>
+          <ul>
+            <li><code>document.querySelectorAll('[data-weather-widget]')</code> — selects all Weather component instances on the page. If an author places two Weather widgets on one page, each gets its own independent handler. Data attributes instead of class names keep the JavaScript decoupled from the CSS.</li>
+            <li><code>e.preventDefault()</code> — stops the browser's default form submission (which would reload the page). All the handling happens in the <code>fetch()</code> call below it.</li>
+            <li><code>credentials: 'same-origin'</code> — sends cookies with the request so AEM's authentication mechanism works. Without it, the Servlet receives an anonymous request, which AEM may reject on the author instance if the <code>/bin/academy/weather</code> path requires authentication.</li>
+            <li><strong><code>escapeHtml()</code></strong> — critical for XSS prevention. The API returns city and country names from Open-Meteo, which could theoretically contain characters like <code>&lt;</code> or <code>"</code>. Inserting API-returned data directly into <code>innerHTML</code> without escaping creates an injection vulnerability. This helper prevents it. HTL does this automatically; when writing raw JavaScript you must do it yourself.</li>
+            <li><code>.finally()</code> — re-enables the submit button regardless of success or failure. Without it, a network error leaves the button permanently disabled and the user can't try again.</li>
+            <li><code>compassLabel(deg)</code> — converts the raw degree number (0–360) to a human-readable compass direction. <code>Math.round(deg / 22.5) % 16</code> maps any degree value to one of 16 compass points. <code>% 16</code> handles the wrap-around from 360° back to 0° (North).</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 8 — Updated render script</h3>
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/weather/weather.html <em>(academy.ui.apps)</em></span><code>&lt;!--/* weather.html — loads its own CSS + JS via the academy.weather clientlib */--&gt;
+&lt;sly data-sly-use.weather="biz.netcentric.academy.components.weather.WeatherModel"
+     data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html"&gt;&lt;/sly&gt;
+
+&lt;sly data-sly-call="${clientlib.css @ categories='academy.weather'}"&gt;&lt;/sly&gt;
+
+&lt;div class="academy-weather" data-weather-widget&gt;
+
+  &lt;!--/* ── Search form — always visible to both authors and visitors ── */--&gt;
+  &lt;div class="academy-weather__search"&gt;
+    &lt;label class="academy-weather__label"&gt;Search for a city&lt;/label&gt;
+    &lt;form class="academy-weather__form" data-weather-form novalidate&gt;
+      &lt;input type="text"
+             class="academy-weather__input"
+             placeholder="e.g. Cape Town, Tokyo, Lisbon"
+             aria-label="City name"
+             autocomplete="off"
+             data-weather-city
+             required&gt;
+      &lt;input type="text"
+             class="academy-weather__input academy-weather__input--country"
+             placeholder="Country (optional)"
+             aria-label="Country name"
+             data-weather-country&gt;
+      &lt;button type="submit"
+              class="academy-weather__btn"
+              data-weather-submit&gt;Get Weather&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+
+  &lt;!--/* ── Author-pre-configured result — server-rendered on page load ── */--&gt;
+  &lt;div data-sly-test="${weather.available}"&gt;
+    &lt;table class="academy-weather__table"&gt;
+      &lt;caption&gt;${weather.resolvedLocation}&lt;/caption&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;&lt;th scope="col"&gt;Metric&lt;/th&gt;&lt;th scope="col"&gt;Value&lt;/th&gt;&lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;&lt;td&gt;Temperature&lt;/td&gt;     &lt;td&gt;${weather.temperature}&amp;deg;C&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;Feels Like&lt;/td&gt;      &lt;td&gt;${weather.apparentTemperature}&amp;deg;C&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;Conditions&lt;/td&gt;      &lt;td&gt;${weather.conditions}&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;Wind Speed&lt;/td&gt;      &lt;td&gt;${weather.windSpeed} km/h&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;Wind Direction&lt;/td&gt;  &lt;td&gt;${weather.windDirection}&amp;deg;&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;Humidity&lt;/td&gt;        &lt;td&gt;${weather.humidity}%&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;Precipitation&lt;/td&gt;   &lt;td&gt;${weather.precipitation} mm&lt;/td&gt;&lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+
+  &lt;!--/* API error from the Sling Model (server-side) */--&gt;
+  &lt;p data-sly-test="${weather.error}"
+     class="academy-weather__error"&gt;${weather.error}&lt;/p&gt;
+
+  &lt;!--/* Dynamic results container — populated by weather.js after form submit */--&gt;
+  &lt;div data-weather-results&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;sly data-sly-call="${clientlib.js @ categories='academy.weather'}"&gt;&lt;/sly&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The template now has three layers, each with a distinct purpose and visible only under specific conditions.</p>
+          <ul>
+            <li><strong>Search form (always visible)</strong> — the <code>&lt;form&gt;</code> is unconditional. Authors see it in preview (<code>?wcmmode=disabled</code>); end users see it on the publish instance. Both can type a city and click "Get Weather" without any pre-configuration.</li>
+            <li><code>novalidate</code> on the form — disables the browser's native validation bubbles (which are un-styleable and accessibility-inconsistent). The JavaScript handles validation manually in <code>if (!city) { ... }</code>. This is the correct pattern when you want full control over validation UX.</li>
+            <li><strong>Server-rendered table (<code>data-sly-test="${weather.available}"</code>)</strong> — only appears when the author set a city in the dialog and the API call succeeded. This is the "instant load" experience — the page arrives pre-populated without waiting for a JavaScript fetch.</li>
+            <li><strong>Dynamic results (<code>data-weather-results</code>)</strong> — an empty div. <code>weather.js</code> writes a table into it after a form submission. It sits below the server-rendered table, so if the author pre-configured Lisbon and the user searches for Tokyo, they see both results without one replacing the other.</li>
+            <li><code>data-weather-widget</code>, <code>data-weather-form</code>, <code>data-weather-city</code>, <code>data-weather-country</code>, <code>data-weather-submit</code>, <code>data-weather-results</code> — every JavaScript hook is a <code>data-</code> attribute, not a CSS class. This keeps styling and behaviour concerns cleanly separated: changing a BEM class in CSS never accidentally breaks a JavaScript selector.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 9 — Build, deploy, verify</h3>
       <pre data-code><span class="filename">terminal, run from /aem-academy</span><code>mvn clean install -PautoInstallSinglePackage</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>Build and deploy. Remember: deployment makes the component available in the system, but the template policy step makes it available to authors in the page editor.</p>
+          <p>After deploy, verify all three layers before testing in the page editor.</p>
+          <ul>
+            <li><strong>Bundle active?</strong> <code>/system/console/bundles</code> → <code>biz.netcentric.academy.core</code> = Active.</li>
+            <li><strong>Servlet registered?</strong> <code>/system/console/servlets</code> → search for <code>WeatherSearchServlet</code>. It should show the path <code>/bin/academy/weather</code>.</li>
+            <li><strong>Servlet responds?</strong> <code>curl "http://localhost:4502/bin/academy/weather?city=Lisbon"</code> (add <code>-u admin:admin</code> for author). You should get a JSON object, not an HTML page or a 404.</li>
+            <li><strong>Clientlib included?</strong> Open the Weather component's page in browser → View Source → search for <code>academy.weather</code>. The CSS and JS links should appear.</li>
+          </ul>
         </div>
       </details>
-      <p>Same activation step as the Image component above: allow the <code class="inline">Academy Training</code> group in the template's policy (module 11 has the full walkthrough) before it shows up for authors. Weather is a standalone component with its own dialog rather than an inherited one, so once it's allowed, drag it onto a page, open its dialog, and enter a city — "Lisbon" with country "Portugal" is a safe first test. Save the dialog and the live conditions should render within a second or two.</p>
+
+      <p>Allow the <code class="inline">Academy Training</code> component group in the template's policy (module 11 walkthrough), drag the Weather component onto a page. You now have two paths to test: the author dialog (open it, enter "Cape Town", "South Africa", save — the table renders on page reload) and the interactive form (preview with <code class="inline">?wcmmode=disabled</code>, type "Nairobi" in the input, click Get Weather — the table appears without a reload).</p>
 
       <div class="try-it alert alert-success">
         <span class="label">Try it with students</span>
-        Enter a city name that exists in multiple countries (Cambridge, Birmingham, and Valencia are all good examples) with the country field left blank, then again with it filled in. Compare <code class="inline">resolvedLocation</code> in both cases to see the disambiguation logic in <code class="inline">geocode()</code> actually doing something.
+        <ol style="margin:0;padding-left:1.2em;">
+          <li><strong>Disambiguation test</strong> — leave the country input blank and search "Birmingham". Note which Birmingham appears (UK, US, or AU?). Then add "Australia" in the country field and search again. The <code>geocode()</code> method's country-filter loop decides the result.</li>
+          <li><strong>Two widgets side by side</strong> — add two Weather components to one page. Search for London in one and Tokyo in the other simultaneously. Both tables should update independently, demonstrating that the <code>data-weather-widget</code> scope prevents the widgets from sharing state.</li>
+          <li><strong>Network off test</strong> — in DevTools → Network → set "Offline", then submit a search. The <code>.catch()</code> handler should show "Request failed — check your network connection." Re-enable network and try again.</li>
+          <li><strong>Invalid city test</strong> — search for "XYZXYZXYZ". The Servlet's geocoding call will find no results, return a 502 with <code>{"error":"Could not find weather..."}</code>, and the JavaScript should render the error message in red below the form.</li>
+        </ol>
       </div>
 
       <div class="knowledge-check">
