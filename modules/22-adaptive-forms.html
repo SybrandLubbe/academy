@@ -1,274 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>22 Dynamic Forms / Adaptive Forms — AEM Backend Training</title>
-<meta name="description" content="Adaptive Forms: Foundation vs Core Components, Form Data Model, submit actions, and show/hide rules.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="../styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AEM Forms purpose, the eight building blocks, use-case topologies, author/publish architecture, and the Core vs Foundation decision.">
+  <title>22 AEM Forms — Platform &amp; Architecture — AEM Backend Training</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
-<header class="topbar">
-  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-  </button>
-  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
-  <span class="progress-pill" data-progress-pill>0 / 28 modules</span>
-</header>
+<div class="layout">
 
-<div class="shell">
-  <nav class="sidebar" aria-label="Curriculum">
-    <p class="tree-root">/content/training</p>
-    <ul class="tree-list">
-      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
-      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
-      <li><a class="tree-node active" data-module-id="adaptive-forms" href="22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="form-fragments" href="23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="forms-implementation" href="24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="analytics-workspaces" href="27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
+  <!-- LEFT SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="tree-root">◆ /content/training</span>
+      <span class="progress-pill" id="progressPill">0 / 28 modules</span>
+    </div>
+    <div class="tree-label">/content/training</div>
+    <ul class="tree-nav">
+      <li><a href="../index.html" class="tree-home">jcr:content [home]</a></li>
+      <li><a href="00-java-primer.html">00-java-primer</a></li>
+      <li><a href="01-architecture-overview.html">01-architecture-overview</a></li>
+      <li><a href="02-jcr-repository.html">02-jcr-repository</a></li>
+      <li><a href="03-sling-framework.html">03-sling-framework</a></li>
+      <li><a href="04-osgi-services.html">04-osgi-services</a></li>
+      <li><a href="05-osgi-services-config.html">05-osgi-services-config</a></li>
+      <li><a href="06-sling-models.html">06-sling-models</a></li>
+      <li><a href="07-sling-models-advanced.html">07-sling-models-advanced</a></li>
+      <li><a href="08-model-composition.html">08-model-composition</a></li>
+      <li><a href="09-htl-templating.html">09-htl-templating</a></li>
+      <li><a href="10-servlets-apis.html">10-servlets-apis</a></li>
+      <li><a href="11-dialogs-components.html">11-dialogs-components</a></li>
+      <li><a href="12-custom-components.html">12-custom-components</a></li>
+      <li><a href="13-java-pitfalls.html">13-java-pitfalls</a></li>
+      <li><a href="14-unit-testing.html">14-unit-testing</a></li>
+      <li><a href="15-context-aware-config.html">15-context-aware-config</a></li>
+      <li><a href="16-workflows-events.html">16-workflows-events</a></li>
+      <li><a href="17-workflow-design.html">17-workflow-design</a></li>
+      <li><a href="18-sling-jobs.html">18-sling-jobs</a></li>
+      <li><a href="19-dispatcher-deployment.html">19-dispatcher-deployment</a></li>
+      <li><a href="20-groovy-console.html">20-groovy-console</a></li>
+      <li><a href="21-acs-commons.html">21-acs-commons</a></li>
+      <li><a href="22-adaptive-forms.html" class="active">22-adaptive-forms</a></li>
+      <li><a href="23-form-fragments.html">23-form-fragments</a></li>
+      <li><a href="24-forms-implementation.html">24-forms-implementation</a></li>
+      <li><a href="25-adobe-tags-setup.html">25-adobe-tags-setup</a></li>
+      <li><a href="26-adobe-tags-implement.html">26-adobe-tags-implement</a></li>
+      <li><a href="27-analytics-workspaces.html">27-analytics-workspaces</a></li>
     </ul>
-    <p class="legend">Filled circle = module marked complete.</p>
+    <p class="sidebar-hint">Filled circle = module marked complete.</p>
   </nav>
 
-  <main class="main">
-    <div class="content">
-      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">22-adaptive-forms</span></p>
-
-      <div class="module-meta">
-        <span class="tag badge text-bg-secondary">Adobe Forms</span>
-        <span>40 min read</span>
-      </div>
-
-      <h1 class="page-title">Dynamic Forms / Adaptive Forms</h1>
-      <p class="lede">AEM Adaptive Forms let you build smart, responsive web forms that change based on user input, device, and business rules — without writing front-end JavaScript for every rule. They connect directly to back-end systems via the Form Data Model and live inside AEM the same way pages and components do.</p>
-
-      <div class="learn-box">
-        <h3>What you'll learn</h3>
-        <ul>
-          <li>What an Adaptive Form is and how it differs from a plain HTML form</li>
-          <li>Foundation Components vs Core Components — which to use</li>
-          <li>Form Container, field types, panels, and the Rule Editor</li>
-          <li>What the Form Data Model is and how it connects to external data</li>
-          <li>Submit actions — what happens when a user clicks Submit</li>
-        </ul>
-      </div>
-
-      <h2>What is an Adaptive Form?</h2>
-      <p>An <strong>Adaptive Form</strong> adapts to the device (responsive layout), to user input (show "Spouse income" only if "Married" is selected), to external data (pre-fill a returning customer's address), and to validation rules (check age before allowing submission). Traditional HTML forms are static — you write the HTML, logic, validation, and handler yourself. Adaptive Forms move all of that into AEM's authoring environment, so business analysts configure show/hide rules without touching code.</p>
-
-      <div class="callout alert alert-primary">
-        <span class="label">Analogy</span>
-        A paper form has all questions printed regardless of your situation. A bank teller asks only relevant follow-up questions. Adaptive Forms turn your web form from a paper form into the teller.
-      </div>
-
-      <h2>Foundation vs Core Components</h2>
-      <pre data-code><span class="filename">two generations — know which one your project uses</span><code>Foundation Components (legacy)
-  Based on: JSP templates
-  Resource type: /libs/fd/af/components/
-  Status: no new features — maintenance only
-
-Core Components (current — use for all new projects)
-  Based on: HTL + Sling Models (same pattern as AEM Sites)
-  Resource type: /libs/core/fd/components/
-  Status: actively developed by Adobe</code></pre>
-
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>This is not cosmetic — Foundation and Core Components use completely different rendering pipelines. Core Components follow the same Sling Model + HTL pattern you've learned throughout this training, making them consistent with AEM Sites development.</p>
-          <ul>
-            <li><strong>/libs/fd/ vs /libs/core/fd/</strong> — different resource type paths mean a form built with Foundation Components cannot mix in Core Component fields.</li>
-            <li>Adobe has stopped adding features to Foundation Components. Always use Core Components for new projects.</li>
-          </ul>
-        </div>
-      </details>
-
-      <h2>Form Container and field types</h2>
-      <p>Every Adaptive Form starts with one outer Form Container component that holds all other components and carries the submit action, data binding, and prefill service configuration.</p>
-      <pre data-code><span class="filename">common Core Form field resource types</span><code>core/fd/components/form/textinput/v2/textinput      → single-line text
-core/fd/components/form/textarea/v2/textarea        → multi-line text
-core/fd/components/form/numberinput/v1/numberinput  → numeric with min/max
-core/fd/components/form/datepicker/v1/datepicker    → date selector
-core/fd/components/form/dropdown/v1/dropdown        → select from a list
-core/fd/components/form/checkboxgroup/v1/checkboxgroup → multi-select
-core/fd/components/form/radiobutton/v1/radiobutton  → single-select radios
-core/fd/components/form/fileupload/v1/fileupload    → file attachment
-core/fd/components/form/panel/v1/panel              → group fields, target for rules
-core/fd/components/form/wizard/v1/wizard            → multi-step wizard layout</code></pre>
-
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>These resource types follow the same Sling resolution from module 3 — they're just Core Components that happen to be form fields.</p>
-          <ul>
-            <li>The <strong>panel</strong> is especially important: it groups related fields and is the target for show/hide rules. Hiding a panel hides all fields inside it with one rule, not one rule per field.</li>
-            <li>The <strong>wizard</strong> renders panels as sequential steps, automatically handling Next/Previous navigation and step-level validation.</li>
-          </ul>
-        </div>
-      </details>
-
-      <h2>Form Data Model — connecting to back-end systems</h2>
-      <pre data-code><span class="filename">Form Data Model data source types</span><code>RESTful web services  → any REST API with a Swagger / OpenAPI spec
-SOAP web services     → legacy systems with a WSDL
-OData services        → Microsoft Dynamics, SharePoint, SAP
-Relational databases  → MySQL, PostgreSQL, Oracle via JDBC
-AEM User Profile      → logged-in user's profile properties</code></pre>
-
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>The FDM is a mapping layer — it describes external data in AEM's own terms so the form doesn't need to know whether data lives in a REST API or a database.</p>
-          <ul>
-            <li>A data source is configured once in <strong>Tools → Cloud Services → Data Sources</strong>. Multiple forms can share one FDM, and one FDM can combine multiple data sources.</li>
-            <li>Once an FDM is connected to a form, you bind fields to FDM properties by dragging from the FDM tree in the field's dialog — no code required for standard cases.</li>
-          </ul>
-        </div>
-      </details>
-
-      <h2>Submit actions</h2>
-      <pre data-code><span class="filename">built-in submit actions</span><code>Submit to REST endpoint
-  → POSTs form data as JSON to a configurable URL
-
-Invoke a Form Data Model Service
-  → calls a write operation on your configured FDM
-
-Send Email
-  → sends confirmation email via AEM's Mail Service OSGi config
-
-Store in AEM Repository
-  → writes submission as a content node under /content/forms/fp
-  → useful for review workflows, not for high-volume storage
-
-Custom submit action
-  → implement GuideSubmitAction in Java — full control</code></pre>
-
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>Submit actions are configured on the Form Container's dialog — no code for the standard ones. The custom action is the path requiring Java development (covered in module 24).</p>
-          <ul>
-            <li><strong>Submit to REST endpoint</strong> is the most common integration pattern — AEM posts JSON to your microservice; AEM acts as front-end only.</li>
-            <li><strong>Store in AEM Repository</strong> should not be used as a production database — AEM's JCR is optimised for content management, not high-volume transactional data.</li>
-          </ul>
-        </div>
-      </details>
-
-      <h2>Show/hide rules — the "adaptive" part</h2>
-      <pre data-code><span class="filename">rule examples — configured visually in the Rule Editor, no code required</span><code>// Show/hide
-WHEN field "maritalStatus" has value "Married"
-THEN show panel "SpouseDetails"
-ELSE hide panel "SpouseDetails"
-
-// Compute a value
-WHEN field "annualIncome" changes
-THEN set field "monthlyIncome" = annualIncome / 12
-
-// Validate
-WHEN field "dateOfBirth" changes
-THEN run custom function "calculateAge"
-     IF age &lt; 18 THEN show error "You must be 18 or older"
-
-// Enable/disable
-WHEN checkbox "agreeToTerms" is NOT checked
-THEN disable button "Submit"</code></pre>
-
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>Rules run in the browser — no server round-trips — so conditional logic feels instant even on complex forms.</p>
-          <ul>
-            <li>The Rule Editor generates JavaScript under the hood but authors never see it. Business analysts configure rules; developers only step in for custom functions.</li>
-            <li>Rules target components by their <strong>Name</strong> property. Always give fields meaningful names before writing rules — changing a name later breaks every rule that references it.</li>
-            <li><strong>Custom functions</strong> extend the Rule Editor: write a JavaScript function in a clientlib, register it, and it appears in the Rule Editor's function palette.</li>
-          </ul>
-        </div>
-      </details>
-
-      <div class="try-it alert alert-success">
-        <span class="label">Try it</span>
-        In AEM Forms (<code>localhost:4502/aem/forms</code>), create an Adaptive Form using the blank Core Components template. Add a dropdown named <code>employmentStatus</code> with options "Employed" / "Self-employed". Add a panel named <code>employerDetails</code> with a text field inside. Open the Rule Editor on the panel and write: show the panel only when <code>employmentStatus</code> equals "Employed". Preview and verify the panel appears and disappears correctly.
-      </div>
-
-      <div class="knowledge-check">
-        <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
-        <ol class="quiz-list">
-        <li>
-          <p class="quiz-question">What does 'adaptive' mean in Adaptive Forms — give two specific examples of what a form adapts to.</p>
-        </li>
-        <li>
-          <p class="quiz-question">What are the two generations of AEM Forms components, and which should you use for new projects?</p>
-        </li>
-        <li>
-          <p class="quiz-question">Name the Form Container's three key configuration responsibilities.</p>
-        </li>
-        <li>
-          <p class="quiz-question">What is the Form Data Model (FDM) and what problem does it solve?</p>
-        </li>
-        <li>
-          <p class="quiz-question">Name three types of data sources you can connect to a Form Data Model.</p>
-        </li>
-        <li>
-          <p class="quiz-question">An author wants 'Spouse income' to appear only when 'Married' is selected. Which tool do they use, and does it require a developer?</p>
-        </li>
-        <li>
-          <p class="quiz-question">Name four built-in submit actions in AEM Adaptive Forms.</p>
-        </li>
-        <li>
-          <p class="quiz-question">A form rule references a field named 'dob'. A developer renames the field to 'dateOfBirth'. What breaks?</p>
-        </li>
-        <li>
-          <p class="quiz-question">What is the difference between a panel and a wizard layout in Adaptive Forms?</p>
-        </li>
-        <li>
-          <p class="quiz-question">Where in the AEM author environment do you navigate to create or manage Adaptive Forms?</p>
-        </li>
-        </ol>
-      </div>
-
-      <div class="complete-row form-check">
-        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="adaptive-forms">
-        <label for="complete" class="form-check-label">Mark this module as complete</label>
-      </div>
-
-      <nav class="pager">
-        <a class="prev" href="21-acs-commons.html"><span class="dir">← Previous</span>ACS Commons</a>
-        <a class="next" href="23-form-fragments.html"><span class="dir">Next →</span>Form Fragments &amp; Sample Code</a>
-      </nav>
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <div class="module-meta">
+      <span class="breadcrumb">/content / training / <strong>22-adaptive-forms</strong></span>
+      <span class="badge-category badge-forms">Adobe Forms</span>
+      <span class="read-time">35 min read</span>
     </div>
+
+    <h1>AEM Forms — Platform &amp; Architecture</h1>
+
+    <div class="learn-box">
+      <h3>What you'll learn</h3>
+      <ul>
+        <li>What AEM Forms is and its three flagship enterprise use cases</li>
+        <li>The eight building blocks and how they map to concepts you already know</li>
+        <li>The author → publish → backend → storage topology</li>
+        <li>Digital Enrollment data flow end to end</li>
+        <li>Core Components vs Foundation Components — the decision that drives everything</li>
+        <li>Which roles you will interact with on a Forms project</li>
+      </ul>
+    </div>
+
+    <h2>What is AEM Forms?</h2>
+
+    <p>AEM Forms is a separate add-on to AEM Sites. It is an enterprise platform for creating, managing, publishing, and updating complex digital forms and correspondence. Think of it as three products bundled together:</p>
+
+    <pre><code>three flagship use cases
+
+Digital Enrollment
+  Responsive, rules-driven data capture — think bank account opening,
+  insurance applications, government registrations.
+  The form is the product. Users start on mobile, finish on desktop.
+
+Customer Communications
+  Personalised correspondence generated at scale — statements, welcome
+  letters, policy documents. Templates merge with customer data to
+  produce PDFs or HTML delivered via email, print, or web.
+
+Enterprise Form Management
+  A centralised portal for every form type — Adaptive, PDF, and XFA.
+  One place to publish, version, tag, search, and govern them all.
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this matters for a backend developer</summary>
+      <ul>
+        <li>Each use case has a different architectural topology — the data flows differently. Knowing which one you're building for prevents you from wiring the wrong integration pattern.</li>
+        <li><strong>Enrollment</strong> needs prefill (read from CRM before render) and submit-back (write to CRM after submit). Both require Java OSGi services you write.</li>
+        <li><strong>Communications</strong> is largely configuration-driven — templates, data dictionaries, batch runs. Less Java, more content authoring.</li>
+        <li><strong>Management</strong> is mostly Forms Portal configuration. Your job is often deployment and permission setup.</li>
+      </ul>
+    </details>
+
+    <h2>The Eight Building Blocks</h2>
+
+    <p>Every AEM Forms feature maps to one of eight building blocks. Understanding these upfront stops you staring at an unfamiliar dialog wondering where you are in the product.</p>
+
+    <pre><code>eight building blocks — your mental map of the product
+
+1. Adaptive Forms
+   Responsive, rules-driven HTML5 forms authored in AEM.
+   Stored as nodes in /content/dam/formsanddocuments/ — same JCR you know.
+   → Module 22 (this one)
+
+2. Templates &amp; Themes
+   Templates  = form structure + allowed components (content policy, same as Sites).
+   Themes     = CSS client libraries — styling separate from structure.
+   → Module 23
+
+3. Components
+   Core Components   → BEM, responsive, no jQuery, actively developed.
+   Foundation Comps  → legacy JSP, maintenance only. Avoid for new projects.
+   → Module 22 (section below)
+
+4. Rule Editor
+   Condition → action rules (show/hide, validate, set value, invoke service).
+   Visual editor for authors; JavaScript code editor for developers.
+   → Module 23
+
+5. Form Data Model (FDM)
+   DAO/ORM-like layer connecting forms to REST / SOAP / JDBC / CRM.
+   Build the model once; bind forms to it later. No coupling form ↔ source.
+   → Module 23
+
+6. Submission &amp; Output
+   Submit actions (store, REST, custom Java).
+   Document of Record (DoR) — flattened PDF of what the user submitted.
+   → Module 24
+
+7. AEM Sites Embedding
+   Place a form on a Sites page via the Embed (v2) component.
+   Author once, surface everywhere — campaign pages, portals, microsites.
+   → Module 24
+
+8. Operations &amp; Roles
+   Access, permissions, environment config, monitoring, handover.
+   → Module 24
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li>Building blocks 1–3 are what <em>authors</em> work with daily. Building blocks 4–6 are where <em>you</em> spend most of your time as a backend developer.</li>
+        <li>The Form Data Model (block 5) is the most important integration concept — it abstracts every data source behind a single AEM-managed layer, so forms never call REST APIs directly. Your OSGi services plug in here.</li>
+        <li><strong>Adaptive Forms are stored in the JCR</strong> exactly like Sites pages — as a tree of nodes under <code>/content/dam/formsanddocuments/</code>. Every skill from modules 2 and 3 (reading node properties, Sling resource resolution) applies directly.</li>
+      </ul>
+    </details>
+
+    <h2>Architecture — Author, Publish, Backend, Storage</h2>
+
+    <p>AEM Forms uses the same author/publish topology you learned in module 1, with a backend tier added for data integration.</p>
+
+    <pre><code>AEM Forms deployment topology
+
+AUTHOR                    PUBLISH                   BACKEND
+  │                         │                         │
+  │  Design &amp; configure     │  Render form (HTML5)    │  REST · SOAP
+  │  Core Components        │  Run Rule Editor JS     │  JDBC · OData
+  │  Form Data Model        │  Execute submit action  │  CRM · AEM Profile
+  │  Templates &amp; Themes     │                         │
+  └────── Replication ──────┘                         │
+                            └── Form Data Model ──────┘
+                                   calls data sources
+
+STORAGE
+  Submissions   → /content/forms/fp (JCR) or external DB
+  DoR (PDF)     → DAM or external storage
+  Workflows     → AEM Workflow engine on Author
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li>The Rule Editor JavaScript runs <strong>in the browser</strong> — no server round-trip. This means conditional logic is instant, but it also means any custom JavaScript validator you write must be deployed as a clientlib to the <strong>publish</strong> instance, not just author.</li>
+        <li>Submit actions run on the <strong>publish</strong> instance. Your OSGi service must be deployed and active on publish. Check <code>/system/console/components</code> on the publish instance, not author, when debugging a submit action that doesn't appear.</li>
+        <li>The Form Data Model's data source configuration lives on <strong>author</strong>. At runtime, the publish instance calls the configured endpoint. Use run-mode OSGi config folders (<code>config.publish</code>) to point different environments at different API URLs — same pattern as module 5.</li>
+        <li>The AEM Workflow engine lives on <strong>author</strong>. If your submit action triggers a workflow, the submission payload travels from publish → author via the JCR replication reverse path. This is called a <em>reverse replication</em> and needs to be configured explicitly in a real deployment.</li>
+      </ul>
+    </details>
+
+    <h2>The Digital Enrollment Topology — end to end</h2>
+
+    <p>This is the most common use case you will implement. It touches every building block.</p>
+
+    <pre><code>Digital Enrollment — data flow
+
+1. Author builds form on AUTHOR with Core Components + FDM binding.
+   Publishes form and FDM to PUBLISH via replication.
+
+2. End user opens form URL on PUBLISH.
+   Prefill service fires: FDM calls CRM / REST API.
+   Form renders pre-populated with customer data.
+
+3. User fills remaining fields. Rule Editor show/hide runs in browser.
+   Client-side validators fire on blur/change.
+
+4. User clicks Submit.
+   Server-side validation fires (always add this — never trust the browser).
+   Submit action executes on PUBLISH:
+     → POST JSON payload to downstream REST API  (most common)
+     → OR trigger AEM Workflow on AUTHOR via reverse replication
+     → OR store in /content/forms/fp for a review workflow
+
+5. Document of Record generated:
+   AEM renders a flat PDF of all submitted values.
+   Stored in DAM or external storage per submit action config.
+
+6. Analytics event fired:
+   Form submission event reaches Adobe Analytics via Adobe Tags.
+   Panel-level completion and drop-off tracked.
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li>Step 4 is where your Java code lives. The submit action is an OSGi component implementing <code>GuideSubmitAction</code>. Module 24 walks through the full implementation.</li>
+        <li>Step 2 (prefill) is the other Java touchpoint — a service implementing <code>DataXMLProvider</code>. Module 23 covers this.</li>
+        <li>Steps 3 and 5 are configuration-only for standard cases. Only step 4 and a custom step 2 require Java code.</li>
+        <li>Keep this six-step flow in your head. Every Forms task you get assigned maps to one of these steps.</li>
+      </ul>
+    </details>
+
+    <h2>Core Components vs Foundation Components</h2>
+
+    <p>This is the single most important decision on any AEM Forms project. It affects rendering, CSS, Rule Editor behaviour, migration effort, and your ability to move to AEM as a Cloud Service.</p>
+
+    <pre><code>Foundation Components (legacy — do not use for new projects)
+
+  Rendering:        JSP templates
+  Resource type:    /libs/fd/af/components/
+  JavaScript deps:  jQuery + Underscore.js (bundled, heavy)
+  Accessibility:    limited ARIA support
+  BEM CSS:          no — custom ad-hoc selectors
+  Status:           maintenance only — no new features from Adobe
+  Cloud Service:    NOT supported on AEM as a Cloud Service
+
+
+Core Components (use for all new projects)
+
+  Rendering:        HTL + Sling Models — same pattern as AEM Sites
+  Resource type:    /libs/core/fd/components/
+  JavaScript deps:  none — zero third-party JS dependencies
+  Accessibility:    full ARIA + keyboard navigation built in
+  BEM CSS:          yes — predictable selectors, easy to override
+  Status:           actively developed by Adobe (open source)
+  Cloud Service:    fully supported
+  Source:           github.com/adobe/aem-core-forms-components
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li>Core Components follow <strong>exactly the same Sling Model + HTL pattern</strong> you've used throughout this training. There is no new rendering paradigm to learn — just apply modules 6, 7, and 9.</li>
+        <li>The different resource type paths (<code>/libs/fd/</code> vs <code>/libs/core/fd/</code>) mean the two systems are <em>completely separate</em>. A form built on Foundation Components cannot mix in Core Component fields. You cannot gradually upgrade field-by-field — migration means rebuilding the form from scratch on a Core Components template.</li>
+        <li>Foundation Components depend on jQuery and Underscore.js. Core Components ship with <strong>zero third-party JavaScript</strong>. This matters for Lighthouse scores, bundle size, and CSP (Content Security Policy) compliance.</li>
+        <li>Custom component development follows the same overlay/proxy pattern from module 12: duplicate under <code>/apps</code>, keep beside the original, never modify <code>/libs</code>.</li>
+        <li>Adobe has confirmed Foundation Components will not be supported on AEM as a Cloud Service. If your client is planning a cloud migration, Foundation Components is a dead end.</li>
+      </ul>
+    </details>
+
+    <h2>Who builds it — roles you will work with</h2>
+
+    <p>AEM Forms projects involve more roles than a typical Sites project. Knowing who does what prevents you from doing their job or blocking them waiting for yours.</p>
+
+    <pre><code>role map for an AEM Forms project
+
+Forms Practitioner (Business Analyst / Power User)
+  ↳ Authors forms using the visual editor
+  ↳ Configures Rule Editor show/hide logic (no code)
+  ↳ Creates templates and themes (no code for standard cases)
+  ↳ You unblock them by: deploying Core Components, setting up templates
+
+Backend Developer (you)
+  ↳ Custom submit actions (Java — GuideSubmitAction)
+  ↳ Prefill services (Java — DataXMLProvider)
+  ↳ Custom validators (JavaScript clientlib — fd.af.validator category)
+  ↳ FDM data source setup when the API has no Swagger spec
+  ↳ OSGi config for run-mode–specific API endpoints
+
+AEM Administrator
+  ↳ Access &amp; permissions — forms-users / forms-power-user groups
+  ↳ Data source credentials in Cloud Services
+  ↳ Reverse replication config for workflow-based submissions
+
+UX Designer
+  ↳ Theme CSS (clientlib targeting BEM classes Core Components emit)
+  ↳ You unblock them by: providing the correct BEM class reference
+
+Solution Architect
+  ↳ Decides enrollment vs communications vs management topology
+  ↳ Decides Core vs Foundation (should always be Core)
+  ↳ FDM design — which data sources, which operations exposed
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li>The boundary between <em>Forms Practitioner</em> and <em>Backend Developer</em> is the Rule Editor. Everything in the visual Rule Editor is the practitioner's job. Once they need a <em>Custom Function</em> — a JavaScript function they can call from a rule — that's yours. Module 23 covers Custom Functions.</li>
+        <li>The AEM Administrator sets up <strong>data source credentials</strong> in Tools → Cloud Services → Data Sources. These are encrypted OSGi configs. As a developer you design which credentials are needed; the admin applies them per environment.</li>
+        <li>Keep permissions clean: assign to groups (<code>forms-users</code>, <code>forms-power-user</code>), never to individuals. This is the AEM security best practice from module 5 applied to Forms.</li>
+      </ul>
+    </details>
+
+    <div class="try-it">
+      <strong>Try it</strong> — If you have access to a local AEM instance with the Forms add-on installed, navigate to <code>http://localhost:4502/aem/forms</code>. This is the Forms authoring console — equivalent to the Sites console at <code>/sites.html</code>. Then open CRXDE and browse to <code>/content/dam/formsanddocuments</code>. Create a folder there and notice it appears immediately in the Forms console. Now open <code>/libs/core/fd/components/form</code> — this is every Core Component field type. Count them, read the node names. This is the palette your authors drag from.
+    </div>
+
+    <h2>Knowledge Check</h2>
+    <p>Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
+    <ol class="knowledge-check">
+      <li>Name the three flagship AEM Forms enterprise use cases. For each one, describe in one sentence what it delivers to end users.</li>
+      <li>Where in the JCR are Adaptive Forms stored? What does this tell you about how they are versioned and replicated?</li>
+      <li>Name all eight AEM Forms building blocks. Which three require Java backend development for non-trivial projects?</li>
+      <li>Draw the Digital Enrollment topology — author, publish, backend, storage — and label which step your prefill service runs in and which step your submit action runs in.</li>
+      <li>A submit action is deployed but does not appear in the Form Container dialog on the author instance. What is the first thing you check, and on which instance?</li>
+      <li>Explain the difference between Core Components and Foundation Components from a backend developer's perspective. Include resource type paths and JavaScript dependency differences.</li>
+      <li>Why can you not gradually migrate a form from Foundation Components to Core Components field by field?</li>
+      <li>What is the Rule Editor's role, and at what point does a Forms Practitioner need to hand work to a Backend Developer?</li>
+      <li>A custom validator clientlib is deployed but the Rule Editor does not show the custom function. What category must the clientlib use?</li>
+      <li>The Form Data Model's data source configuration is set up on the author instance. Which instance actually calls the external REST API at runtime, and what does this mean for OSGi run-mode config?</li>
+    </ol>
+
+    <button class="btn-complete" id="completeBtn" onclick="markComplete()">Mark this module as complete</button>
+
+    <nav class="module-nav">
+      <a href="21-acs-commons.html" class="nav-prev">← Previous<span>ACS Commons</span></a>
+      <a href="23-form-fragments.html" class="nav-next">Next →<span>Templates, Rules &amp; Form Data Model</span></a>
+    </nav>
 
     <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
   </main>
 </div>
 
 <script src="../script.js"></script>
+<script>
+  function markComplete() {
+    const key = 'module-22-adaptive-forms';
+    localStorage.setItem(key, 'complete');
+    document.getElementById('completeBtn').textContent = '✓ Completed';
+    document.getElementById('completeBtn').classList.add('completed');
+    if (window.updateProgress) updateProgress();
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    const key = 'module-22-adaptive-forms';
+    if (localStorage.getItem(key) === 'complete') {
+      document.getElementById('completeBtn').textContent = '✓ Completed';
+      document.getElementById('completeBtn').classList.add('completed');
+    }
+  });
+</script>
 </body>
 </html>

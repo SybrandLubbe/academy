@@ -1,147 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>24 Implementing Adaptive Forms — AEM Backend Training</title>
-<meta name="description" content="Maven setup, embedding a form in Sites, custom submit actions, REST data sources, and custom validators.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="../styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Submit actions, Document of Record, embedding in AEM Sites, Foundation to Core migration with gotchas, analytics integration, and operations security.">
+  <title>24 Submission, Embedding &amp; Migration to Core — AEM Backend Training</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
-<header class="topbar">
-  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-  </button>
-  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
-  <span class="progress-pill" data-progress-pill>0 / 28 modules</span>
-</header>
+<div class="layout">
 
-<div class="shell">
-  <nav class="sidebar" aria-label="Curriculum">
-    <p class="tree-root">/content/training</p>
-    <ul class="tree-list">
-      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
-      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="adaptive-forms" href="22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="form-fragments" href="23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
-      <li><a class="tree-node active" data-module-id="forms-implementation" href="24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
-      <li><a class="tree-node" data-module-id="analytics-workspaces" href="27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
+  <!-- LEFT SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="tree-root">◆ /content/training</span>
+      <span class="progress-pill" id="progressPill">0 / 28 modules</span>
+    </div>
+    <div class="tree-label">/content/training</div>
+    <ul class="tree-nav">
+      <li><a href="../index.html" class="tree-home">jcr:content [home]</a></li>
+      <li><a href="00-java-primer.html">00-java-primer</a></li>
+      <li><a href="01-architecture-overview.html">01-architecture-overview</a></li>
+      <li><a href="02-jcr-repository.html">02-jcr-repository</a></li>
+      <li><a href="03-sling-framework.html">03-sling-framework</a></li>
+      <li><a href="04-osgi-services.html">04-osgi-services</a></li>
+      <li><a href="05-osgi-services-config.html">05-osgi-services-config</a></li>
+      <li><a href="06-sling-models.html">06-sling-models</a></li>
+      <li><a href="07-sling-models-advanced.html">07-sling-models-advanced</a></li>
+      <li><a href="08-model-composition.html">08-model-composition</a></li>
+      <li><a href="09-htl-templating.html">09-htl-templating</a></li>
+      <li><a href="10-servlets-apis.html">10-servlets-apis</a></li>
+      <li><a href="11-dialogs-components.html">11-dialogs-components</a></li>
+      <li><a href="12-custom-components.html">12-custom-components</a></li>
+      <li><a href="13-java-pitfalls.html">13-java-pitfalls</a></li>
+      <li><a href="14-unit-testing.html">14-unit-testing</a></li>
+      <li><a href="15-context-aware-config.html">15-context-aware-config</a></li>
+      <li><a href="16-workflows-events.html">16-workflows-events</a></li>
+      <li><a href="17-workflow-design.html">17-workflow-design</a></li>
+      <li><a href="18-sling-jobs.html">18-sling-jobs</a></li>
+      <li><a href="19-dispatcher-deployment.html">19-dispatcher-deployment</a></li>
+      <li><a href="20-groovy-console.html">20-groovy-console</a></li>
+      <li><a href="21-acs-commons.html">21-acs-commons</a></li>
+      <li><a href="22-adaptive-forms.html">22-adaptive-forms</a></li>
+      <li><a href="23-form-fragments.html">23-form-fragments</a></li>
+      <li><a href="24-forms-implementation.html" class="active">24-forms-implementation</a></li>
+      <li><a href="25-adobe-tags-setup.html">25-adobe-tags-setup</a></li>
+      <li><a href="26-adobe-tags-implement.html">26-adobe-tags-implement</a></li>
+      <li><a href="27-analytics-workspaces.html">27-analytics-workspaces</a></li>
     </ul>
-    <p class="legend">Filled circle = module marked complete.</p>
+    <p class="sidebar-hint">Filled circle = module marked complete.</p>
   </nav>
 
-  <main class="main">
-    <div class="content">
-      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">24-forms-implementation</span></p>
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <div class="module-meta">
+      <span class="breadcrumb">/content / training / <strong>24-forms-implementation</strong></span>
+      <span class="badge-category badge-forms">Adobe Forms</span>
+      <span class="read-time">45 min read</span>
+    </div>
 
-      <div class="module-meta">
-        <span class="tag badge text-bg-secondary">Adobe Forms</span>
-        <span>45 min read</span>
-      </div>
+    <h1>Submission, Embedding &amp; Migration to Core</h1>
 
-      <h1 class="page-title">Implementing Adaptive Forms</h1>
-      <p class="lede">AEM Forms is a separate add-on to AEM Sites. This module covers everything a developer needs to ship a form: setting up the Maven dependency, embedding the form in a Sites page, writing a custom submit action, connecting a REST data source, and adding custom validation.</p>
+    <div class="learn-box">
+      <h3>What you'll learn</h3>
+      <ul>
+        <li>The complete submission pipeline — from browser submit to PDF archive</li>
+        <li>Custom submit actions — the Java interface, registration, and the thin-action pattern</li>
+        <li>Document of Record — what it is, where it's stored, and path configuration gotchas</li>
+        <li>Embedding forms in AEM Sites — two techniques and when to use each</li>
+        <li>Foundation → Core Components migration — six steps with the gotchas that sink projects</li>
+        <li>Analytics integration — out-of-the-box metrics and custom event tracking</li>
+        <li>Operations and security — permissions, least privilege, hardening checklist</li>
+      </ul>
+    </div>
 
-      <div class="learn-box">
-        <h3>What you'll learn</h3>
-        <ul>
-          <li>The Maven dependency and scope required for AEM Forms development</li>
-          <li>Two ways to embed a form in an AEM Sites page</li>
-          <li>Writing a custom submit action — full working code</li>
-          <li>Configuring a REST data source and Form Data Model step by step</li>
-          <li>Adding a custom JavaScript validator</li>
-        </ul>
-      </div>
+    <h2>The Submission Pipeline — what happens after Submit</h2>
 
-      <h2>Prerequisite: AEM Forms add-on</h2>
-      <p>AEM Forms requires a separate add-on package on your AEM instance, and a Forms API Maven dependency in your project. Check your project lead before starting — it affects licensing and instance setup.</p>
-      <pre data-code><span class="filename">/aem-academy/core/pom.xml — add inside &lt;dependencies&gt; <em>(academy.core)</em></span><code>&lt;dependency&gt;
-    &lt;groupId&gt;com.adobe.aem&lt;/groupId&gt;
-    &lt;artifactId&gt;aem-forms-sdk-api&lt;/artifactId&gt;
-    &lt;version&gt;6.5.14.0&lt;/version&gt;
-    &lt;scope&gt;provided&lt;/scope&gt;         &lt;!-- NEVER bundle — already in AEM --&gt;
-&lt;/dependency&gt;
+    <p>A form submission is not a single event. It is a pipeline with six stages, each of which can be configured, extended, or broken independently.</p>
 
-&lt;dependency&gt;
-    &lt;groupId&gt;com.adobe.aem&lt;/groupId&gt;
-    &lt;artifactId&gt;core-forms-components-core&lt;/artifactId&gt;
-    &lt;version&gt;3.0.6&lt;/version&gt;
-    &lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;</code></pre>
+    <pre><code>end-to-end submission pipeline
 
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>Both use <code>&lt;scope&gt;provided&lt;/scope&gt;</code> — compile against them for IDE type info, but exclude from the final bundle.</p>
-          <ul>
-            <li>Bundling provided-scope JARs causes class conflicts at runtime because AEM already has them. The build may succeed but AEM will log class-loading errors.</li>
-            <li>The version must match your installed AEM Forms add-on. A mismatch causes <code>NoClassDefFoundError</code> at runtime — check the add-on version in <code>/system/console/bundles</code>.</li>
-          </ul>
-        </div>
-      </details>
+Stage 1: Browser-side validation
+  Client-side validators fire (Rule Editor rules + Custom Function validators).
+  Required field checks run.
+  The form does NOT submit if any validator returns an error string.
+  ← This is a UX convenience, NOT a security control.
 
-      <h2>Embedding a form in a Sites page</h2>
-      <pre data-code><span class="filename">option 1 — Adaptive Forms embed component (recommended)</span><code>Drag the "Adaptive Forms - Embed" component onto your Sites page.
-Component resource type:
-  core/fd/components/formsportal/embeddedform/v1/embeddedform
+Stage 2: HTTP POST to Publish
+  Browser POSTs multipart form data to the Publish instance.
+  URL: /content/dam/formsanddocuments/[form-name]/jcr:content?guideContainerPath=...
+  Attached files are included in the multipart body.
 
-The form renders inline in the page DOM — shares the page's CSS and scripts.
-Authors choose which form to embed via the component's dialog (DAM path).</code></pre>
+Stage 3: Server-side validation (ADD THIS — ALWAYS)
+  Your submit action (or a sling filter) re-validates the payload.
+  Never trust the browser. A determined user can bypass Stage 1 with curl.
+  Reject invalid payloads with HTTP 400 before proceeding.
 
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>The embedded component is the recommended approach — the form shares the page's theme and navigation, and AEM handles all script inclusion.</p>
-        </div>
-      </details>
+Stage 4: Submit action executes
+  GuideSubmitAction.submitAction() runs on Publish.
+  This is where your Java code lives:
+    → POST JSON to downstream REST API
+    → Write to JCR at /content/forms/fp (for workflow review)
+    → Invoke FDM write operation
+    → Custom logic: call a Sling Job for async heavy processing
 
-      <pre data-code><span class="filename">option 2 — iframe (when the consuming app is not AEM)</span><code>&lt;iframe
-    src="/content/dam/formsanddocuments/loan-application/jcr:content?wcmmode=disabled"
-    width="100%" height="600" frameborder="0"
-    title="Loan Application Form"&gt;
-&lt;/iframe&gt;</code></pre>
+Stage 5: Document of Record (DoR) generation
+  AEM generates a flat, non-editable PDF of all submitted field values.
+  Template: either the form's own XDP template or the auto-generated layout.
+  Output: stored to payload path, DAM, or external storage.
 
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>The iframe isolates the form from the parent page — useful when the consumer is a React SPA or external portal that can't use the AEM component.</p>
-          <ul>
-            <li><code>?wcmmode=disabled</code> — loads the form in publish mode even on the author instance, bypassing the page editor's authoring overlays.</li>
-            <li>Cross-frame communication (e.g. scrolling the parent page on submit) requires JavaScript <code>postMessage</code> — extra work compared to the embedded approach.</li>
-          </ul>
-        </div>
-      </details>
+Stage 6: Post-submit workflow / notification
+  Optional: trigger an AEM Workflow on Author (review &amp; approve).
+  Optional: send email confirmation via AEM Mail Service.
+  Optional: fire analytics event (tracked separately via Adobe Tags).
+</code></pre>
 
-      <h2>Custom submit action</h2>
-      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/forms/LoanSubmitAction.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.forms;
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li><strong>Stage 3 is not optional.</strong> Browser-side validation is a UX improvement, not a security control. A curl command bypasses it entirely. Add server-side validation in your submit action before calling any downstream system.</li>
+        <li><strong>Stage 4 runs on Publish.</strong> This surprises developers coming from Sites. The submit action is not a workflow step on Author — it runs on the Publish instance at POST time. Your OSGi service must be deployed and active on Publish.</li>
+        <li><strong>Sling Jobs for heavy work.</strong> If Stage 4 calls a slow downstream API (5+ seconds), don't block the HTTP response. Dispatch a Sling Job (module 18) from the submit action, return a success response immediately, and let the job handle the backend call asynchronously. The user sees the thank-you page fast; the integration continues in the background.</li>
+        <li><strong>Stage 6 workflows run on Author.</strong> If you trigger an AEM Workflow from a submit action on Publish, the payload must travel via reverse replication to Author before the workflow starts. Configure reverse replication agents — this is often forgotten in new environment setups.</li>
+      </ul>
+    </details>
+
+    <h2>Custom Submit Action — the Java implementation</h2>
+
+    <pre><code>/aem-academy/core/src/main/java/biz/netcentric/academy/forms/LoanSubmitAction.java
+
+package biz.netcentric.academy.forms;
 
 import com.adobe.aemds.guide.model.GuideSubmitInfo;
 import com.adobe.aemds.guide.service.GuideSubmitAction;
@@ -153,170 +143,365 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 
 @Component(
-    service  = GuideSubmitAction.class,    // AEM Forms discovers this automatically
-    property = "guideDataModel=basic"      // compatible with JSON schema forms
+    service   = GuideSubmitAction.class,  // AEM Forms discovers all implementations
+    property  = { "guideDataModel=basic" } // "basic" = JSON schema + schema-less forms
 )
 public class LoanSubmitAction implements GuideSubmitAction {
 
     @Reference
-    private LoanService loanService;       // your business logic — keep the action thin
+    private LoanService loanService;   // keep the submit action THIN — delegate here
 
     @Override
     public String getServiceDescription() {
-        return "Submit Loan to Core Banking";  // appears in Form Container dialog
+        return "Submit Loan to Core Banking";  // label in Form Container dialog
     }
 
     @Override
     public void submitAction(
-            SlingHttpServletRequest request,
+            SlingHttpServletRequest  request,
             SlingHttpServletResponse response,
-            GuideSubmitInfo submitInfo) throws IOException, ServletException {
+            GuideSubmitInfo          submitInfo) throws IOException, ServletException {
 
-        String jsonData        = submitInfo.getData();
-        String applicationRef  = loanService.submitApplication(jsonData);
-        String thankYouPage    = submitInfo.getAdaptiveForm().getValueOf("thankYouPage");
-        response.sendRedirect(request.getContextPath() + thankYouPage + "?ref=" + applicationRef);
+        // 1. Get submitted data
+        String jsonData = submitInfo.getData();             // submitted form JSON
+
+        // 2. Server-side validation (NEVER skip this)
+        if (jsonData == null || jsonData.isEmpty()) {
+            response.sendError(400, "Empty submission rejected.");
+            return;
+        }
+
+        // 3. Delegate to business service — keep action thin and testable
+        String applicationRef = loanService.submitApplication(jsonData);
+
+        // 4. Redirect to thank-you page with confirmation reference
+        String thankYouPath = submitInfo.getAdaptiveForm().getValueOf("thankYouPage");
+        response.sendRedirect(
+            request.getContextPath() + thankYouPath + "?ref=" + applicationRef
+        );
     }
-}</code></pre>
+}
+</code></pre>
 
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>A custom submit action is a standard OSGi component — modules 4 and 5 apply. The Forms-specific parts are the interface and the registration property.</p>
-          <ul>
-            <li><code>@Component(service = GuideSubmitAction.class)</code> — registers in the OSGi registry. AEM Forms' engine looks up all active <code>GuideSubmitAction</code> services and lists them in the Form Container dialog by their <code>getServiceDescription()</code> string.</li>
-            <li><code>property = "guideDataModel=basic"</code> — makes this action available for JSON schema and schema-less forms. Use <code>xsd</code> for XSD-schema forms.</li>
-            <li><code>GuideSubmitInfo</code> — wraps the current submission: form definition, submitted JSON string, attached files. Never parse the raw request body yourself — use this API.</li>
-            <li>Keep the submit action thin — delegate business logic to <code>loanService</code>. This keeps the action testable and the service reusable.</li>
-          </ul>
-        </div>
-      </details>
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li><code>@Component(service = GuideSubmitAction.class)</code> — AEM Forms' engine calls <code>bundleContext.getServiceReferences(GuideSubmitAction.class, null)</code> to discover all implementations. Your component appears in the Form Container dialog automatically, labelled by <code>getServiceDescription()</code>. No XML config or registration step.</li>
+        <li><code>property = "guideDataModel=basic"</code> — restricts this action to JSON schema and schema-less forms. Use <code>"guideDataModel=xsd"</code> for XSD-schema forms, or include both properties for universal compatibility: <code>property = {"guideDataModel=basic", "guideDataModel=xsd"}</code>.</li>
+        <li><strong>Keep the action thin.</strong> The submit action is not a service — it is a wiring point. All business logic belongs in <code>LoanService</code>, which is independently testable with JUnit (module 14) without an AEM instance. The submit action is hard to test in isolation.</li>
+        <li><code>GuideSubmitInfo</code> gives you: <code>getData()</code> (submitted JSON string), <code>getAttachments()</code> (file uploads), <code>getAdaptiveForm()</code> (form configuration, including custom properties you set in the Form Container dialog). Never parse the raw Sling request body — use this API.</li>
+        <li>The Maven dependency (<code>aem-forms-sdk-api</code>) must use <code>&lt;scope&gt;provided&lt;/scope&gt;</code>. Bundling it causes class-loading conflicts at runtime because AEM already has it. Symptom: a <code>ClassCastException</code> when AEM tries to call your <code>GuideSubmitAction</code> method.</li>
+      </ul>
+    </details>
 
-      <h2>REST data source — step by step</h2>
-      <pre data-code><span class="filename">five steps to connect a REST API to a Form Data Model</span><code>Step 1 — prepare a Swagger 2.0 or OpenAPI 3.0 spec for your REST API.
-         Upload it to DAM: /content/dam/formsanddocuments/api-specs/customers.yaml
+    <h2>Document of Record — configuration and gotchas</h2>
 
-Step 2 — create a Data Source in Tools → Cloud Services → Data Sources
-         Type: RESTful Web Service
-         Swagger File: /content/dam/.../customers.yaml
-         Authentication: Basic / OAuth2 / API Key / None
-         Base URL: https://api.mycompany.com/v1
+    <p>A Document of Record (DoR) is a flat, archival PDF generated from the submitted form data. It is the digital equivalent of a filed paper form — legal evidence of what was submitted.</p>
 
-Step 3 — create a Form Data Model in AEM Forms → Data Integrations
-         Select data source: CustomerAPI
-         Expose operations:
-           Read:  GET /customers/{id}   → "Read Customer"
-           Write: POST /applications    → "Submit Application"
+    <pre><code>DoR configuration on the Form Container — Advanced tab
 
-Step 4 — bind the FDM to your form via Form Container → Data Model tab
+Document of Record Type
+  Auto-generated DoR  → AEM generates a PDF layout from the form structure.
+                         No extra template needed. Good for simple forms.
+  Template-based DoR  → You supply an XDP (LiveCycle Designer) template.
+                         Gives full control over PDF layout, branding, page breaks.
 
-Step 5 — bind individual fields to FDM properties via each field's dialog</code></pre>
+DoR Storage (set in submit action or workflow step)
+  Payload-relative path:  ./DoR/output.pdf
+    → Stored relative to the submission payload in /content/forms/fp/[submission-uuid]/
+    → Default for JCR-stored submissions and workflow-based review flows.
 
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>This is entirely configuration-driven for standard REST integration — no Java code needed.</p>
-          <ul>
-            <li>Step 2 stores credentials encrypted in a Cloud Services config node. Use run-mode folders (<code>config.author</code> / <code>config.publish</code>) to point different environments at different API endpoints — the same pattern from module 5.</li>
-            <li>If your API has no Swagger spec, you write a custom Java <code>DataIntegrationService</code> — significantly more work.</li>
-          </ul>
-        </div>
-      </details>
+  DAM path:               /content/dam/submissions/[form-name]/[date]/
+    → Fixed DAM location; not payload-relative.
+    → Good when you need to share the PDF via DAM-based permissions.
 
-      <h2>Custom JavaScript validator</h2>
-      <pre data-code><span class="filename">clientlib validator — category must be "fd.af.validator"</span><code>// /ui.apps/.../clientlib-validators/js/validators.js
-window.guideValidator = window.guideValidator || {};
+  External storage variable:
+    → AEM passes the DoR to a custom OSGi service for external storage (S3, SharePoint).
+    → The submit action receives the DoR InputStream and handles upload.
 
-/**
- * Validates a South African 13-digit ID number (Luhn checksum).
- * Available in the Rule Editor's "Custom Functions" palette.
- */
-window.guideValidator.validateSAId = function(value, field) {
-    if (!value || value.length !== 13) {
-        return "SA ID must be 13 digits";  // string = error message
-    }
-    var digits = value.split("").map(Number);
-    var sum = digits.reduce(function(acc, d, i) {
-        return i % 2 === 0 ? acc + d : acc + (d * 2 &gt; 9 ? d * 2 - 9 : d * 2);
-    }, 0);
-    return (sum % 10 === 0) ? true : "Invalid SA ID — checksum failed";
-    //                         ↑ true = valid      ↑ string = error
-};</code></pre>
+COMMON MISTAKE: setting a payload-relative path on a form that uses
+"Submit to REST endpoint" — no payload node is created, so the path
+resolves to nothing and DoR generation fails silently.
+</code></pre>
 
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>Custom validators are JavaScript functions in a specific clientlib category — discovered automatically by AEM Forms without any additional registration.</p>
-          <ul>
-            <li><code>window.guideValidator</code> — the namespace AEM Forms' Rule Editor scans for custom functions. Any function registered here becomes available as a "Custom Function" in the Rule Editor.</li>
-            <li>Return <code>true</code> for valid input, or a <strong>string error message</strong> for invalid input. AEM Forms displays the string as the field's validation error. No separate error display code needed.</li>
-            <li>The clientlib must have category <code>"fd.af.validator"</code> — a different category means AEM Forms ignores the file entirely.</li>
-          </ul>
-        </div>
-      </details>
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li><strong>DoR generation runs asynchronously</strong> from the submit action in most configurations. It does not block the HTTP response. If the DoR appears delayed in your testing, this is expected — it may take a few seconds to appear at the configured path.</li>
+        <li><strong>Payload-relative paths only work</strong> when a payload node exists in the JCR — i.e., when the submit action stores the submission as a JCR node. The "Submit to REST endpoint" built-in action does NOT create a payload node. If you use a REST submit action, use a DAM path or external storage for the DoR.</li>
+        <li><strong>XDP-based DoR</strong> gives you control over the PDF layout but requires a LiveCycle Designer XDP template. For most new projects, auto-generated DoR is sufficient and avoids the XDP tooling dependency.</li>
+        <li>Store the DoR path configuration in OSGi config per run-mode (<code>config.stage</code>, <code>config.prod</code>), not hardcoded in the form. The storage path for DoRs often differs between Dev/Stage/Prod.</li>
+      </ul>
+    </details>
 
-      <div class="try-it alert alert-success">
-        <span class="label">Try it — full pipeline</span>
-        <ol style="margin:0;padding-left:1.2em;">
-          <li>Create a submit action that logs submitted JSON at INFO level: <code>log.info("Submitted: {}", submitInfo.getData())</code>.</li>
-          <li>Deploy, confirm ACTIVE in <code>/system/console/components</code>.</li>
-          <li>Set this action on an Adaptive Form, fill it, and submit via preview (<code>?wcmmode=disabled</code>).</li>
-          <li>Tail <code>crx-quickstart/logs/error.log</code> and verify your JSON appears.</li>
-        </ol>
-      </div>
+    <h2>Embedding Forms in AEM Sites</h2>
 
-      <div class="knowledge-check">
-        <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
-        <ol class="quiz-list">
-        <li>
-          <p class="quiz-question">Why must the AEM Forms SDK API dependency use <scope>provided</scope> in pom.xml?</p>
-        </li>
-        <li>
-          <p class="quiz-question">What is the difference between the 'embeddedform' and iframe approaches for showing a form on a Sites page?</p>
-        </li>
-        <li>
-          <p class="quiz-question">Which Java interface must a custom submit action implement?</p>
-        </li>
-        <li>
-          <p class="quiz-question">How does AEM Forms discover custom submit actions registered in the OSGi bundle?</p>
-        </li>
-        <li>
-          <p class="quiz-question">What does GuideSubmitInfo give you access to inside a submit action's method?</p>
-        </li>
-        <li>
-          <p class="quiz-question">What file format must your REST API provide before you can connect it as a Form Data Model data source?</p>
-        </li>
-        <li>
-          <p class="quiz-question">Walk through the five steps to connect a REST API to a Form Data Model (one sentence each).</p>
-        </li>
-        <li>
-          <p class="quiz-question">What clientlib category must a custom JavaScript validator's clientlib use?</p>
-        </li>
-        <li>
-          <p class="quiz-question">What should a custom JavaScript validator return on success? What should it return on failure?</p>
-        </li>
-        <li>
-          <p class="quiz-question">You deploy a custom submit action but it doesn't appear in the Form Container dialog. What is the first thing you check?</p>
-        </li>
-        </ol>
-      </div>
+    <p>An Adaptive Form has its own URL under <code>/content/dam/formsanddocuments/</code>. Embedding it in a Sites page lets you surface the same form across multiple experiences without duplicating it.</p>
 
-      <div class="complete-row form-check">
-        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="forms-implementation">
-        <label for="complete" class="form-check-label">Mark this module as complete</label>
-      </div>
+    <pre><code>two embedding approaches — choose based on your context
 
-      <nav class="pager">
-        <a class="prev" href="23-form-fragments.html"><span class="dir">← Previous</span>Form Fragments &amp; Sample Code</a>
-        <a class="next" href="25-adobe-tags-setup.html"><span class="dir">Next →</span>Adobe Tags — Setup &amp; Concepts</a>
-      </nav>
+APPROACH 1: Adaptive Form Container component (new form on the Sites page)
+  Resource type: core/fd/components/formsportal/embeddedform/v1/embeddedform
+  When to use:   The form is the primary purpose of the Sites page.
+                 Authors drag the component onto the page, author the form inline.
+  CSS:           Form uses the page's theme — no separate form theme needed.
+  Client libs:   AEM auto-includes form header/footer client libraries.
+
+APPROACH 2: Adaptive Forms Embed (v2) component (reference an existing form)
+  Resource type: core/fd/components/formsportal/embeddedform/v2/embeddedform
+  When to use:   Reuse a form that already exists and is managed independently.
+                 One campaign form surfaced on three different campaign landing pages.
+  Author dialog: Select the form by DAM path (/content/dam/formsanddocuments/...).
+  CSS:           Use customheaderlibs.html + customfooterlibs.html to load form deps.
+
+CLIENT LIBRARY SPLIT when embedding in Sites:
+  FORM clientlib     → form styling and validation (travels with the form)
+    categories: ["your-project.form-theme"]
+    Contains: BEM overrides, form-specific CSS
+
+  SITES page clientlib → page chrome, navigation, footer
+    Contains: page layout, header styles
+
+  When form is embedded, add form's header/footer libs to Sites page:
+  (In your Sites page component's customheaderlibs.html)
+    &lt;sly data-sly-call="${clientlib.css @ categories='your-project.form-theme'}" /&gt;
+    &lt;sly data-sly-call="${clientlib.js @ categories='your-project.form-theme'}" /&gt;
+
+MULTIPLE FORMS on one page:
+  Supported only if both forms have "Form covers entire width of the frame" checked
+  in their embed component dialog. Otherwise CSS conflicts occur.
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li><strong>Approach 2 is the power pattern.</strong> One enrollment form, authored once in the Forms console, embedded on the campaign landing page, the customer portal, and the mobile app's web view — all pointing at the same DAM path. Update the form once; all three surfaces reflect the change after republish.</li>
+        <li><strong>CSS conflicts</strong> are the most common embedding bug. The Sites page's global CSS can override form component styles. The fix: scope your form theme CSS to a form container class — <code>.adaptiveForm { ... }</code> — so it never leaks into the page.</li>
+        <li><code>customheaderlibs.html</code> and <code>customfooterlibs.html</code> are HTL files in your Sites page component (not the form). They include the form's client library dependencies in the page's <code>&lt;head&gt;</code>. If you skip this step, the embedded form renders without its CSS and JS — fields appear unstyled and rules don't fire.</li>
+        <li>For iFrame embedding (when the hosting app is not AEM — a React SPA, a legacy portal): append <code>?wcmmode=disabled</code> to the form URL. Without it, the authoring overlay renders and the form is not interactive for end users.</li>
+      </ul>
+    </details>
+
+    <h2>Foundation → Core Components Migration</h2>
+
+    <p>If you inherit a project running Foundation Components, here is the migration path. There is no automated conversion tool for form content — forms must be rebuilt from scratch on Core Component templates.</p>
+
+    <pre><code>Foundation → Core migration — six steps
+
+Step 1: Prerequisites (check these FIRST — nothing else works without them)
+  AEM 6.5 LTS with Service Pack 16 (6.5.16.0) minimum.
+  Maven AEM Archetype 41+ with Forms options enabled.
+  Deploy the all package to ALL author AND publish instances.
+  Verify in /system/console/bundles: com.adobe.cq.forms.core-components* = Active
+
+Step 2: Enable Core Components on the AEM instance
+  Set up an Archetype 41+ project with aemVersion=6.5.x, includeFormsenrollment=y.
+  Enable themes support: add client lib references in customheaderlibs.html of your
+  page component (see Embedding section above).
+  Align core.forms versions in pom.xml to match your AEM Forms add-on version.
+
+Step 3: Build and deploy
+  mvn clean install -P autoInstallPackage
+  Output: all/target/[appid].all-[version].zip → installs to author.
+  Deploy manually (or via Cloud Manager / package manager) to all publish instances.
+  COMMON MISTAKE: deploying only to author. Rules run on publish — must deploy both.
+
+Step 4: Create Core Components templates
+  Create new templates using the Adaptive Forms (Core Components) template type.
+  Do NOT modify or extend Foundation templates — they are incompatible.
+  The Template Editor is at: /conf/[your-config]/settings/wcm/templates/
+
+Step 5: Rebuild forms on Core templates
+  Open Forms console → Create → Adaptive Form → select Core Components template.
+  Re-author all fields, panels, and rules from scratch.
+  There is no migration of field-level rules or custom CSS — manual rebuild only.
+  AEM Modernize Tools can assist with some structural migrations but NOT rule logic.
+
+Step 6: Migrate custom code
+  Custom scripts (Foundation widget APIs) → rewrite as Custom Functions (module 23).
+  CSS/themes → rewrite targeting BEM classes; do not copy Foundation CSS.
+  Fragments → rebuild on Core fragments (same DAM path is fine; node structure differs).
+  Prefill services → interface is the same (DataXMLProvider); re-test thoroughly.
+  Submit actions → interface is the same (GuideSubmitAction); re-test thoroughly.
+  THEN run full regression: prefill, all rules, validation, submission, DoR.
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li><strong>Step 1 is a hard prerequisite.</strong> Core Components simply don't work below SP16. Don't attempt Step 2 without confirming the service pack version in <code>/system/console/bundles</code>.</li>
+        <li><strong>Forms are not convertible field-by-field.</strong> Foundation and Core Components use completely different node structures. You cannot move fields between them. Migration is a rebuild. Scope it as a development project, not a configuration task.</li>
+        <li><strong>Custom scripts fail completely after migration.</strong> Foundation widget APIs (like <code>guideBridge.getFocus()</code> in the old style) do not exist in Core Components. Inventory every inline script in every Foundation form before starting. Map each one to a Core Components equivalent or Custom Function.</li>
+        <li><strong>CSS cannot be ported directly.</strong> Foundation Components emit custom ad-hoc classes. Core Components emit BEM classes like <code>cmp-adaptiveform-textinput__label</code>. Porting means rewriting every selector. Budget time for this — it is always more work than it looks.</li>
+        <li><strong>Fragments must be rebuilt.</strong> Foundation fragments and Core fragments have different node structures. The DAM path can stay the same, but the content inside the fragment node must be rebuilt on Core Components.</li>
+        <li><strong>Regression-test the three critical paths:</strong> prefill (data flows in on load), all Rule Editor logic (show/hide, compute, validate), and submission (data flows out, DoR generates, thank-you page loads). Any of these can fail silently after migration.</li>
+        <li><strong>Version alignment in pom.xml.</strong> <code>core-forms-components-core</code> version in pom.xml must match what your installed AEM Forms add-on provides. A mismatch causes <code>NoClassDefFoundError</code> at runtime. Check the installed version in <code>/system/console/bundles</code> and match it.</li>
+      </ul>
+    </details>
+
+    <h2>Analytics Integration</h2>
+
+    <p>AEM Forms integrates with Adobe Analytics via Adobe Tags (Launch). Out-of-the-box events cover standard form lifecycle; custom events require Rule Editor wiring.</p>
+
+    <pre><code>out-of-the-box analytics events — what you get for free
+
+Event                   What it tracks
+──────────────────────  ──────────────────────────────────────────────────
+formRendered            Form opened (unique views + return visits)
+formSubmit              Successful submission
+formError               Client-side validation error triggered
+formSave                Draft saved to Forms Portal
+formHelp                Help icon clicked on a field
+panelVisit              User navigated to a panel (wizard/tab forms)
+fieldVisit              User focused a specific field
+
+Reported metrics (in Adobe Analytics Workspace):
+  Average fill time · Renditions · Submissions · Drafts · Abandonment rate
+  Panel-level drop-off: which panel users abandon most
+  Browser / OS / language distribution
+  Field-level error counts (which fields cause most validation failures)
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li><strong>Panel-level drop-off is the most valuable metric.</strong> It tells you exactly which section of a multi-step form users abandon. Combine it with field-level error counts to find the friction points. This data drives UX improvements — reduce abandonment by fixing what the data points at.</li>
+        <li>Analytics requires: an Adobe Analytics license + Adobe Tags (Launch) property + Forms Analytics config in AEM. All three must be in place. The most common reason analytics doesn't fire: the Tags property is configured on the author instance but not published to the publish instance.</li>
+      </ul>
+    </details>
+
+    <pre><code>custom analytics events — wiring via Rule Editor + Adobe Tags
+
+Step 1: Define a custom event in the Rule Editor
+  In Rule Editor on any field or button:
+  WHEN [condition] THEN dispatch event "customFormEvent"
+  Pass a data payload: { eventName: "formSectionComplete", section: "personalDetails" }
+
+Step 2: Catch the custom event in Adobe Tags (module 25–26)
+  Create a Data Element of type "Custom Code":
+    return window.adobeDataLayer.getState().customFormEvent;
+  Create a Rule triggered by "AEM Forms Event" event type
+  Map the Data Element value to an Adobe Analytics eVar or event.
+
+Step 3: Test in Adobe Tags Debug mode
+  Load the form with the Tags Debugger enabled.
+  Complete the section → verify the custom event fires in the debugger.
+  Check the Analytics beacon in the Network tab: s.events should include your event.
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li>AEM Forms uses the <strong>Adobe Client Data Layer (ACDL)</strong> to push events. Adobe Tags listens to the ACDL. This is the same data layer used by AEM Sites Core Components — if the project already uses Sites with Tags, the wiring pattern is identical.</li>
+        <li>Prefer <strong>Adobe Launch/Data Collection</strong> over the older Cloud framework approach — it supports custom events beyond the OOTB set and integrates with the full Adobe Experience Cloud tag management ecosystem.</li>
+      </ul>
+    </details>
+
+    <h2>Operations &amp; Security — the handover checklist</h2>
+
+    <p>A form going to production is not just a publish action. It needs access control, data source security, environment configuration, and a handover package.</p>
+
+    <pre><code>operations handover checklist — backend developer responsibilities
+
+PERMISSIONS
+  Assign to groups, never to individuals (scalable, auditable, revocable).
+  Built-in groups to know:
+    forms-users       → can view and fill forms (end users on author)
+    forms-power-user  → can author forms (Forms Practitioners)
+    fd-administrators → admin-level Forms access
+  Use Allow over Deny.
+  Never add ACLs manually in CRXDE — use the Security UI or Groovy scripts.
+
+DATA SOURCE SECURITY
+  Configure each FDM data source with a LEAST-PRIVILEGE account:
+    Read-only account for prefill data sources.
+    Write account (minimum required permissions) for submit-back sources.
+  Credentials are encrypted in Tools → Cloud Services → Data Sources.
+  Use run-mode OSGi config for environment-specific credentials (module 5).
+  NEVER commit production credentials to Git.
+
+ENVIRONMENT CONFIGURATION
+  Rule: deploy the SAME build package Dev → Stage → Prod.
+  Environment-specific values (API URLs, analytics property IDs) in OSGi config:
+    /apps/your-project/config.dev/       → dev overrides
+    /apps/your-project/config.stage/     → stage overrides
+    /apps/your-project/config/           → production defaults
+
+HARDENING
+  Disable anonymous access to /content/forms/fp (submission data).
+  Restrict the Rule Editor Code mode to fd-administrators group only.
+  Block /bin/querybuilder.json on the dispatcher (common data leak).
+  Restrict /crx/de to author only — never expose CRXDE on publish.
+
+MONITORING
+  Watch error.log for GuideSubmitAction exceptions (they don't surface to users).
+  Set up JMX monitoring on the Forms submission queue if volume is high.
+  Alert on 5xx responses to form submission POST endpoints.
+
+HANDOVER DOCUMENTATION
+  Which forms exist → their DAM paths
+  Which submit actions → which services they call
+  FDM data sources → credentials owner
+  Fragments and their forms → update impact map
+  Rule Editor custom functions → clientlib path, author, what each does
+</code></pre>
+
+    <details class="why-box">
+      <summary>📖 Why this code?</summary>
+      <ul>
+        <li><strong>Never expose CRXDE on publish.</strong> This is a critical security control. The Dispatcher's allow-list should block <code>/crx/de</code>, <code>/crx/packmgr</code>, and <code>/system/console</code> on publish. These are common attack vectors. The AEM hardening guide from module 19 applies in full to Forms deployments.</li>
+        <li><strong>Restrict Rule Editor Code mode.</strong> The Code Editor allows arbitrary JavaScript execution with the form author's session permissions. Granting it to business users is the same as granting them access to run arbitrary JS in the browser context of your forms. Restrict to developers only.</li>
+        <li><strong>GuideSubmitAction exceptions don't surface to end users.</strong> A failing submit action logs to <code>error.log</code> on Publish and may redirect to an error page, but gives the user no actionable information. Monitor <code>error.log</code> on Publish for <code>com.adobe.aemds.guide</code> exceptions in production.</li>
+        <li><strong>The handover documentation is not optional.</strong> Forms projects frequently outlive the team that built them. The next developer needs to know: which custom functions exist and what they do, which submit actions call which downstream systems, and which fragments are shared between how many forms. Missing this documentation means the next change breaks something unexpected.</li>
+      </ul>
+    </details>
+
+    <div class="try-it">
+      <strong>Try it — full pipeline smoke test</strong> — Deploy a custom submit action that logs the submitted JSON at INFO level: <code>log.info("Submission received: {}", submitInfo.getData())</code>. Deploy it, confirm it is ACTIVE in <code>/system/console/components</code> on the Publish instance (not author). Set this action on an Adaptive Form in the Form Container dialog. Preview the form with <code>?wcmmode=disabled</code>, fill in all fields, and click Submit. Tail <code>crx-quickstart/logs/error.log</code> on the Publish instance and verify your JSON appears. Then intentionally submit with a required field empty — confirm the log entry does NOT appear (client-side validation blocked it). Then bypass client-side validation with the browser console (<code>document.querySelector('.adaptiveForm').guideContext.submitValue()</code>) and confirm the log DOES appear — proving your server-side validation is the real gate.
     </div>
+
+    <h2>Knowledge Check</h2>
+    <p>Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
+    <ol class="knowledge-check">
+      <li>List the six stages of the submission pipeline. Which stage is a security control and which is only a UX improvement? What happens if Stage 3 is missing?</li>
+      <li>A custom submit action is deployed but does not appear in the Form Container dialog on the author instance. Walk through the diagnostic steps in order.</li>
+      <li>Explain the <code>guideDataModel=basic</code> property on a GuideSubmitAction component. When would you set it to <code>xsd</code> instead?</li>
+      <li>What does <code>submitInfo.getData()</code> return, and what does <code>submitInfo.getAdaptiveForm().getValueOf("thankYouPage")</code> return?</li>
+      <li>A form using "Submit to REST endpoint" is configured with a payload-relative DoR path (<code>./DoR/output.pdf</code>). The DoR never appears. Explain why and how to fix it.</li>
+      <li>What is the difference between the Adaptive Form Container component and the Embed (v2) component? Give a real project scenario where you would use each.</li>
+      <li>What must be in <code>customheaderlibs.html</code> when a form is embedded in a Sites page? What happens if you omit it?</li>
+      <li>Walk through the six steps of Foundation → Core migration. Which two gotchas are most likely to cause silent failures that only appear at runtime?</li>
+      <li>Name four out-of-the-box analytics events AEM Forms sends. Which metric is most useful for identifying UX problems in a multi-step wizard form?</li>
+      <li>A submit action logs no errors, but submitted data is not reaching the downstream REST API. List three things you check, in order, and explain why each might be the cause.</li>
+    </ol>
+
+    <button class="btn-complete" id="completeBtn" onclick="markComplete()">Mark this module as complete</button>
+
+    <nav class="module-nav">
+      <a href="23-form-fragments.html" class="nav-prev">← Previous<span>Authoring, Templates, Rules &amp; Form Data Model</span></a>
+      <a href="25-adobe-tags-setup.html" class="nav-next">Next →<span>Adobe Tags — Setup &amp; Concepts</span></a>
+    </nav>
 
     <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
   </main>
 </div>
 
 <script src="../script.js"></script>
+<script>
+  function markComplete() {
+    const key = 'module-24-forms-implementation';
+    localStorage.setItem(key, 'complete');
+    document.getElementById('completeBtn').textContent = '✓ Completed';
+    document.getElementById('completeBtn').classList.add('completed');
+    if (window.updateProgress) updateProgress();
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    const key = 'module-24-forms-implementation';
+    if (localStorage.getItem(key) === 'complete') {
+      document.getElementById('completeBtn').textContent = '✓ Completed';
+      document.getElementById('completeBtn').classList.add('completed');
+    }
+  });
+</script>
 </body>
 </html>
