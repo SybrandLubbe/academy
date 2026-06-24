@@ -31,7 +31,8 @@
     "forms-implementation",
     "adobe-tags-setup",
     "adobe-tags-implement",
-    "analytics-workspaces"
+    "analytics-workspaces",
+    "site-capstone"
   ];
 
   function getProgress() {

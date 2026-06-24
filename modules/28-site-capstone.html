@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>28 Capstone — Mini Site, Live Copy &amp; Dynamic Navigation — AEM Backend Training</title>
+<meta name="description" content="Build a multi-language mini site, create a live copy from the EN master, and implement a Sling Model-driven navigation component that auto-builds from child pages.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 29 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adaptive-forms" href="22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="form-fragments" href="23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="forms-implementation" href="24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="analytics-workspaces" href="27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="site-capstone" href="28-site-capstone.html">28-site-capstone<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">28-site-capstone</span></p>
+
+      <div class="module-meta">
+        <span class="tag badge text-bg-secondary">Capstone</span>
+        <span>90 min task</span>
+      </div>
+
+      <h1 class="page-title">Capstone — Mini Site, Live Copy &amp; Dynamic Navigation</h1>
+      <p class="lede">Everything in this training leads here. You will build a real multi-language mini site from scratch in AEM, create a live copy from the English master, add five or more pages with real content, and implement a Sling Model–driven navigation bar that automatically discovers and links every page you add — with no authoring required and no code changes when the site grows.</p>
+
+      <div class="learn-box">
+        <h3>What you're building</h3>
+        <ul>
+          <li>A mini site under <code>/content/academy-mini/en/</code> — the English language master</li>
+          <li>At least 5 pages with content authored using existing Core Components</li>
+          <li>A German live copy at <code>/content/academy-mini/de/</code> using AEM Multi-Site Manager</li>
+          <li>A custom navigation component: <strong>full Java model, HTL template, CSS, and JavaScript</strong></li>
+          <li>The navigation reads child pages from the JCR at runtime — add a page, it appears in the nav automatically</li>
+          <li>Dropdown support for sub-pages, active-state highlighting, and mobile responsiveness</li>
+        </ul>
+      </div>
+
+      <div class="callout alert alert-primary">
+        <span class="label">Modules this capstone draws from</span>
+        Site structure (02), Sling framework (03), Sling Models (06+07), HTL (09), Components (11+12), OSGi Config (05). Every annotation and pattern in the code below has been covered. If something looks unfamiliar, the module number is noted in the comment above it.
+      </div>
+
+      <h2>Part 1 — Site structure you are creating</h2>
+      <p>Before touching AEM, understand the target structure. This is what the JCR will look like when you're done.</p>
+      <pre data-code><span class="filename">target JCR structure — what you're building</span><code>/content/academy-mini/
+├── en/                         ← language master (you build this)
+│   ├── jcr:content             ← root page properties (title, template, language)
+│   ├── home/                   ← page 1
+│   ├── about/                  ← page 2
+│   ├── courses/                ← page 3 — has sub-pages (dropdown trigger)
+│   │   ├── aem-basics/         ← sub-page 3a
+│   │   └── advanced-aem/       ← sub-page 3b
+│   ├── blog/                   ← page 4
+│   └── contact/                ← page 5
+│
+└── de/                         ← German live copy (MSM creates this for you)
+    ├── jcr:content             ← live relationship metadata lives here
+    ├── home/
+    ├── about/
+    ├── courses/
+    │   ├── aem-basics/
+    │   └── advanced-aem/
+    ├── blog/
+    └── contact/
+
+/apps/academy/
+├── components/
+│   ├── page/                   ← page component (extends Core page)
+│   │   ├── .content.xml
+│   │   └── partials/
+│   │       └── header.html     ← includes navigation component
+│   └── navigation/             ← YOUR NEW COMPONENT (built in Part 3)
+│       ├── .content.xml
+│       ├── navigation.html
+│       └── _cq_dialog/
+│           └── .content.xml
+└── clientlibs/
+    └── navigation/             ← CSS + JS for the nav bar
+        ├── .content.xml
+        ├── css/
+        │   └── navigation.css
+        ├── js/
+        │   └── navigation.js
+        ├── css.txt
+        └── js.txt</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This structure follows the exact same conventions as a production Netcentric AEM project. Each choice has a reason.</p>
+          <ul>
+            <li><code>/content/academy-mini/en/</code> — the <code>en</code> folder is the <em>language root</em>, at JCR depth 3 (<code>/content/[site]/[language]</code>). The navigation model will auto-detect this depth to find the site root, so the nav works on every page without any configuration.</li>
+            <li><code>courses/</code> has sub-pages — this tests the dropdown behaviour. The navigation model recurses one level deep; sub-pages of sub-pages are deliberately not shown (three-level navs confuse users).</li>
+            <li><code>de/</code> as a live copy — MSM keeps German pages synchronised with English. Authors editing the English master can roll out changes to German automatically. German editors can localise copy without disconnecting from the master.</li>
+            <li><code>/apps/academy/components/navigation/</code> — under your project's component tree, not under <code>/libs</code>. This is the only safe place for custom code (module 01).</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Part 2 — Create the EN master and add pages</h2>
+      <p>Work through these steps in the AEM author UI. Use the Sites console at <code>localhost:4502/sites.html</code>.</p>
+      <pre data-code><span class="filename">step-by-step: creating the mini site and pages</span><code>STEP 1 — Create the site root
+  In Sites console: Create → Page
+  Template:  AEM Sites page template (or your project's language master template)
+  Title:     Academy Mini
+  Name:      academy-mini
+  Path:      /content/academy-mini
+
+STEP 2 — Create the EN language root inside it
+  Select academy-mini → Create → Page
+  Template:  Language Master template (cq:Template with language=en_GB)
+  Title:     English
+  Name:      en
+
+  Alternatively, create en/ directly via CRXDE:
+    /content/academy-mini/en
+    jcr:primaryType = cq:Page
+    jcr:content/jcr:primaryType = cq:PageContent
+    jcr:content/jcr:title = "English"
+    jcr:content/cq:template = "/conf/academy/settings/wcm/templates/[your-template]"
+
+STEP 3 — Create the five child pages (the nav items)
+  For each page below, select /content/academy-mini/en/ → Create → Page:
+
+  Page 1: Home         (name: home)
+  Page 2: About Us     (name: about)
+  Page 3: Courses      (name: courses)
+  Page 4: Blog         (name: blog)
+  Page 5: Contact      (name: contact)
+
+  Inside Courses, create two sub-pages:
+  Page 3a: AEM Basics        (name: aem-basics,  parent: courses)
+  Page 3b: Advanced AEM      (name: advanced-aem, parent: courses)
+
+STEP 4 — Author content using existing Core Components
+  Open each page in the page editor (click the pencil icon).
+  Add components by clicking the "+" zone:
+
+  Home page:     Title component ("Welcome to Academy Mini")
+                 Text component (intro paragraph)
+                 Teaser component (3 teasers pointing to About, Courses, Blog)
+
+  About page:    Title + Text + Image (your headshot or placeholder)
+
+  Courses page:  Title + Text + List component (set to "child pages" mode →
+                 this automatically lists aem-basics and advanced-aem!)
+
+  Blog page:     Title + List component (set to "child pages" → empty for now)
+
+  Contact page:  Title + Text + Forms Adaptive Form (if Forms add-on present)
+                 OR just Title + Text with contact details
+
+STEP 5 — Publish all pages
+  Select /content/academy-mini/en → Manage Publication → Publish
+  Check "Include Children" to publish all pages in one action.
+  Verify at: http://localhost:4503/content/academy-mini/en/home.html</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The page naming choices here are deliberate, not arbitrary.</p>
+          <ul>
+            <li><strong>Name vs Title</strong> — the <em>Name</em> becomes the URL path segment and the JCR node name (e.g. <code>about</code> → <code>/content/academy-mini/en/about</code> → URL <code>/content/academy-mini/en/about.html</code>). The <em>Title</em> is what the navigation component displays. Keeping names short and URL-safe, and titles human-readable, is the correct separation.</li>
+            <li><strong>List component in "child pages" mode</strong> — this is a Core Component feature that automatically discovers and links child pages. It demonstrates the same pattern your navigation component will use at the site level.</li>
+            <li><strong>Manage Publication with "Include Children"</strong> — AEM's replication system. Publishing the root alone doesn't publish children. The "Include Children" checkbox traverses the subtree and queues every child page for replication to the publish instance.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Part 3 — Create a Live Copy (DE from EN master)</h2>
+      <p>AEM's Multi-Site Manager (MSM) creates a <em>live relationship</em> between a source tree and one or more target trees. Changes to the source can be <em>rolled out</em> to targets automatically or manually. The live copy pages share content with the source until a page is <em>detached</em> or a property is <em>cancelled</em>.</p>
+      <pre data-code><span class="filename">creating the DE live copy — AEM author UI steps</span><code>METHOD 1 — Sites console (recommended)
+  1. Navigate to /content/academy-mini/en in the Sites console.
+  2. Select the "en" page (checkbox, not the page title).
+  3. Top toolbar → Create → Live Copy.
+  4. In the wizard:
+       Source:           /content/academy-mini/en   (pre-filled)
+       Destination:      /content/academy-mini/
+       Title:            Deutsch
+       Name:             de
+       Rollout Config:   Standard rollout config
+                         (synchronises on source activation by default)
+  5. Click Create.
+
+MSM creates /content/academy-mini/de/ with:
+  - All the same child pages as en/
+  - Each page marked with jcr:mixinTypes = [msm:LiveRelationship]
+  - A cq:LiveSyncConfig node storing the source path and rollout config
+
+METHOD 2 — CRXDE (shows what MSM creates under the hood)
+  After creating via UI, inspect the result in CRXDE:
+
+  /content/academy-mini/de/jcr:content
+    cq:isDelivered     = true
+    jcr:mixinTypes     = [msm:LiveRelationship]
+
+  /content/academy-mini/de/jcr:content/cq:LiveSyncConfig
+    jcr:primaryType    = "cq:LiveSyncConfig"
+    cq:master          = "/content/academy-mini/en"
+    cq:rolloutConfigs  = ["/libs/msm/wcm/rolloutconfigs/default"]
+    cq:isDeep          = true   ← live copy applies to all descendants</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>MSM is one of AEM's most powerful — and most misunderstood — features. These details help you debug it when it doesn't behave as expected.</p>
+          <ul>
+            <li><code>jcr:mixinTypes = [msm:LiveRelationship]</code> — mixin types are additional node type declarations that add capability without changing the primary type. MSM adds this mixin to mark a page as part of a live copy. You can check this in CRXDE to instantly confirm which pages are live copies and which are not.</li>
+            <li><code>cq:isDeep = true</code> — the live copy relationship applies to the entire subtree, not just the root page. When you roll out a change to <code>en/courses/aem-basics</code>, it propagates to <code>de/courses/aem-basics</code> too.</li>
+            <li><strong>Rollout configs</strong> determine what triggers synchronisation: the Standard config rolls out when the source page is activated (published). Other configs roll out on page creation, deletion, or on a schedule. For localisation projects, you often want manual rollout so German editors aren't surprised by overnight content changes.</li>
+            <li><strong>Cancelled properties</strong> — when a German editor changes the page title in <code>de/about</code>, MSM "cancels" that property on the live copy. The EN master still controls all other properties, but the title is now locally owned. This is the intended localisation mechanism.</li>
+          </ul>
+        </div>
+      </details>
+
+      <pre data-code><span class="filename">rolling out changes from EN to DE — the day-to-day workflow</span><code>ROLL OUT A SINGLE PAGE
+  Sites console → select en/about → More options (⋯) → Rollout
+  Or: open en/about → Page Properties → Live Copy tab → Rollout
+
+ROLL OUT THE ENTIRE SITE AT ONCE
+  Sites console → select en/ → Rollout → tick "Include Subpages"
+  All changed pages flow to de/ in one operation.
+
+VERIFY LIVE COPY STATUS
+  Sites console → en/ → Live Copy Overview (globe icon)
+  Green = in sync. Orange = inherited but locally modified. Red = detached.
+
+DETACH A PAGE FROM THE LIVE COPY
+  de/about → Page Properties → Live Copy tab → Detach
+  After detach: de/about is a fully independent page.
+  Use for pages that need completely different content in DE —
+  not just translated copy, but different structure entirely.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Rollout is the publish action for multi-site managers — understanding it prevents the most common MSM support issue on real projects.</p>
+          <ul>
+            <li><strong>Roll out vs Publish</strong> — rolling out copies content from the EN master to DE pages; publishing makes DE pages visible on the publish instance. Both steps are required for changes to reach end users on the German site. Forgetting to publish after rollout is the most common mistake.</li>
+            <li><strong>Live Copy Overview</strong> — the most useful MSM tool. Open it before every rollout on a production project to see exactly which pages are out of sync and why. Orange pages have local overrides that will be preserved; red pages won't receive rollout updates at all.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Part 4 — The Navigation Component</h2>
+      <p>This is the core backend development task. You are building a component that requires no authoring — it automatically discovers and links every page in the current site's language root. Add a page, refresh, it appears in the nav. This is what "content-driven navigation" means in AEM.</p>
+
+      <h3>4a — Component definition</h3>
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/components/navigation/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root
+    xmlns:jcr  ="http://www.jcp.org/jcr/1.0"
+    xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    xmlns:cq   ="http://www.day.com/jcr/cq/1.0"
+    jcr:primaryType   ="cq:Component"
+    jcr:title         ="Academy Site Navigation"
+    jcr:description   ="Horizontal nav bar — auto-built from the current site's child pages."
+    componentGroup    ="Academy Training"
+    sling:resourceSuperType="core/wcm/components/commons/v1/template"/&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is the minimal component definition — every field matters.</p>
+          <ul>
+            <li><code>jcr:primaryType="cq:Component"</code> — the node type that registers this folder as a component in AEM's component registry. Without it, AEM treats the folder as just a directory and it never appears in the component browser.</li>
+            <li><code>componentGroup="Academy Training"</code> — the group name that template policies use to allow or block this component. Must match the group name in your template's content policy for authors to be able to add it.</li>
+            <li><code>sling:resourceSuperType="core/wcm/components/commons/v1/template"</code> — inherits edit-mode placeholder rendering from Core Components. Without it, the component shows a blank space in the page editor, confusing authors.</li>
+            <li>There is no <code>sling:resourceType</code> here because the component folder <em>is</em> the resource type. The path <code>academy/components/navigation</code> relative to the search path is the resource type string.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>4b — Optional dialog: navigation root override</h3>
+      <p>By default the model auto-detects the language root. This dialog lets an author override it — useful when embedding the same nav on a microsite at a different path.</p>
+      <pre data-code><span class="filename">/apps/academy/components/navigation/_cq_dialog/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root
+    xmlns:jcr    ="http://www.jcp.org/jcr/1.0"
+    xmlns:sling  ="http://sling.apache.org/jcr/sling/1.0"
+    xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+    jcr:primaryType  ="nt:unstructured"
+    jcr:title        ="Navigation"
+    sling:resourceType="cq/gui/components/authoring/dialog"&gt;
+  &lt;content
+      jcr:primaryType  ="nt:unstructured"
+      sling:resourceType="granite/ui/components/coral/foundation/container"&gt;
+    &lt;items jcr:primaryType="nt:unstructured"&gt;
+      &lt;navRootPath
+          jcr:primaryType  ="nt:unstructured"
+          sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+          fieldLabel       ="Navigation Root Path"
+          fieldDescription ="Leave empty — auto-detects /content/[site]/[lang] at depth 3."
+          name             ="./navRootPath"
+          rootPath         ="/content"/&gt;
+    &lt;/items&gt;
+  &lt;/content&gt;
+&lt;/jcr:root&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This dialog follows the same Granite UI pattern from module 11 — resource type per field, <code>name="./navRootPath"</code> writes to the component's content node, which the Sling Model reads with <code>@ValueMapValue</code>.</p>
+          <ul>
+            <li><code>sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"</code> — renders a path browser field in the author dialog. The author can type or browse to any JCR path, which becomes the navigation root.</li>
+            <li><code>name="./navRootPath"</code> — the <code>./</code> prefix writes the value as a property on the navigation component's own content node. This is the property <code>@ValueMapValue(name = "navRootPath")</code> reads in the Java model.</li>
+            <li>The <code>fieldDescription</code> explains what to leave empty — critical for optional fields. Without it, authors will always fill it in "just to be safe," breaking the auto-detection.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>4c — The Sling Model</h3>
+      <p>This is the heart of the component. It reads the JCR page tree at request time and returns a list of typed <code>NavItem</code> objects that the HTL template renders. No caching — the JCR query is lightweight and ensures the nav is always current.</p>
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/core/models/SiteNavigationModel.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.core.models;
+
+import com.day.cq.wcm.api.Page;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.models.annotations.DefaultInjectionStrategy;
+import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.ScriptVariable;
+import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * Sling Model for the Academy Site Navigation component.
+ *
+ * Automatically discovers all child pages of the current language root
+ * and builds a typed list of NavItems for HTL rendering.
+ * If navRootPath is configured in the dialog, it is used instead.
+ */
+@Model(
+    adaptables            = SlingHttpServletRequest.class,
+    defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL
+)
+public class SiteNavigationModel {
+
+    // currentPage is injected from the HTL script variable scope (module 07)
+    @ScriptVariable
+    private Page currentPage;
+
+    // Optional: author-configured root path override (from the dialog)
+    @ValueMapValue(name = "navRootPath")
+    private String navRootPath;
+
+    // ── Internal state ────────────────────────────────────────────────────────
+    private List&lt;NavItem&gt; navItems;
+    private Page           siteRoot;
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Inner class — one entry in the navigation list
+    // ─────────────────────────────────────────────────────────────────────────
+    public static class NavItem {
+        private final String       title;
+        private final String       path;
+        private final boolean      active;
+        private final List&lt;NavItem&gt; children;
+
+        public NavItem(String title, String path,
+                       boolean active, List&lt;NavItem&gt; children) {
+            this.title    = title;
+            this.path     = path;
+            this.active   = active;
+            this.children = children != null ? children : new ArrayList&lt;&gt;();
+        }
+
+        public String        getTitle()       { return title; }
+        public String        getPath()        { return path; }
+        public boolean       isActive()       { return active; }
+        public List&lt;NavItem&gt; getChildren()    { return children; }
+        public boolean       isHasChildren()  { return !children.isEmpty(); }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Initialisation — runs after all @ValueMapValue and @ScriptVariable fields
+    // are populated (PostConstruct — module 06)
+    // ─────────────────────────────────────────────────────────────────────────
+    @PostConstruct
+    private void init() {
+        navItems = new ArrayList&lt;&gt;();
+
+        // 1. Find the navigation root
+        if (navRootPath != null &amp;&amp; !navRootPath.isEmpty()) {
+            // Author override: use the configured path
+            siteRoot = currentPage.getPageManager().getPage(navRootPath);
+        } else {
+            // Auto-detect: walk up from the current page to depth 3.
+            // Depth 3 = /content/[site]/[language] — the language root.
+            siteRoot = currentPage;
+            while (siteRoot != null &amp;&amp; siteRoot.getDepth() &gt; 3) {
+                siteRoot = siteRoot.getParent();
+            }
+        }
+
+        if (siteRoot == null) return;
+
+        // 2. Iterate direct children of the root — each becomes a nav item
+        Iterator&lt;Page&gt; children = siteRoot.listChildren();
+        while (children.hasNext()) {
+            Page child = children.next();
+            if (child.isHideInNav()) continue;  // respect the hideInNav flag
+            navItems.add(buildNavItem(child));
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Build a NavItem from a Page, including one level of children (dropdown)
+    // ─────────────────────────────────────────────────────────────────────────
+    private NavItem buildNavItem(Page page) {
+        // Navigation Title takes priority over regular Title (module 02)
+        String title = page.getNavigationTitle() != null
+            ? page.getNavigationTitle()
+            : page.getTitle();
+        if (title == null) title = page.getName();  // last-resort fallback
+
+        // Active = current page is this page or a descendant of it
+        boolean isActive = currentPage.getPath().startsWith(page.getPath());
+
+        // Recurse ONE level for dropdown sub-items
+        List&lt;NavItem&gt; childItems = new ArrayList&lt;&gt;();
+        Iterator&lt;Page&gt; subPages = page.listChildren();
+        while (subPages.hasNext()) {
+            Page sub = subPages.next();
+            if (sub.isHideInNav()) continue;
+            boolean subActive = currentPage.getPath().startsWith(sub.getPath());
+            childItems.add(new NavItem(
+                sub.getNavigationTitle() != null
+                    ? sub.getNavigationTitle() : sub.getTitle(),
+                sub.getPath() + ".html",
+                subActive,
+                new ArrayList&lt;&gt;()  // no third level — keeps the nav usable
+            ));
+        }
+
+        return new NavItem(title, page.getPath() + ".html", isActive, childItems);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Public accessors — called by the HTL template
+    // ─────────────────────────────────────────────────────────────────────────
+    public List&lt;NavItem&gt; getNavItems()    { return navItems; }
+    public String         getSiteTitle()  {
+        return siteRoot != null ? siteRoot.getTitle() : "";
+    }
+    public String         getSiteRootPath() {
+        return siteRoot != null ? siteRoot.getPath() + ".html" : "#";
+    }
+}</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Every annotation and method in this model maps back to a specific module — this is the capstone, so it deliberately touches multiple areas.</p>
+          <ul>
+            <li><code>@Model(adaptables = SlingHttpServletRequest.class)</code> — adapts from the request, not from a Resource, because we need access to the full request context including the <code>currentPage</code> script variable. Adapting from Resource alone would lose the script variable injection.</li>
+            <li><code>@ScriptVariable private Page currentPage</code> — HTL sets <code>currentPage</code> as a script-scope variable in the page rendering context. Because the navigation component is rendered within that context, this injection works. This is the same mechanism covered in module 07's <em>advanced</em> section.</li>
+            <li><code>@ValueMapValue(name = "navRootPath")</code> — reads the <code>navRootPath</code> property from the component's content node (set via the dialog). Combined with <code>defaultInjectionStrategy = OPTIONAL</code>, null is returned when the author left the field empty, which the init() method handles gracefully.</li>
+            <li><code>siteRoot.getDepth() &gt; 3</code> — walking up to depth 3 targets <code>/content/[site]/[language]</code>. Depth is zero-indexed from the JCR root: <code>/</code>=0, <code>/content</code>=1, <code>/content/academy-mini</code>=2, <code>/content/academy-mini/en</code>=3. This is why the language root is at depth 3.</li>
+            <li><code>page.isHideInNav()</code> — reads the <code>hideInNav</code> boolean property from <code>jcr:content</code>. Authors set this in Page Properties → Navigation → "Hide in navigation." Respecting it is the correct behaviour — never iterate pages without checking this flag.</li>
+            <li><code>page.getNavigationTitle()</code> — reads <code>jcr:content/navTitle</code>. This lets authors set a shorter label for the nav without changing the page title. The fallback chain (navTitle → title → name) guarantees something is always returned.</li>
+            <li><strong>No caching, no query</strong> — <code>listChildren()</code> reads directly from the JCR node tree using Jackrabbit's node iteration API. This is O(n) where n is the number of child pages, which is typically &lt;20 for a site nav. It's fast enough to run on every request. If you had hundreds of nav items, you'd use the Core Components Navigation model instead.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>4d — The HTL template</h3>
+      <pre data-code><span class="filename">/apps/academy/components/navigation/navigation.html <em>(academy.ui.apps)</em></span><code>&lt;!--/* navigation.html
+       Academy Site Navigation Component
+       Uses SiteNavigationModel to render a horizontal nav bar.
+       Clientlib injection handled here — one component, one &lt;link&gt; + one &lt;script&gt;. */--&gt;
+
+&lt;sly data-sly-use.nav="biz.netcentric.academy.core.models.SiteNavigationModel"
+     data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html"&gt;&lt;/sly&gt;
+
+&lt;sly data-sly-call="${clientlib.css @ categories='academy.navigation'}"&gt;&lt;/sly&gt;
+
+&lt;nav class="academy-nav" aria-label="Main navigation"&gt;
+  &lt;div class="academy-nav__inner"&gt;
+
+    &lt;!--/* Brand link — title and home URL from the model */--&gt;
+    &lt;a class="academy-nav__brand"
+       href="${nav.siteRootPath}"&gt;${nav.siteTitle}&lt;/a&gt;
+
+    &lt;!--/* Mobile hamburger button */--&gt;
+    &lt;button class="academy-nav__toggle"
+            data-nav-toggle
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"&gt;
+      &lt;span class="academy-nav__toggle-bar"&gt;&lt;/span&gt;
+      &lt;span class="academy-nav__toggle-bar"&gt;&lt;/span&gt;
+      &lt;span class="academy-nav__toggle-bar"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+
+    &lt;!--/* Main navigation list — auto-built from navItems */--&gt;
+    &lt;ul class="academy-nav__list" data-nav-list role="menubar"&gt;
+      &lt;li class="academy-nav__item
+                 ${item.active      ? 'academy-nav__item--active'       : ''}
+                 ${item.hasChildren ? 'academy-nav__item--has-dropdown'  : ''}"
+          data-sly-list.item="${nav.navItems}"
+          role="none"&gt;
+
+        &lt;a class="academy-nav__link"
+           href="${item.path}"
+           aria-current="${item.active ? 'page' : false}"
+           role="menuitem"&gt;${item.title}&lt;/a&gt;
+
+        &lt;!--/* Dropdown sub-menu — only rendered when item has child pages */--&gt;
+        &lt;ul class="academy-nav__dropdown"
+            data-sly-test="${item.hasChildren}"
+            role="menu"
+            aria-label="${item.title} sub-pages"&gt;
+          &lt;li class="academy-nav__dropdown-item
+                     ${child.active ? 'academy-nav__dropdown-item--active' : ''}"
+              data-sly-list.child="${item.children}"
+              role="none"&gt;
+            &lt;a class="academy-nav__dropdown-link"
+               href="${child.path}"
+               aria-current="${child.active ? 'page' : false}"
+               role="menuitem"&gt;${child.title}&lt;/a&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+
+      &lt;/li&gt;
+    &lt;/ul&gt;
+
+  &lt;/div&gt;
+&lt;/nav&gt;
+
+&lt;sly data-sly-call="${clientlib.js @ categories='academy.navigation'}"&gt;&lt;/sly&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This template is deliberately thin — every decision lives in the model. The HTL only answers "where does it go?"</p>
+          <ul>
+            <li><code>data-sly-use.nav="...SiteNavigationModel"</code> — triggers <code>request.adaptTo(SiteNavigationModel.class)</code>. Sling Models handles injection and <code>@PostConstruct</code>. The result is bound to <code>nav</code> for the rest of the template.</li>
+            <li><code>data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html"</code> — loads AEM's built-in clientlib HTL template. The two <code>data-sly-call</code> statements below it inject the CSS and JS for the <code>academy.navigation</code> category directly into the component's output, rather than relying on the page to include them. This makes the component self-contained — it works wherever it's dropped.</li>
+            <li><code>class="academy-nav__item ${item.active ? ...} ${item.hasChildren ? ...}"</code> — HTL evaluates both ternary expressions independently and concatenates them. Empty strings produce no extra spaces in the output. This is the correct HTL pattern for multiple conditional classes (module 09).</li>
+            <li><code>data-sly-test="${item.hasChildren}"</code> — completely removes the <code>&lt;ul class="academy-nav__dropdown"&gt;</code> element from the output when there are no children. This is different from CSS <code>display:none</code> — there is genuinely no DOM node, which benefits screen readers and avoids unnecessary markup.</li>
+            <li><code>aria-current="${item.active ? 'page' : false}"</code> — HTL omits an attribute entirely when its value is <code>false</code>. So non-active links have no <code>aria-current</code> attribute at all, which is the correct accessibility pattern.</li>
+            <li><code>&lt;!--/* ... */--&gt;</code> — HTL-style comments (module 09). Never sent to the browser. Use them for developer notes without polluting page source.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>4e — Clientlib: CSS</h3>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/navigation/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root
+    xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    jcr:primaryType="cq:ClientLibraryFolder"
+    categories="[academy.navigation]"
+    allowProxy="{Boolean}true"/&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <ul>
+            <li><code>categories="[academy.navigation]"</code> — the square brackets denote an array value. The category name must match the string used in <code>data-sly-call="${clientlib.css @ categories='academy.navigation'}"</code> exactly.</li>
+            <li><code>allowProxy="{Boolean}true"</code> — serves the clientlib at <code>/etc.clientlibs/academy/clientlibs/navigation/</code> on the publish instance. Without this, the JS and CSS files are blocked by default Dispatcher rules that deny access to <code>/apps</code>.</li>
+          </ul>
+        </div>
+      </details>
+
+      <pre data-code><span class="filename">/apps/academy/clientlibs/navigation/css.txt <em>(academy.ui.apps)</em></span><code>#base=css
+navigation.css</code></pre>
+
+      <pre data-code><span class="filename">/apps/academy/clientlibs/navigation/css/navigation.css <em>(academy.ui.apps)</em></span><code>/* ═══════════════════════════════════════════════════════════════════════════
+   Academy Site Navigation — academy.navigation clientlib
+   BEM structure: .academy-nav [block]
+                  .academy-nav__inner / __brand / __toggle / __list / ...
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Reset ─────────────────────────────────────────────────────────────── */
+.academy-nav *, .academy-nav *::before, .academy-nav *::after {
+  box-sizing: border-box;
+}
+
+/* ── Block ──────────────────────────────────────────────────────────────── */
+.academy-nav {
+  background   : #0f172a;
+  border-bottom: 3px solid #2563eb;
+  position     : sticky;
+  top          : 0;
+  z-index      : 200;
+  font-family  : 'Space Grotesk', system-ui, sans-serif;
+}
+
+.academy-nav__inner {
+  display    : flex;
+  align-items: center;
+  max-width  : 1280px;
+  margin     : 0 auto;
+  padding    : 0 1.5rem;
+  height     : 60px;
+  gap        : 0.5rem;
+}
+
+/* ── Brand ──────────────────────────────────────────────────────────────── */
+.academy-nav__brand {
+  font-size     : 1rem;
+  font-weight   : 700;
+  color         : #f8fafc;
+  text-decoration: none;
+  letter-spacing: -0.02em;
+  white-space   : nowrap;
+  margin-right  : 1.5rem;
+  flex-shrink   : 0;
+}
+.academy-nav__brand:hover { color: #60a5fa; }
+
+/* ── Nav list ───────────────────────────────────────────────────────────── */
+.academy-nav__list {
+  display    : flex;
+  list-style : none;
+  margin     : 0;
+  padding    : 0;
+  flex       : 1;
+}
+
+/* ── Nav item ───────────────────────────────────────────────────────────── */
+.academy-nav__item { position: relative; }
+
+.academy-nav__link {
+  display        : flex;
+  align-items    : center;
+  gap            : 4px;
+  padding        : 0 14px;
+  height         : 60px;
+  color          : #cbd5e1;
+  text-decoration: none;
+  font-size      : 0.875rem;
+  font-weight    : 500;
+  white-space    : nowrap;
+  transition     : color 0.15s, background 0.15s;
+  border-bottom  : 3px solid transparent;
+}
+.academy-nav__link:hover {
+  color     : #f8fafc;
+  background: rgba(255,255,255,0.06);
+}
+
+/* Active state — current page or ancestor */
+.academy-nav__item--active &gt; .academy-nav__link {
+  color        : #60a5fa;
+  border-bottom: 3px solid #60a5fa;
+}
+
+/* Chevron for items that have a dropdown */
+.academy-nav__item--has-dropdown &gt; .academy-nav__link::after {
+  content    : '▾';
+  font-size  : 10px;
+  opacity    : 0.55;
+  margin-left: 2px;
+}
+
+/* ── Dropdown ───────────────────────────────────────────────────────────── */
+.academy-nav__dropdown {
+  display      : none;           /* shown on hover via CSS (no JS required) */
+  position     : absolute;
+  top          : 100%;
+  left         : 0;
+  min-width    : 210px;
+  background   : #1e293b;
+  border       : 1px solid rgba(255,255,255,0.08);
+  border-top   : 2px solid #2563eb;
+  border-radius: 0 0 6px 6px;
+  list-style   : none;
+  margin       : 0;
+  padding      : 6px 0;
+  z-index      : 300;
+  box-shadow   : 0 8px 24px rgba(0,0,0,0.35);
+}
+
+.academy-nav__item--has-dropdown:hover .academy-nav__dropdown {
+  display: block;
+}
+
+.academy-nav__dropdown-link {
+  display        : block;
+  padding        : 9px 16px;
+  color          : #94a3b8;
+  text-decoration: none;
+  font-size      : 0.85rem;
+  font-weight    : 500;
+  transition     : color 0.15s, background 0.15s;
+}
+.academy-nav__dropdown-link:hover {
+  color     : #f8fafc;
+  background: rgba(255,255,255,0.06);
+}
+.academy-nav__dropdown-item--active .academy-nav__dropdown-link {
+  color: #60a5fa;
+}
+
+/* ── Mobile toggle button ───────────────────────────────────────────────── */
+.academy-nav__toggle {
+  display       : none;
+  flex-direction: column;
+  gap           : 5px;
+  padding       : 6px 8px;
+  background    : none;
+  border        : none;
+  cursor        : pointer;
+  margin-left   : auto;
+}
+.academy-nav__toggle-bar {
+  display      : block;
+  width        : 22px;
+  height       : 2px;
+  background   : #cbd5e1;
+  border-radius: 1px;
+  transition   : transform 0.2s, opacity 0.2s;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+
+  .academy-nav__toggle { display: flex; }
+
+  .academy-nav__list {
+    display      : none;
+    flex-direction: column;
+    position     : absolute;
+    top          : 60px;
+    left         : 0;
+    right        : 0;
+    background   : #0f172a;
+    border-top   : 1px solid rgba(255,255,255,0.08);
+    padding      : 8px 0 16px;
+  }
+  .academy-nav__list--open { display: flex; }
+
+  .academy-nav__link {
+    height : auto;
+    padding: 10px 20px;
+  }
+
+  /* Dropdown hidden on mobile until JS adds .open */
+  .academy-nav__item--has-dropdown .academy-nav__dropdown {
+    display      : none;
+    position     : static;
+    border       : none;
+    border-radius: 0;
+    box-shadow   : none;
+    background   : rgba(255,255,255,0.03);
+    padding      : 0;
+  }
+  .academy-nav__item--has-dropdown.open .academy-nav__dropdown {
+    display: block;
+  }
+  .academy-nav__dropdown-link { padding-left: 32px; }
+
+  /* Hamburger → X animation */
+  .academy-nav__toggle--open .academy-nav__toggle-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .academy-nav__toggle--open .academy-nav__toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .academy-nav__toggle--open .academy-nav__toggle-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The CSS is BEM-structured and fully self-contained — it won't leak into the rest of the page.</p>
+          <ul>
+            <li><strong>Every rule is scoped to <code>.academy-nav</code></strong> — the block name. No global selectors. This means the component can be dropped onto any page (Sites page, Forms Portal, standalone page) without interfering with other CSS on the page.</li>
+            <li><strong>Dropdown shown on CSS hover</strong> (<code>.academy-nav__item--has-dropdown:hover .academy-nav__dropdown { display: block }</code>) — no JavaScript needed for the desktop dropdown. JavaScript only handles the mobile toggle and mobile dropdown expansion. Reducing JavaScript dependency improves performance and eliminates a class of bugs.</li>
+            <li><code>position: sticky; top: 0</code> on <code>.academy-nav</code> — the nav stays visible as users scroll down. Requires the nav to be inside a scrollable container that is not <code>overflow: hidden</code>. If sticky doesn't work in your page layout, check the parent's overflow setting.</li>
+            <li><code>border-bottom: 3px solid transparent</code> on <code>.academy-nav__link</code> — the transparent border reserves the 3px space even on inactive links. Without it, active links would shift the layout by 3px (their border appears), causing a subtle flicker when hovering between links.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>4f — Clientlib: JavaScript</h3>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/navigation/js.txt <em>(academy.ui.apps)</em></span><code>#base=js
+navigation.js</code></pre>
+
+      <pre data-code><span class="filename">/apps/academy/clientlibs/navigation/js/navigation.js <em>(academy.ui.apps)</em></span><code>(function () {
+  'use strict';
+
+  var nav    = document.querySelector('.academy-nav');
+  if (!nav) return;
+
+  var toggle = nav.querySelector('[data-nav-toggle]');
+  var list   = nav.querySelector('[data-nav-list]');
+
+  // ── Mobile menu open/close ─────────────────────────────────────────────
+  if (toggle &amp;&amp; list) {
+    toggle.addEventListener('click', function () {
+      var isOpen = list.classList.toggle('academy-nav__list--open');
+      toggle.classList.toggle('academy-nav__toggle--open', isOpen);
+      toggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    // Close when user clicks anywhere outside the nav
+    document.addEventListener('click', function (e) {
+      if (!nav.contains(e.target)) {
+        list.classList.remove('academy-nav__list--open');
+        toggle.classList.remove('academy-nav__toggle--open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // ── Mobile dropdown toggles (tap parent link to expand sub-items) ──────
+  nav.querySelectorAll('.academy-nav__item--has-dropdown').forEach(function (item) {
+    var link = item.querySelector('.academy-nav__link');
+    if (!link) return;
+
+    link.addEventListener('click', function (e) {
+      // Only intercept on narrow viewports — let CSS handle desktop hover
+      if (window.innerWidth &gt; 768) return;
+      e.preventDefault();
+      var wasOpen = item.classList.contains('open');
+      // Close all other open dropdowns
+      nav.querySelectorAll('.academy-nav__item--has-dropdown.open')
+         .forEach(function (el) { el.classList.remove('open'); });
+      // Toggle this one
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // ── Keyboard navigation (arrow keys for menu items) ───────────────────
+  var menuItems = Array.from(
+    nav.querySelectorAll('.academy-nav__link, .academy-nav__dropdown-link')
+  );
+  menuItems.forEach(function (link, idx) {
+    link.addEventListener('keydown', function (e) {
+      var next = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        next = menuItems[idx + 1];
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        next = menuItems[idx - 1];
+      } else if (e.key === 'Escape') {
+        nav.querySelectorAll('.academy-nav__item--has-dropdown.open')
+           .forEach(function (el) { el.classList.remove('open'); });
+        if (toggle) toggle.focus();
+      }
+      if (next) { e.preventDefault(); next.focus(); }
+    });
+  });
+
+}());</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The JavaScript follows the site's existing clientlib pattern from module 16 — an IIFE, no framework dependencies, defensive null checks.</p>
+          <ul>
+            <li><strong>IIFE (<code>(function () { ... }())</code>)</strong> — Immediately Invoked Function Expression. Creates a private scope so no variables leak onto <code>window</code>. The nav script cannot conflict with any other script on the page.</li>
+            <li><code>if (!nav) return</code> — the first thing, always. If the component isn't on the page (e.g. on an error page or a redirect page), the script exits immediately rather than throwing errors.</li>
+            <li><code>window.innerWidth &gt; 768</code> in the click handler — desktop and mobile use different interaction patterns. On desktop, CSS hover handles the dropdown. On mobile, a tap on the parent link expands the sub-items. Checking viewport width at click time (not at load time) correctly handles device rotation.</li>
+            <li><strong>Keyboard navigation</strong> — arrow keys move focus between nav items, Escape closes dropdowns. This is WCAG 2.1 AA compliance for keyboard users. Without it, keyboard-only users cannot navigate the dropdown. It's included here as a baseline — production implementations should also add <code>role="navigation"</code> and full ARIA attributes, already present in the HTML template.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Part 5 — Wire the navigation into every page</h2>
+      <p>The navigation component needs to appear on every page without authors having to add it manually. The correct pattern is to include it in the <em>page component's header partial</em> — it renders once per page, automatically, for the entire site.</p>
+      <pre data-code><span class="filename">/apps/academy/components/page/partials/header.html <em>(academy.ui.apps)</em></span><code>&lt;!--/*
+  header.html — included by the page body template.
+  This is the persistent chrome around every page's content area.
+  The navigation component is data-sly-include'd here so it appears
+  on every page with no authoring required.
+*/--&gt;
+&lt;header class="site-header"&gt;
+  &lt;sly data-sly-resource="${'navigation'
+                            @ resourceType='academy/components/navigation',
+                              cssClassName=''}"/&gt;
+&lt;/header&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This is the standard AEM pattern for non-authorable chrome — elements that appear on every page but aren't managed in the page editor.</p>
+          <ul>
+            <li><code>data-sly-resource</code> triggers a full Sling dispatch for the navigation component — complete with its own script resolution, Sling Model adaptation, and clientlib injection. This is different from <code>data-sly-include</code> (which only pastes another script's output): <code>data-sly-resource</code> goes through the complete rendering pipeline, giving the navigation its own edit overlay in author mode.</li>
+            <li><code>resourceType='academy/components/navigation'</code> — since the <code>&lt;header&gt;</code> element has no JCR content node with a <code>sling:resourceType</code>, we supply the type explicitly. Sling renders the navigation component using this resource type with the current request's context.</li>
+            <li>In the page component hierarchy (<code>sling:resourceSuperType="core/wcm/components/page/v3/page"</code>), AEM automatically includes <code>partials/header.html</code> at the top of the <code>&lt;body&gt;</code> via Core's page template. If your page component uses a different structure, include the header partial wherever your layout template assembles the page.</li>
+          </ul>
+        </div>
+      </details>
+
+      <pre data-code><span class="filename">alternative: customheaderlibs.html — simpler include when you don't need author overlays</span><code>&lt;!--/* /apps/academy/components/page/customheaderlibs.html
+       This file is included in &lt;head&gt; by Core Components' page template.
+       Use it for meta tags, clientlibs, and non-interactive includes.
+       For the nav bar (which has author overlays), use the body partial instead. */--&gt;
+
+&lt;!--/* Example: include form theme clientlibs needed on every page */--&gt;
+&lt;sly data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html"
+     data-sly-call="${clientlib.css @ categories='academy.base'}"&gt;&lt;/sly&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p><code>customheaderlibs.html</code> and the body partial serve different purposes — knowing which to use prevents a common placement mistake.</p>
+          <ul>
+            <li><code>customheaderlibs.html</code> is rendered inside <code>&lt;head&gt;</code>. Use it for CSS clientlibs, meta tags, and preloads. Never put interactive JavaScript here that depends on <code>document.querySelector</code> — the DOM doesn't exist yet when <code>&lt;head&gt;</code> is parsed.</li>
+            <li>The body partial (<code>partials/header.html</code>) is rendered at the top of <code>&lt;body&gt;</code>. Use it for visible UI components like the navigation bar. The navigation JavaScript (which queries the DOM) is deferred to the bottom of the component output, after the nav HTML exists.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Part 6 — Deploy, verify, and extend</h2>
+      <pre data-code><span class="filename">deployment and verification checklist</span><code>STEP 1 — Build and deploy
+  cd /aem-academy
+  mvn clean install -PautoInstallSinglePackage
+  Verify in /system/console/bundles:
+    biz.netcentric.academy.core = Active
+
+STEP 2 — Check the component is registered
+  /system/console/components
+  Search: SiteNavigationModel
+  Status must be ACTIVE — not Registered, not Unsatisfied.
+
+STEP 3 — View a page with the nav
+  http://localhost:4503/content/academy-mini/en/home.html
+  The nav bar should appear at the top showing:
+    Academy Mini  |  Home  |  About Us  |  Courses ▾  |  Blog  |  Contact
+  Hovering "Courses" should reveal the dropdown with "AEM Basics" and "Advanced AEM".
+
+STEP 4 — Active state check
+  Navigate to /content/academy-mini/en/courses.html
+  The "Courses" nav item should have class academy-nav__item--active.
+  Navigate to /content/academy-mini/en/courses/aem-basics.html
+  "Courses" should still be active (it's an ancestor).
+
+STEP 5 — Add a new page and verify auto-update
+  Sites console → /content/academy-mini/en/ → Create → Page
+  Title: Community  |  Name: community
+  Refresh any page on the site.
+  "Community" appears in the navigation automatically.
+  No code change. No redeployment. No authoring of the nav component.
+
+STEP 6 — Test the live copy
+  Navigate to /content/academy-mini/de/home.html
+  The DE nav should show all the same pages as EN
+  (content is synchronised; page titles may be German after localisation).
+
+STEP 7 — Mobile test
+  Open DevTools → responsive mode → 375px width.
+  The hamburger button should appear.
+  Click it → the nav list slides in.
+  Click "Courses" → sub-items appear.
+  Click outside the nav → it closes.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The verification steps are ordered from infrastructure to functionality for a reason.</p>
+          <ul>
+            <li><strong>Step 1 before Step 3</strong> — if the bundle isn't Active, the Sling Model can't be adapted. The page will render without the nav (or with an error), and checking the output before the bundle is fixed wastes time. Always verify infrastructure first.</li>
+            <li><strong>Step 5 is the proof</strong> — adding a page and seeing it appear in the nav without a deploy is the entire point of this component. If this doesn't work, check that the new page is published (not just created on author) and that it doesn't have <code>hideInNav = true</code> set in Page Properties.</li>
+            <li><strong>Step 6 demonstrates live copy value</strong> — the DE site inherits all content automatically. A German editor can then open the DE pages and localise titles without disconnecting from the live copy.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Part 7 — Extend the navigation: ideas for going further</h2>
+      <pre data-code><span class="filename">extension ideas — each one maps to a module you've completed</span><code>IDEA 1 — Persist nav root via Context-Aware Config (module 15)
+  Instead of a dialog field per component instance, store the navigation
+  root in a CA Config at /conf/academy-mini/:
+    @Configuration(name = "Navigation Settings")
+    public @interface NavigationConfig {
+      String navRootPath() default "";
+    }
+  The model reads it via ConfigurationBuilder — all navigation instances
+  on the site share one configuration, changed in one place.
+
+IDEA 2 — Cache nav items in a Sling Job (module 18)
+  listChildren() is fast for &lt;20 pages, but for a site with 200+ nav items,
+  schedule a Sling Job to pre-compute the nav tree and store it as a JSON
+  node under /var/academy/nav-cache. The model reads from cache first,
+  falls back to live computation. Invalidate the cache on page creation/deletion
+  via a ResourceChangeListener (module 16).
+
+IDEA 3 — Add search to the nav bar
+  Add a &lt;form&gt; to the navigation.html template with a text input.
+  Wire it to a path-based search servlet (module 10) at /bin/academy/search
+  that queries AEM's QueryBuilder for matching pages.
+
+IDEA 4 — Breadcrumb component
+  Same SiteNavigationModel pattern, but instead of listing children,
+  walk UP from currentPage to the root, building a list of ancestors.
+  The breadcrumb shows the path: Home / Courses / AEM Basics.
+
+IDEA 5 — Analytics integration (module 25-26)
+  Add data-acdl attributes to each nav link:
+    data-acdl-event="nav:click"
+    data-acdl-label="${item.title}"
+  In navigation.js, push to ACDL on click:
+    window.adobeDataLayer.push({ event: "nav:click",
+      eventInfo: { value: { navLabel: label, navPath: href } } });
+  Tags rule: ACDL Event Listener → "nav:click" → Set Variables + s.tl().</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Each extension idea is a module review in disguise.</p>
+          <ul>
+            <li><strong>Idea 1</strong> applies module 15 (CA Config): the nav root is content-hierarchy–aware configuration. A sub-site at <code>/content/academy-mini/microsite/en</code> automatically gets different config from the main site.</li>
+            <li><strong>Idea 2</strong> applies modules 16 and 18: a ResourceChangeListener invalidates the cache; a Sling Job refreshes it asynchronously without blocking page requests. This is the correct pattern for any computed value that's expensive to recalculate on every request.</li>
+            <li><strong>Idea 5</strong> applies modules 25-26 directly: adding analytics tracking to the nav connects the developer's work (pushing to ACDL) to the Analytics Engineer's Tags configuration. The nav click event is one of the most valuable interactions to track — it shows which sections users navigate to most and where they go after landing on a page.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="try-it alert alert-success">
+        <span class="label">Full capstone task — what to submit</span>
+        Complete all seven verification steps above and demonstrate the following:
+        <ol style="margin:0.7em 0 0 1.2em;padding:0">
+          <li>Open <code>/content/academy-mini/en/home.html</code> on the publish instance. The navigation bar shows all five pages. "Home" is highlighted as active.</li>
+          <li>Navigate to a Courses sub-page. "Courses" remains active in the nav.</li>
+          <li>Create a sixth page (e.g. "Community") under EN. Refresh the browser — it appears in the nav bar without redeployment.</li>
+          <li>Open <code>/content/academy-mini/de/home.html</code>. The DE site shows the same nav structure.</li>
+          <li>Resize to mobile (375px). The hamburger button appears. Clicking it opens the nav. Clicking "Courses" expands the sub-items.</li>
+          <li>Hide a page via Page Properties → Navigation → "Hide in navigation." Verify it disappears from the nav on refresh, with no code change.</li>
+        </ol>
+      </div>
+
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="site-capstone">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="27-analytics-workspaces.html"><span class="dir">← Previous</span>Adobe Analytics Workspaces</a>
+        <a class="next" href="../index.html"><span class="dir">Back to</span>Curriculum overview</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>
