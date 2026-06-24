@@ -84,8 +84,7 @@
 
       <h2>Creating an Adaptive Form — the authoring workflow</h2>
 
-      <pre><code>authoring workflow — six decisions in order
-
+      <pre data-code><span class="filename">authoring workflow — six decisions in order</span><code>
 Step 1 — Navigate to the Forms console
          http://localhost:4502/aem/forms
          Forms &amp; Documents → Create → Adaptive Form
@@ -119,20 +118,22 @@ Step 6 — Preview and Publish
          Publish: publishes the form AND all referenced fragments to Publish.
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li><strong>Step 3 — Name is permanent.</strong> The Name becomes the JCR node name and the URL path segment. Changing it after the form goes live requires a redirect and breaks bookmarks, deep links, and analytics tracking. Use kebab-case, no spaces, set it once.</li>
           <li><strong>Step 4 — Name before Rules.</strong> The Rule Editor references fields by their <code>Name</code> property, not their label. If you write a rule referencing <code>dateOfBirth</code> and someone later renames the field to <code>dob</code>, the rule breaks silently — no error, no validation, the rule just stops firing.</li>
           <li><strong>Step 5 — Config Container</strong> scopes which FDM, Analytics property, and reCAPTCHA config the form uses — same CAConfig pattern from module 15.</li>
           <li><strong>Step 6 — Preview with <code>?wcmmode=disabled</code></strong> bypasses the authoring overlay. Without it, the rule editor, submit button, and validation all behave differently than in production.</li>
         </ul>
+        </div>
       </details>
 
       <h2>Templates vs Themes — the separation</h2>
 
-      <pre><code>templates and themes — what each one does
-
+      <pre data-code><span class="filename">templates and themes — what each one does</span><code>
 TEMPLATE
   Defines: which Core Components can be added to the form
   Defines: which panels are pre-placed and locked vs editable
@@ -156,19 +157,21 @@ KEY RULE: Every form starts from a template.
           Restructure the template → CSS doesn't change.
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li>The template/theme split is identical to the AEM Sites pattern: editable templates in <code>/conf</code>, the rendering (CSS/JS) in separate clientlibs. If you've customised a Sites template, you already know this.</li>
           <li>Core Components emit <strong>BEM-compliant CSS classes</strong>. The theme clientlib targets those classes — e.g. <code>.cmp-adaptiveform-textinput__label</code>. Because BEM classes are stable across versions (Adobe's versioning policy), your theme CSS survives Core Component upgrades.</li>
           <li>Choose deliberately: <strong>editable templates</strong> (authors can modify layout) vs <strong>static templates</strong> (developers control structure in code). Most enterprise projects use editable templates with a locked initial structure and an open editable region.</li>
         </ul>
+        </div>
       </details>
 
       <h2>Form Fragments — reuse by reference</h2>
 
-      <pre><code>fragment storage and reference in the JCR
-
+      <pre data-code><span class="filename">fragment storage and reference in the JCR</span><code>
 STORAGE
 /content/dam/formsanddocuments/
 ├── company-fragments/
@@ -193,19 +196,21 @@ DETACHING A FRAGMENT (right-click → Detach in the editor)
   Future updates to the original fragment NO LONGER propagate.
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li>Fragments have their <strong>own publish lifecycle</strong>. A form referencing an unpublished fragment renders without that section in production. Publishing a form does not automatically publish its fragments — use "Activate with References" or publish fragments separately first. This is the single most common Forms deployment mistake.</li>
           <li>The <code>fragmentPath</code> property is a plain JCR string — a path. Sling resolves it at render time. This is the same pattern as a <code>fileReference</code> on an image component pointing at a DAM asset. No magic — just path resolution.</li>
           <li>One fragment can be bound to <strong>different data schemas</strong> in different forms — an address fragment prefills from billing address in one form and delivery address in another, by setting different FDM bindings on the container.</li>
         </ul>
+        </div>
       </details>
 
       <h2>Rule Editor — condition → action patterns</h2>
 
-      <pre><code>Rule Editor — complete action reference
-
+      <pre data-code><span class="filename">Rule Editor — complete action reference</span><code>
 CONDITIONS (the WHEN clause — what triggers the rule)
   field equals value | is not equal to | is empty | is not empty
   field is valid | is not valid
@@ -246,20 +251,22 @@ IMPORTANT: switching from code editor → visual editor CLEARS custom code.
            Write complex logic in Custom Functions (next section), not inline.
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li><strong>Rules run in the browser.</strong> No server round-trip — show/hide feels instant. But this also means rules are not a security boundary. Always validate server-side in your submit action. Never trust browser-side validation alone.</li>
           <li><strong>Pattern 4 (cascade dropdown)</strong> via FDM service is the correct integration pattern. Hardcoding all province/country combinations in JavaScript is fragile and hard to maintain. Let the FDM call a data service.</li>
           <li><strong>Never write logic in the inline Code Editor</strong> if you can avoid it. Code entered inline is stored as a string property on the node — no version control, no unit testing, no IDE support. Move it to a Custom Function in a clientlib.</li>
           <li>You can restrict the Code Editor mode to a specific AEM user group in OSGi config. Do this in production — business analysts should use visual mode only.</li>
         </ul>
+        </div>
       </details>
 
       <h2>Custom Functions — JSDoc, clientlibs, and the four use cases</h2>
 
-      <pre><code>Custom Function clientlib setup
-
+      <pre data-code><span class="filename">Custom Function clientlib setup</span><code>
 /apps/your-project/clientlibs/forms-custom-functions/
   jcr:primaryType = cq:ClientLibraryFolder
   categories      = ["fd.customfunctions"]  ← required; this is how AEM discovers them
@@ -272,16 +279,18 @@ IMPORTANT: switching from code editor → visual editor CLEARS custom code.
   js/validators.js ← your actual functions
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li>The category <code>"fd.customfunctions"</code> is the discovery key. AEM Forms scans all active clientlibs with this category and exposes their functions in the Rule Editor's "Custom Functions" palette. A different category means the Rule Editor ignores the file entirely — this is the most common reason a Custom Function doesn't appear.</li>
           <li><code>allowProxy = true</code> exposes the clientlib at <code>/etc.clientlibs/</code> on the publish tier. Without it, the JS isn't served to end users and the function silently fails at runtime.</li>
         </ul>
+        </div>
       </details>
 
-      <pre><code>Custom Functions — four use cases with JSDoc annotations
-
+      <pre data-code><span class="filename">Custom Functions — four use cases with JSDoc annotations</span><code>
 // USE CASE 1: Data Validation
 /**
  * Validates a South African 13-digit ID number (Luhn checksum).
@@ -345,20 +354,22 @@ async function lookupCompanyName(regNumber) {
 }
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li><strong>JSDoc annotations are mandatory.</strong> The Rule Editor discovers functions by scanning for <code>/** */</code> comment blocks. A function with no JSDoc is invisible. At minimum you need an empty <code>/** */</code> block — always add <code>@name</code>, <code>@param</code>, and <code>@return</code> so authors know what to pass in.</li>
           <li><strong>Return conventions for validators:</strong> return <code>true</code> for valid, return a <strong>string error message</strong> for invalid. AEM Forms displays the string as the field's validation error. Never throw an exception — the Rule Editor swallows it silently.</li>
           <li><strong>Use <code>@private</code></strong> on helper functions to exclude them from the Rule Editor palette while still making them available as internal helpers called by your public functions.</li>
           <li><strong>Use Case 4</strong> proxies through a Sling servlet to avoid CORS and to keep the external API endpoint hidden from the browser. The servlet is a standard <code>@SlingServlet</code> from module 10.</li>
         </ul>
+        </div>
       </details>
 
       <h2>Form Data Model — connecting to enterprise data</h2>
 
-      <pre><code>FDM data source types and when to use each
-
+      <pre data-code><span class="filename">FDM data source types and when to use each</span><code>
 Data Source Type        When to use
 ─────────────────────── ──────────────────────────────────────────────────
 RESTful web service     Any modern REST API with a Swagger 2.0 / OpenAPI 3
@@ -376,8 +387,7 @@ AEM User Profile        Logged-in user's profile properties. Good for
                         prefilling name, email, preferred language.
 </code></pre>
 
-      <pre><code>FDM setup — five steps from data source to bound form
-
+      <pre data-code><span class="filename">FDM setup — five steps from data source to bound form</span><code>
 Step 1 — Configure the data source
          Tools → Cloud Services → Data Sources → Create
          Type: RESTful Web Service
@@ -408,8 +418,10 @@ Step 5 — Bind individual fields
          Set Write Service in the submit action configuration.
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li><strong>REST over JDBC.</strong> JDBC creates a direct schema dependency — a column rename in the DB breaks the FDM silently at runtime. A REST API absorbs that change in the service layer. JDBC also requires firewall rules allowing AEM to connect directly to the database, increasing the attack surface.</li>
           <li><strong>Test before binding (Step 3).</strong> The FDM editor has a "Test Service" button that calls the real API from within AEM. Use it. Catching a broken Swagger spec at Step 3 is far cheaper than debugging it after the form is fully built.</li>
@@ -417,6 +429,7 @@ Step 5 — Bind individual fields
           <li><strong>Use run-mode config for URLs.</strong> The data source Base URL should differ between Dev, Stage, and Prod. Store it in run-mode OSGi config folders — same pattern from module 5. Never hardcode the production API URL.</li>
           <li><strong>Least privilege for credentials.</strong> Configure each data source with the minimum permissions: read-only account for prefill sources, write account only for submit-back operations. Credentials are encrypted in Tools → Cloud Services → Data Sources.</li>
         </ul>
+        </div>
       </details>
 
       <div class="try-it alert alert-success">

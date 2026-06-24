@@ -86,8 +86,7 @@
 
       <p>AEM Forms is an enterprise platform for creating, managing, publishing, and updating complex digital forms and correspondence. Think of it as three products bundled together:</p>
 
-      <pre><code>three flagship use cases
-
+      <pre data-code><span class="filename">three flagship use cases</span><code>
 Digital Enrollment
   Responsive, rules-driven data capture — think bank account opening,
   insurance applications, government registrations.
@@ -103,22 +102,24 @@ Enterprise Form Management
   One place to publish, version, tag, search, and govern them all.
 </code></pre>
 
-      <details class="why-box">
-        <summary>📖 Why this matters for a backend developer</summary>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li>Each use case has a different architectural topology — the data flows differently. Knowing which one you're building for prevents you from wiring the wrong integration pattern.</li>
           <li><strong>Enrollment</strong> needs prefill (read from CRM before render) and submit-back (write to CRM after submit). Both require Java OSGi services you write.</li>
           <li><strong>Communications</strong> is largely configuration-driven — templates, data dictionaries, batch runs. Less Java, more content authoring.</li>
           <li><strong>Management</strong> is mostly Forms Portal configuration. Your job is often deployment and permission setup.</li>
         </ul>
+        </div>
       </details>
 
       <h2>The Eight Building Blocks</h2>
 
       <p>Every AEM Forms feature maps to one of eight building blocks. Understanding these upfront stops you staring at an unfamiliar dialog wondering where you are in the product.</p>
 
-      <pre><code>eight building blocks — your mental map of the product
-
+      <pre data-code><span class="filename">eight building blocks — your mental map of the product</span><code>
 1. Adaptive Forms
    Responsive, rules-driven HTML5 forms authored in AEM.
    Stored as nodes in /content/dam/formsanddocuments/ — same JCR you know.
@@ -159,21 +160,23 @@ Enterprise Form Management
    → Module 24
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li>Building blocks 1–3 are what <em>authors</em> work with daily. Building blocks 4–6 are where <em>you</em> spend most of your time as a backend developer.</li>
           <li>The Form Data Model (block 5) is the most important integration concept — it abstracts every data source behind a single AEM-managed layer, so forms never call REST APIs directly. Your OSGi services plug in here.</li>
           <li><strong>Adaptive Forms are stored in the JCR</strong> exactly like Sites pages — as a tree of nodes under <code>/content/dam/formsanddocuments/</code>. Every skill from modules 2 and 3 applies directly.</li>
         </ul>
+        </div>
       </details>
 
       <h2>Architecture — Author, Publish, Backend, Storage</h2>
 
       <p>AEM Forms uses the same author/publish topology you learned in module 1, with a backend tier added for data integration.</p>
 
-      <pre><code>AEM Forms deployment topology
-
+      <pre data-code><span class="filename">AEM Forms deployment topology</span><code>
 AUTHOR                    PUBLISH                   BACKEND
   │                         │                         │
   │  Design &amp; configure     │  Render form (HTML5)    │  REST · SOAP
@@ -190,22 +193,24 @@ STORAGE
   Workflows     → AEM Workflow engine on Author
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li>The Rule Editor JavaScript runs <strong>in the browser</strong> — no server round-trip. This means any custom JavaScript validator you write must be deployed as a clientlib to the <strong>publish</strong> instance, not just author.</li>
           <li>Submit actions run on the <strong>publish</strong> instance. Check <code>/system/console/components</code> on publish, not author, when debugging a submit action that doesn't appear.</li>
           <li>The Form Data Model's data source configuration lives on <strong>author</strong> but is replicated to publish. Use run-mode OSGi config folders (<code>config.publish</code>) to point different environments at different API URLs — same pattern as module 5.</li>
           <li>The AEM Workflow engine lives on <strong>author</strong>. If your submit action triggers a workflow, the payload travels from publish → author via reverse replication. This must be configured explicitly in a real deployment.</li>
         </ul>
+        </div>
       </details>
 
       <h2>The Digital Enrollment Topology — end to end</h2>
 
       <p>This is the most common use case you will implement. It touches every building block.</p>
 
-      <pre><code>Digital Enrollment — data flow
-
+      <pre data-code><span class="filename">Digital Enrollment — data flow</span><code>
 1. Author builds form on AUTHOR with Core Components + FDM binding.
    Publishes form and FDM to PUBLISH via replication.
 
@@ -232,21 +237,23 @@ STORAGE
    Panel-level completion and drop-off tracked.
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li>Step 4 is where your Java code lives — the submit action implementing <code>GuideSubmitAction</code>. Module 24 walks through the full implementation.</li>
           <li>Step 2 (prefill) is the other Java touchpoint — a service implementing <code>DataXMLProvider</code>. Module 23 covers this.</li>
           <li>Steps 3 and 5 are configuration-only for standard cases. Only steps 2 and 4 require Java code.</li>
         </ul>
+        </div>
       </details>
 
       <h2>Core Components vs Foundation Components</h2>
 
       <p>This is the single most important decision on any AEM Forms project. It affects rendering, CSS, Rule Editor behaviour, migration effort, and your ability to move to AEM as a Cloud Service.</p>
 
-      <pre><code>Foundation Components (legacy — do not use for new projects)
-
+      <pre data-code><span class="filename">Foundation Components (legacy — do not use for new projects)</span><code>
   Rendering:        JSP templates
   Resource type:    /libs/fd/af/components/
   JavaScript deps:  jQuery + Underscore.js (bundled, heavy)
@@ -268,20 +275,22 @@ Core Components (use for all new projects)
   Source:           github.com/adobe/aem-core-forms-components
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li>Core Components follow <strong>exactly the same Sling Model + HTL pattern</strong> you've used throughout this training. There is no new rendering paradigm — just apply modules 6, 7, and 9.</li>
           <li>The different resource type paths (<code>/libs/fd/</code> vs <code>/libs/core/fd/</code>) mean the two systems are <em>completely separate</em>. A form built on Foundation Components cannot mix in Core Component fields. Migration means rebuilding the form from scratch on a Core Components template.</li>
           <li>Foundation Components depend on jQuery and Underscore.js. Core Components ship with <strong>zero third-party JavaScript</strong>. This matters for Lighthouse scores, bundle size, and CSP compliance.</li>
           <li>Adobe has confirmed Foundation Components will not be supported on AEM as a Cloud Service. If your client is planning a cloud migration, Foundation Components is a dead end.</li>
         </ul>
+        </div>
       </details>
 
       <h2>Who builds it — roles you will work with</h2>
 
-      <pre><code>role map for an AEM Forms project
-
+      <pre data-code><span class="filename">role map for an AEM Forms project</span><code>
 Forms Practitioner (Business Analyst / Power User)
   ↳ Authors forms using the visual editor
   ↳ Configures Rule Editor show/hide logic (no code)
@@ -303,12 +312,15 @@ UX Designer
   ↳ You unblock them by: providing the correct BEM class reference
 </code></pre>
 
-      <details class="why-box">
+      <details class="code-explain">
         <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+
         <ul>
           <li>The boundary between <em>Forms Practitioner</em> and <em>Backend Developer</em> is the Rule Editor. Everything in the visual Rule Editor is the practitioner's job. Once they need a <em>Custom Function</em> — a JavaScript function callable from a rule — that's yours. Module 23 covers Custom Functions.</li>
           <li>Keep permissions clean: assign to groups (<code>forms-users</code>, <code>forms-power-user</code>), never to individuals. This is the AEM security best practice from module 5 applied to Forms.</li>
         </ul>
+        </div>
       </details>
 
       <div class="try-it alert alert-success">
