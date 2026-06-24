@@ -1,85 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Creating Adaptive Forms, templates vs themes, form fragments, Rule Editor condition-action patterns, Custom Functions with JSDoc, and the Form Data Model.">
-  <title>23 Authoring, Templates, Rules &amp; Form Data Model — AEM Backend Training</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>23 Authoring, Templates, Rules &amp; Form Data Model — AEM Backend Training</title>
+<meta name="description" content="Creating Adaptive Forms, templates vs themes, form fragments, Rule Editor condition-action patterns, Custom Functions with JSDoc, and the Form Data Model.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
 </head>
 <body>
 
-<div class="layout">
+<header class="topbar">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 28 modules</span>
+</header>
 
-  <!-- LEFT SIDEBAR -->
-  <nav class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <span class="tree-root">◆ /content/training</span>
-      <span class="progress-pill" id="progressPill">0 / 28 modules</span>
-    </div>
-    <div class="tree-label">/content/training</div>
-    <ul class="tree-nav">
-      <li><a href="../index.html" class="tree-home">jcr:content [home]</a></li>
-      <li><a href="00-java-primer.html">00-java-primer</a></li>
-      <li><a href="01-architecture-overview.html">01-architecture-overview</a></li>
-      <li><a href="02-jcr-repository.html">02-jcr-repository</a></li>
-      <li><a href="03-sling-framework.html">03-sling-framework</a></li>
-      <li><a href="04-osgi-services.html">04-osgi-services</a></li>
-      <li><a href="05-osgi-services-config.html">05-osgi-services-config</a></li>
-      <li><a href="06-sling-models.html">06-sling-models</a></li>
-      <li><a href="07-sling-models-advanced.html">07-sling-models-advanced</a></li>
-      <li><a href="08-model-composition.html">08-model-composition</a></li>
-      <li><a href="09-htl-templating.html">09-htl-templating</a></li>
-      <li><a href="10-servlets-apis.html">10-servlets-apis</a></li>
-      <li><a href="11-dialogs-components.html">11-dialogs-components</a></li>
-      <li><a href="12-custom-components.html">12-custom-components</a></li>
-      <li><a href="13-java-pitfalls.html">13-java-pitfalls</a></li>
-      <li><a href="14-unit-testing.html">14-unit-testing</a></li>
-      <li><a href="15-context-aware-config.html">15-context-aware-config</a></li>
-      <li><a href="16-workflows-events.html">16-workflows-events</a></li>
-      <li><a href="17-workflow-design.html">17-workflow-design</a></li>
-      <li><a href="18-sling-jobs.html">18-sling-jobs</a></li>
-      <li><a href="19-dispatcher-deployment.html">19-dispatcher-deployment</a></li>
-      <li><a href="20-groovy-console.html">20-groovy-console</a></li>
-      <li><a href="21-acs-commons.html">21-acs-commons</a></li>
-      <li><a href="22-adaptive-forms.html">22-adaptive-forms</a></li>
-      <li><a href="23-form-fragments.html" class="active">23-form-fragments</a></li>
-      <li><a href="24-forms-implementation.html">24-forms-implementation</a></li>
-      <li><a href="25-adobe-tags-setup.html">25-adobe-tags-setup</a></li>
-      <li><a href="26-adobe-tags-implement.html">26-adobe-tags-implement</a></li>
-      <li><a href="27-analytics-workspaces.html">27-analytics-workspaces</a></li>
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adaptive-forms" href="22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="form-fragments" href="23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="forms-implementation" href="24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="analytics-workspaces" href="27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
     </ul>
-    <p class="sidebar-hint">Filled circle = module marked complete.</p>
+    <p class="legend">Filled circle = module marked complete.</p>
   </nav>
 
-  <!-- MAIN CONTENT -->
-  <main class="content">
-    <div class="module-meta">
-      <span class="breadcrumb">/content / training / <strong>23-form-fragments</strong></span>
-      <span class="badge-category badge-forms">Adobe Forms</span>
-      <span class="read-time">45 min read</span>
-    </div>
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">23-form-fragments</span></p>
 
-    <h1>Authoring, Templates, Rules &amp; Form Data Model</h1>
+      <div class="module-meta">
+        <span class="tag badge text-bg-secondary">Adobe Forms</span>
+        <span>45 min read</span>
+      </div>
 
-    <div class="learn-box">
-      <h3>What you'll learn</h3>
-      <ul>
-        <li>The authoring workflow — how a form goes from blank to published</li>
-        <li>Templates vs Themes — why the separation matters and how it maps to Sites concepts</li>
-        <li>Form Fragments — reuse by reference, not copy-paste, and why the publish lifecycle trips people up</li>
-        <li>Rule Editor — every condition type and action type, with the gotcha that breaks rules silently</li>
-        <li>Custom Functions — JSDoc annotations, clientlib category, and the four main use cases</li>
-        <li>Form Data Model — data source types, prefill binding, submit-back, and security</li>
-      </ul>
-    </div>
+      <h1 class="page-title">Authoring, Templates, Rules &amp; Form Data Model</h1>
+      <p class="lede">Module 22 mapped the landscape. This module is where you build in it. You'll walk through creating a form from scratch, understand why templates and themes are kept separate, see how fragments enforce reuse, learn every Rule Editor action type, write Custom Functions with JSDoc, and connect a form to a backend system via the Form Data Model.</p>
 
-    <h2>Creating an Adaptive Form — the authoring workflow</h2>
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>The authoring workflow — how a form goes from blank to published</li>
+          <li>Templates vs Themes — why the separation matters</li>
+          <li>Form Fragments — reuse by reference, not copy-paste, and why the publish lifecycle trips people up</li>
+          <li>Rule Editor — every condition type and action type, with the gotcha that breaks rules silently</li>
+          <li>Custom Functions — JSDoc annotations, clientlib category, and the four main use cases</li>
+          <li>Form Data Model — data source types, prefill binding, submit-back, and security</li>
+        </ul>
+      </div>
 
-    <p>Adaptive Forms are built in the AEM Forms authoring console, not in the Sites page editor. The workflow is similar to creating a Sites page but with Forms-specific configuration.</p>
+      <h2>Creating an Adaptive Form — the authoring workflow</h2>
 
-    <pre><code>authoring workflow — six decisions in order
+      <pre><code>authoring workflow — six decisions in order
 
 Step 1 — Navigate to the Forms console
          http://localhost:4502/aem/forms
@@ -114,21 +119,19 @@ Step 6 — Preview and Publish
          Publish: publishes the form AND all referenced fragments to Publish.
 </code></pre>
 
-    <details class="why-box">
-      <summary>📖 Why this code?</summary>
-      <ul>
-        <li><strong>Step 3 — Name is permanent.</strong> The Name becomes the JCR node name and the URL path segment. Changing it after the form goes live requires a redirect and breaks bookmarks, deep links, and analytics tracking. Set it thoughtfully the first time.</li>
-        <li><strong>Step 4 — Name before Rules.</strong> The Rule Editor references fields by their <code>Name</code> property, not their label. If you write a rule referencing <code>dateOfBirth</code> and someone later renames the field to <code>dob</code>, the rule breaks silently — no error, no validation, the rule just stops firing. Always name fields first.</li>
-        <li><strong>Step 5 — Config Container.</strong> This is an AEM Cloud Service config (the same CAConfig pattern from module 15). It scopes which FDM, Analytics property, and reCAPTCHA config the form uses. One environment can have multiple config containers pointing at different environments' APIs.</li>
-        <li><strong>Step 6 — Preview with <code>?wcmmode=disabled</code></strong> bypasses the authoring overlay. Without it, the rule editor, submit button, and validation all behave differently than in production.</li>
-      </ul>
-    </details>
+      <details class="why-box">
+        <summary>📖 Why this code?</summary>
+        <ul>
+          <li><strong>Step 3 — Name is permanent.</strong> The Name becomes the JCR node name and the URL path segment. Changing it after the form goes live requires a redirect and breaks bookmarks, deep links, and analytics tracking. Use kebab-case, no spaces, set it once.</li>
+          <li><strong>Step 4 — Name before Rules.</strong> The Rule Editor references fields by their <code>Name</code> property, not their label. If you write a rule referencing <code>dateOfBirth</code> and someone later renames the field to <code>dob</code>, the rule breaks silently — no error, no validation, the rule just stops firing.</li>
+          <li><strong>Step 5 — Config Container</strong> scopes which FDM, Analytics property, and reCAPTCHA config the form uses — same CAConfig pattern from module 15.</li>
+          <li><strong>Step 6 — Preview with <code>?wcmmode=disabled</code></strong> bypasses the authoring overlay. Without it, the rule editor, submit button, and validation all behave differently than in production.</li>
+        </ul>
+      </details>
 
-    <h2>Templates vs Themes — the separation</h2>
+      <h2>Templates vs Themes — the separation</h2>
 
-    <p>AEM Forms separates structure from styling. This is the same principle as Sites page templates and editable templates, applied to forms.</p>
-
-    <pre><code>templates and themes — what each one does
+      <pre><code>templates and themes — what each one does
 
 TEMPLATE
   Defines: which Core Components can be added to the form
@@ -137,55 +140,48 @@ TEMPLATE
   Stored at: /conf/your-project/settings/wcm/templates/
   Created by: developer or advanced author in Template Editor
 
-  Analogy: a printed form with some fields already filled (pre-placed, locked)
-           and blank lines where authors add their own fields (editable area)
+  Analogy: a printed form with some fields already filled (pre-placed,
+           locked) and blank lines where authors add their own fields.
 
 THEME
   Defines: CSS for every Core Component BEM class the form emits
-  Stored at: /content/dam/formsanddocuments/themes/ (DAM, not /conf)
+  Stored at: /content/dam/formsanddocuments/themes/ (DAM)
              or deployed as a clientlib under /apps/your-project/clientlibs/
   Applied via: the Theme field on the form's Basic properties tab
-  One theme can brand dozens of forms. Changing the theme changes all of them.
+  One theme can brand dozens of forms.
 
-  Analogy: a stylesheet. Swap the stylesheet, the form looks different.
-           The structure (which fields exist) doesn't change.
-
-KEY RULE: Every form starts from a template. Themes are optional styling.
-          You can restyle without touching the form. You can restructure the
-          template without changing CSS.
+KEY RULE: Every form starts from a template.
+          Themes are optional styling.
+          Swap the theme → form looks different. Structure is unchanged.
+          Restructure the template → CSS doesn't change.
 </code></pre>
 
-    <details class="why-box">
-      <summary>📖 Why this code?</summary>
-      <ul>
-        <li>The template/theme split is identical to the AEM Sites pattern: editable templates live in <code>/conf</code>, the rendering (CSS/JS) is separate clientlibs. If you've customised a Sites template, you already know this.</li>
-        <li>Core Components emit <strong>BEM-compliant CSS classes</strong>. The theme clientlib targets those classes. Example: <code>.cmp-adaptiveform-textinput__label</code>. Because BEM classes are stable across versions (Adobe's versioning policy), your theme CSS survives Core Component upgrades.</li>
-        <li>Choose deliberately between <strong>editable templates</strong> (authors can modify layout) and <strong>static templates</strong> (developers control structure in code). Most enterprise projects use editable templates with locked initial structure and an open editable region for forms practitioners.</li>
-        <li>Themes are transported as packages between AEM instances — same as any JCR content. Move a theme from Dev to Stage to Prod using a content package.</li>
-      </ul>
-    </details>
+      <details class="why-box">
+        <summary>📖 Why this code?</summary>
+        <ul>
+          <li>The template/theme split is identical to the AEM Sites pattern: editable templates in <code>/conf</code>, the rendering (CSS/JS) in separate clientlibs. If you've customised a Sites template, you already know this.</li>
+          <li>Core Components emit <strong>BEM-compliant CSS classes</strong>. The theme clientlib targets those classes — e.g. <code>.cmp-adaptiveform-textinput__label</code>. Because BEM classes are stable across versions (Adobe's versioning policy), your theme CSS survives Core Component upgrades.</li>
+          <li>Choose deliberately: <strong>editable templates</strong> (authors can modify layout) vs <strong>static templates</strong> (developers control structure in code). Most enterprise projects use editable templates with a locked initial structure and an open editable region.</li>
+        </ul>
+      </details>
 
-    <h2>Form Fragments — reuse by reference, not copy-paste</h2>
+      <h2>Form Fragments — reuse by reference</h2>
 
-    <p>A fragment is a saved, reusable subset of a form — address panels, consent blocks, employment details — stored in the DAM and referenced, not copied, into other forms.</p>
-
-    <pre><code>fragment storage and reference in the JCR
+      <pre><code>fragment storage and reference in the JCR
 
 STORAGE
 /content/dam/formsanddocuments/
 ├── company-fragments/
-│   ├── address-block/          ← reusable address panel (3 fields + validation rules)
-│   │   └── jcr:content/guideContainer/...
-│   ├── gdpr-consent/           ← checkbox + legal text, locked — legal cannot change it
-│   └── employment-details/     ← panel with employer name, start date, job title
+│   ├── address-block/          ← reusable address panel (3 fields + rules)
+│   ├── gdpr-consent/           ← checkbox + legal text (locked — legal owns it)
+│   └── employment-details/     ← employer name, start date, job title
 └── loan-application/           ← a complete form (not a fragment)
 
 FRAGMENT REFERENCE in a consuming form (CRXDE view)
 /content/dam/formsanddocuments/loan-application/jcr:content/
   guideContainer/rootPanel/personalSection/addressSection
-    jcr:primaryType   = "nt:unstructured"
-    sling:resourceType= "core/fd/components/form/fragment/v1/fragment"
-    fragmentPath      = "/content/dam/formsanddocuments/company-fragments/address-block"
+    sling:resourceType = "core/fd/components/form/fragment/v1/fragment"
+    fragmentPath       = "/content/dam/formsanddocuments/company-fragments/address-block"
                                     ↑ path reference only — NOT a copy of content
 
 WHAT HAPPENS AT RENDER TIME
@@ -195,42 +191,36 @@ WHAT HAPPENS AT RENDER TIME
 DETACHING A FRAGMENT (right-click → Detach in the editor)
   Converts the reference to a local copy.
   Future updates to the original fragment NO LONGER propagate.
-  Use when you need a one-off variant — but prefer parameterisation over detaching.
 </code></pre>
 
-    <details class="why-box">
-      <summary>📖 Why this code?</summary>
-      <ul>
-        <li>Fragments have their <strong>own publish lifecycle</strong>. A form referencing an unpublished fragment renders without that section in production. The publish step for a form publishes the form node — you must separately publish fragments, or use the "Include Referenced Content" option on publication. This is the single most common Forms deployment mistake.</li>
-        <li>The <code>fragmentPath</code> property is a plain JCR string — a path. At render time, Sling resolves it. This is the same pattern as a <code>fileReference</code> on an image component pointing at a DAM asset. No magic — just path resolution.</li>
-        <li>One fragment can be bound to <strong>different data schemas</strong> when included in different forms — an address fragment can prefill from a billing address in one form and a delivery address in another, by setting different FDM bindings on the container.</li>
-        <li>Fragments enable <strong>collaborative authoring</strong>: a legal team owns the consent fragment (locked), a UX team owns the address block, and individual form teams can compose without duplicating. This is the "change once, reflect everywhere" principle from module 12's component overlay concept, applied to form content.</li>
-      </ul>
-    </details>
+      <details class="why-box">
+        <summary>📖 Why this code?</summary>
+        <ul>
+          <li>Fragments have their <strong>own publish lifecycle</strong>. A form referencing an unpublished fragment renders without that section in production. Publishing a form does not automatically publish its fragments — use "Activate with References" or publish fragments separately first. This is the single most common Forms deployment mistake.</li>
+          <li>The <code>fragmentPath</code> property is a plain JCR string — a path. Sling resolves it at render time. This is the same pattern as a <code>fileReference</code> on an image component pointing at a DAM asset. No magic — just path resolution.</li>
+          <li>One fragment can be bound to <strong>different data schemas</strong> in different forms — an address fragment prefills from billing address in one form and delivery address in another, by setting different FDM bindings on the container.</li>
+        </ul>
+      </details>
 
-    <h2>Rule Editor — condition → action patterns</h2>
+      <h2>Rule Editor — condition → action patterns</h2>
 
-    <p>The Rule Editor is the authoring tool for form behaviour. It generates JavaScript but authors never see the code. Developers step in only for Custom Functions (next section).</p>
-
-    <pre><code>Rule Editor — complete condition and action reference
+      <pre><code>Rule Editor — complete action reference
 
 CONDITIONS (the WHEN clause — what triggers the rule)
-  field equals value        → "maritalStatus" equals "Married"
-  field is not equal to     → "country" is not equal to "ZA"
-  field is empty / not empty
-  field is valid / not valid
-  checkbox is checked / not checked
+  field equals value | is not equal to | is empty | is not empty
+  field is valid | is not valid
+  checkbox is checked | is not checked
   button is clicked
   form initialises (runs once on load)
-  custom function returns   → validateSAId(idNumber) returns true
+  custom function returns [value]
 
 ACTIONS (the THEN clause — what happens)
   Show / Hide               → panel, field, or section
   Enable / Disable          → field or button
   Validate                  → run field-level validation manually
-  Set Value of              → field.value = literal | field value | FDM property | custom function output
+  Set Value of              → field = literal | field | FDM property | function output
   Set Property of           → field.label | field.placeholder | dropdown.options
-  Invoke a Service          → call an FDM operation (GET for prefill, POST for check)
+  Invoke a Service          → call an FDM operation (GET prefill, POST check)
   Submit / Reset            → submit or reset the form programmatically
   Navigate to               → next/previous panel in a wizard layout
   Dispatch Event            → fire a custom analytics event
@@ -241,7 +231,7 @@ Pattern 1 — conditional field visibility
   WHEN maritalStatus equals "Married" THEN show spouseDetailsPanel
   WHEN maritalStatus is not equal to "Married" THEN hide spouseDetailsPanel
 
-Pattern 2 — computed field value
+Pattern 2 — computed value
   WHEN annualIncome changes THEN set monthlyIncome = annualIncome / 12
 
 Pattern 3 — disable submit until terms accepted
@@ -252,60 +242,49 @@ Pattern 4 — cascade dropdown (country → province)
   THEN invoke FDM service "getProvincesForCountry" with input = country
   THEN set options of provinceDropdown = service output
 
-Pattern 5 — cross-field validation
-  WHEN dateOfBirth changes THEN set age = calculateAge(dateOfBirth)
-  WHEN age changes THEN if age &lt; 18 THEN show error on dateOfBirth field
-
 IMPORTANT: switching from code editor → visual editor CLEARS custom code.
-           Write code in Custom Functions (next section), not inline.
+           Write complex logic in Custom Functions (next section), not inline.
 </code></pre>
 
-    <details class="why-box">
-      <summary>📖 Why this code?</summary>
-      <ul>
-        <li><strong>Rules run in the browser.</strong> No server round-trip. This is why show/hide feels instant. But it also means rules are not a security boundary — always validate server-side in your submit action. Never trust browser-side validation alone.</li>
-        <li><strong>The 'this' operator</strong> makes a rule portable. Writing <code>WHEN this changes</code> instead of <code>WHEN specificFieldName changes</code> means the rule survives a field rename. Use it wherever the rule is on the same component it references.</li>
-        <li><strong>Pattern 4 — cascade dropdown</strong> via FDM service is the correct integration pattern for dependent dropdowns. The alternative (hardcoding all province/country combinations in JavaScript) is fragile and hard to maintain. Let the FDM call a data service.</li>
-        <li><strong>Never write logic in the inline Code Editor</strong> if you can avoid it. Code entered inline is stored as a string property on the node — no version control, no unit testing, no IDE support. Move it to a Custom Function in a clientlib (see next section).</li>
-        <li>The Rule Editor is available to <strong>all authors</strong> by default. You can restrict the Code Editor mode to a specific AEM user group in OSGi config — do this in production. Business analysts should use visual mode; only developers should have code mode access.</li>
-      </ul>
-    </details>
+      <details class="why-box">
+        <summary>📖 Why this code?</summary>
+        <ul>
+          <li><strong>Rules run in the browser.</strong> No server round-trip — show/hide feels instant. But this also means rules are not a security boundary. Always validate server-side in your submit action. Never trust browser-side validation alone.</li>
+          <li><strong>Pattern 4 (cascade dropdown)</strong> via FDM service is the correct integration pattern. Hardcoding all province/country combinations in JavaScript is fragile and hard to maintain. Let the FDM call a data service.</li>
+          <li><strong>Never write logic in the inline Code Editor</strong> if you can avoid it. Code entered inline is stored as a string property on the node — no version control, no unit testing, no IDE support. Move it to a Custom Function in a clientlib.</li>
+          <li>You can restrict the Code Editor mode to a specific AEM user group in OSGi config. Do this in production — business analysts should use visual mode only.</li>
+        </ul>
+      </details>
 
-    <h2>Custom Functions — JSDoc, clientlibs, and the four use cases</h2>
+      <h2>Custom Functions — JSDoc, clientlibs, and the four use cases</h2>
 
-    <p>Custom Functions let you extend the Rule Editor with JavaScript functions authors can call by name. They are packaged as AEM clientlibs and discovered automatically — no registration step.</p>
-
-    <pre><code>Custom Function structure — clientlib setup
+      <pre><code>Custom Function clientlib setup
 
 /apps/your-project/clientlibs/forms-custom-functions/
-  jcr:primaryType   = cq:ClientLibraryFolder
-  categories        = ["fd.customfunctions"]  ← required; this is how AEM discovers them
-  allowProxy        = true
+  jcr:primaryType = cq:ClientLibraryFolder
+  categories      = ["fd.customfunctions"]  ← required; this is how AEM discovers them
+  allowProxy      = true                    ← required; serves JS on publish tier
 
-  js.txt            ← lists JS files to include
+  js.txt          ← lists JS files to include
     #base=js
     validators.js
-    calculators.js
-    integrations.js
 
-  js/validators.js  ← your actual functions (see below)
+  js/validators.js ← your actual functions
 </code></pre>
 
-    <details class="why-box">
-      <summary>📖 Why this code?</summary>
-      <ul>
-        <li>The category <code>"fd.customfunctions"</code> is the discovery key. AEM Forms scans all active clientlibs with this category and exposes their functions in the Rule Editor's "Custom Functions" palette. A different category means the Rule Editor ignores the file entirely — this is the most common reason a Custom Function doesn't appear.</li>
-        <li><code>allowProxy = true</code> exposes the clientlib at <code>/etc.clientlibs/</code> on the publish tier. Without it, the JS isn't served to end users and the function silently fails at runtime.</li>
-      </ul>
-    </details>
+      <details class="why-box">
+        <summary>📖 Why this code?</summary>
+        <ul>
+          <li>The category <code>"fd.customfunctions"</code> is the discovery key. AEM Forms scans all active clientlibs with this category and exposes their functions in the Rule Editor's "Custom Functions" palette. A different category means the Rule Editor ignores the file entirely — this is the most common reason a Custom Function doesn't appear.</li>
+          <li><code>allowProxy = true</code> exposes the clientlib at <code>/etc.clientlibs/</code> on the publish tier. Without it, the JS isn't served to end users and the function silently fails at runtime.</li>
+        </ul>
+      </details>
 
-    <pre><code>Custom Functions — four use cases with JSDoc annotations
+      <pre><code>Custom Functions — four use cases with JSDoc annotations
 
-// ─────────────────────────────────────────────────────────────────
 // USE CASE 1: Data Validation
-// ─────────────────────────────────────────────────────────────────
 /**
- * Validates a South African 13-digit ID number using Luhn checksum.
+ * Validates a South African 13-digit ID number (Luhn checksum).
  * @name validateSAId
  * @param {string} idNumber - The 13-digit SA ID to validate
  * @return {boolean}        - true = valid; string = error message to display
@@ -316,14 +295,12 @@ function validateSAId(idNumber) {
     }
     var digits = idNumber.split("").map(Number);
     var sum = digits.reduce(function(acc, d, i) {
-        return i % 2 === 0 ? acc + d : acc + (d * 2 &gt; 9 ? d * 2 - 9 : d * 2);
+        return i % 2 === 0 ? acc + d : acc + (d * 2 > 9 ? d * 2 - 9 : d * 2);
     }, 0);
     return (sum % 10 === 0) ? true : "Invalid SA ID — checksum failed.";
 }
 
-// ─────────────────────────────────────────────────────────────────
 // USE CASE 2: Dynamic Calculation
-// ─────────────────────────────────────────────────────────────────
 /**
  * Calculates age in full years from a date-of-birth string.
  * @name calculateAge
@@ -331,19 +308,14 @@ function validateSAId(idNumber) {
  * @return {number}    - Age in years
  */
 function calculateAge(dob) {
-    var birth = new Date(dob);
-    var now   = new Date();
-    var age   = now.getFullYear() - birth.getFullYear();
-    var m     = now.getMonth() - birth.getMonth();
-    if (m &lt; 0 || (m === 0 &amp;&amp; now.getDate() &lt; birth.getDate())) {
-        age--;
-    }
+    var birth = new Date(dob), now = new Date();
+    var age = now.getFullYear() - birth.getFullYear();
+    var m = now.getMonth() - birth.getMonth();
+    if (m &lt; 0 || (m === 0 &amp;&amp; now.getDate() &lt; birth.getDate())) { age--; }
     return age;
 }
 
-// ─────────────────────────────────────────────────────────────────
-// USE CASE 3: Data Transformation / Formatting
-// ─────────────────────────────────────────────────────────────────
+// USE CASE 3: Data Transformation
 /**
  * Formats a raw bank account number as XX-XXXXXX-XXX (SA format).
  * @name formatAccountNumber
@@ -356,12 +328,9 @@ function formatAccountNumber(raw) {
     return clean.slice(0,2) + "-" + clean.slice(2,8) + "-" + clean.slice(8);
 }
 
-// ─────────────────────────────────────────────────────────────────
-// USE CASE 4: External Integration (call REST API from browser)
-// ─────────────────────────────────────────────────────────────────
+// USE CASE 4: External Integration
 /**
- * Looks up a company name for a given registration number via the
- * company-lookup Sling servlet (proxied to avoid CORS).
+ * Looks up company name via a proxied Sling servlet (avoids CORS).
  * @name lookupCompanyName
  * @param {string} regNumber - Company registration number
  * @return {string}          - Company name or empty string
@@ -369,150 +338,124 @@ function formatAccountNumber(raw) {
  */
 async function lookupCompanyName(regNumber) {
     try {
-        var resp = await fetch("/bin/company-lookup?regNumber=" + encodeURIComponent(regNumber));
+        var resp = await fetch("/bin/company-lookup?reg=" + encodeURIComponent(regNumber));
         if (!resp.ok) { return ""; }
-        var data = await resp.json();
-        return data.companyName || "";
-    } catch (e) {
-        return "";
-    }
+        return (await resp.json()).companyName || "";
+    } catch (e) { return ""; }
 }
 </code></pre>
 
-    <details class="why-box">
-      <summary>📖 Why this code?</summary>
-      <ul>
-        <li><strong>JSDoc annotations are mandatory.</strong> The Rule Editor discovers functions by scanning for <code>/** */</code> comment blocks. A function with no JSDoc is invisible in the Rule Editor. At minimum you need an empty <code>/** */</code> block — but always add <code>@name</code>, <code>@param</code>, and <code>@return</code> so authors know what to pass in.</li>
-        <li><strong>Return conventions for validators:</strong> return <code>true</code> for valid; return a <strong>string error message</strong> for invalid. AEM Forms displays the string as the field's validation error. Never throw an exception — the Rule Editor will swallow it silently.</li>
-        <li><strong>Use <code>@private</code></strong> on helper functions you don't want authors to see. Private functions are excluded from the Rule Editor palette but still available as internal helpers called by your public functions.</li>
-        <li><strong>Use <code>@memberof</code></strong> to namespace your functions: <code>@memberof YourCompany</code> groups them in the Rule Editor and prevents name collisions with other teams' functions. Essential on projects with multiple development teams.</li>
-        <li><strong>Use Case 4 (external integration)</strong> proxies through a Sling servlet to avoid CORS and to keep the external API endpoint hidden from the browser. The servlet is a standard <code>@SlingServlet</code> — the same pattern from module 10.</li>
-        <li><strong>Synchronous over async where possible.</strong> Adobe's guidance is to prefer synchronous operations in Rule Editor functions because async functions inside the visual Rule Editor can behave unexpectedly when chained. Use <code>async</code> only when absolutely necessary (external call), and handle errors defensively.</li>
-      </ul>
-    </details>
+      <details class="why-box">
+        <summary>📖 Why this code?</summary>
+        <ul>
+          <li><strong>JSDoc annotations are mandatory.</strong> The Rule Editor discovers functions by scanning for <code>/** */</code> comment blocks. A function with no JSDoc is invisible. At minimum you need an empty <code>/** */</code> block — always add <code>@name</code>, <code>@param</code>, and <code>@return</code> so authors know what to pass in.</li>
+          <li><strong>Return conventions for validators:</strong> return <code>true</code> for valid, return a <strong>string error message</strong> for invalid. AEM Forms displays the string as the field's validation error. Never throw an exception — the Rule Editor swallows it silently.</li>
+          <li><strong>Use <code>@private</code></strong> on helper functions to exclude them from the Rule Editor palette while still making them available as internal helpers called by your public functions.</li>
+          <li><strong>Use Case 4</strong> proxies through a Sling servlet to avoid CORS and to keep the external API endpoint hidden from the browser. The servlet is a standard <code>@SlingServlet</code> from module 10.</li>
+        </ul>
+      </details>
 
-    <h2>Form Data Model — connecting to enterprise data</h2>
+      <h2>Form Data Model — connecting to enterprise data</h2>
 
-    <p>The Form Data Model (FDM) is a DAO/ORM-like abstraction layer. It describes external data in AEM's own terms so forms never call APIs directly.</p>
+      <pre><code>FDM data source types and when to use each
 
-    <pre><code>FDM data source types and when to use each
-
-Data Source Type        When to use it
+Data Source Type        When to use
 ─────────────────────── ──────────────────────────────────────────────────
-RESTful web service     Any modern REST API. Requires Swagger 2.0 or
-                        OpenAPI 3.0 spec. Most common for new projects.
+RESTful web service     Any modern REST API with a Swagger 2.0 / OpenAPI 3
+                        spec. Most common for new projects.
 
-SOAP web service        Legacy systems with a WSDL. Still common in
-                        banking and insurance. Painful but supported.
+SOAP web service        Legacy systems with a WSDL. Common in banking and
+                        insurance.
 
-OData service           Microsoft Dynamics, SharePoint, SAP. AEM handles
-                        the OData protocol natively.
+OData service           Microsoft Dynamics, SharePoint, SAP.
 
-JDBC database           Direct DB connection — MySQL, PostgreSQL, Oracle.
-                        Use only when no REST layer exists. Tightly couples
-                        AEM to the DB schema — avoid if REST is available.
+JDBC database           Direct DB connection. Use only when no REST layer
+                        exists. Tightly couples AEM to the DB schema.
 
-AEM User Profile        Logged-in user's profile properties.
-                        Good for pre-filling name, email, preferred language.
-                        Requires authenticated session — not for anonymous forms.
+AEM User Profile        Logged-in user's profile properties. Good for
+                        prefilling name, email, preferred language.
 </code></pre>
 
-    <details class="why-box">
-      <summary>📖 Why this code?</summary>
-      <ul>
-        <li><strong>REST first.</strong> If a JDBC database and a REST API both expose the same data, always use the REST API. JDBC creates a direct schema dependency — a column rename in the database breaks the FDM silently. A REST API absorbs that change in the service layer.</li>
-        <li>Data source credentials are stored in <strong>Tools → Cloud Services → Data Sources</strong> as encrypted OSGi configurations. Apply least privilege: configure each data source with a read-only account where possible, and a write account only for submit-back operations.</li>
-      </ul>
-    </details>
-
-    <pre><code>FDM setup — five steps from data source to bound form
+      <pre><code>FDM setup — five steps from data source to bound form
 
 Step 1 — Configure the data source
          Tools → Cloud Services → Data Sources → Create
          Type: RESTful Web Service
          Swagger file: upload to DAM first, then select path
-         Authentication: Basic / OAuth2 / API Key / None (per environment)
+         Authentication: Basic / OAuth2 / API Key / None
          Base URL: https://api.example.com/v1
 
 Step 2 — Create the Form Data Model
          AEM Forms → Data Integrations → Create → Form Data Model
-         Select data source created in Step 1
+         Select the data source from Step 1
          Expose operations:
-           Read  → GET /customers/{customerId}  = "Read Customer"
-           Write → POST /applications           = "Submit Application"
+           Read  → GET /customers/{customerId}  → "Read Customer"
+           Write → POST /applications           → "Submit Application"
 
-Step 3 — Test the FDM operations in the FDM editor
-         Use the "Test Service" button to call the API from within AEM.
+Step 3 — Test the FDM operations
+         Use the "Test Service" button in the FDM editor.
          Verify data shapes before binding to a form.
+         Catch a broken Swagger spec here, not after form build.
 
 Step 4 — Bind the FDM to a form
-         Form Container → Data Model tab → Select Form Data Model → pick your FDM
+         Form Container → Data Model tab → Select Form Data Model
 
 Step 5 — Bind individual fields
          Open each field's dialog → Bind Reference tab
-         Drag and drop from the FDM object tree, or type the path:
-           applicant.firstName → binds text input to the firstName property
-         Set Read Service on the Form Container for prefill.
+         Drag from the FDM object tree or type the path:
+           applicant.firstName → binds text input to firstName property
+         Set Read Service on Form Container for prefill.
          Set Write Service in the submit action configuration.
 </code></pre>
 
-    <details class="why-box">
-      <summary>📖 Why this code?</summary>
-      <ul>
-        <li><strong>Step 2 — Build the model first, bind fields later.</strong> The FDM is the contract between the form and the data source. Design it to match the data your form actually needs, not the full API surface. Expose only the operations required.</li>
-        <li><strong>Step 3 — Test before binding.</strong> The FDM editor has a "Test Service" button that calls the real API from within AEM. Use it. Catching a broken Swagger spec or wrong authentication at Step 3 is far cheaper than debugging it after the form is fully built.</li>
-        <li><strong>Prefill XML format.</strong> When you use the FDM Prefill Service, AEM calls your Read operation, maps the response to the bound fields, and renders the form pre-populated. The field binding path (<code>applicant.firstName</code>) must exactly match the JSON property path in the API response. A mismatch silently leaves the field blank.</li>
-        <li><strong>Use run-mode config for URLs.</strong> The data source Base URL should differ between Dev, Stage, and Prod environments. Store it in run-mode OSGi config folders (<code>config.dev</code>, <code>config.stage</code>, <code>config.prod</code>) — the same pattern from module 5. Never hardcode the production API URL in a config stored on the author instance.</li>
-        <li><strong>FDM vs custom prefill service.</strong> The out-of-the-box FDM Prefill Service covers most standard cases. Write a custom <code>DataXMLProvider</code> OSGi service only when you need logic that the FDM can't express — for example, combining data from three different APIs before prefilling.</li>
-      </ul>
-    </details>
+      <details class="why-box">
+        <summary>📖 Why this code?</summary>
+        <ul>
+          <li><strong>REST over JDBC.</strong> JDBC creates a direct schema dependency — a column rename in the DB breaks the FDM silently at runtime. A REST API absorbs that change in the service layer. JDBC also requires firewall rules allowing AEM to connect directly to the database, increasing the attack surface.</li>
+          <li><strong>Test before binding (Step 3).</strong> The FDM editor has a "Test Service" button that calls the real API from within AEM. Use it. Catching a broken Swagger spec at Step 3 is far cheaper than debugging it after the form is fully built.</li>
+          <li><strong>Prefill binding paths are case-sensitive.</strong> A field bound to <code>applicant.firstName</code> must exactly match the JSON property path in the API response. A case mismatch silently leaves the field blank.</li>
+          <li><strong>Use run-mode config for URLs.</strong> The data source Base URL should differ between Dev, Stage, and Prod. Store it in run-mode OSGi config folders — same pattern from module 5. Never hardcode the production API URL.</li>
+          <li><strong>Least privilege for credentials.</strong> Configure each data source with the minimum permissions: read-only account for prefill sources, write account only for submit-back operations. Credentials are encrypted in Tools → Cloud Services → Data Sources.</li>
+        </ul>
+      </details>
 
-    <div class="try-it">
-      <strong>Try it</strong> — Write a Custom Function called <code>validateEmail</code> that returns <code>true</code> if the string contains a single <code>@</code> symbol with characters before and after, and returns a string error message otherwise. Package it in a clientlib with category <code>"fd.customfunctions"</code>. Deploy to AEM and open the Rule Editor on a text input field — verify your function appears in the "Custom Functions" palette. Then wire it: <em>WHEN email field changes THEN validate using validateEmail</em>. Preview the form and confirm the error message appears when you enter an invalid email.
+      <div class="try-it alert alert-success">
+        <span class="label">Try it</span>
+        Write a Custom Function called <code>validateEmail</code> that returns <code>true</code> if the string contains a single <code>@</code> with characters before and after, and returns a string error message otherwise. Package it in a clientlib with category <code>"fd.customfunctions"</code>. Deploy to AEM and open the Rule Editor on a text input — verify your function appears in the "Custom Functions" palette. Wire it: <em>WHEN email field changes THEN validate using validateEmail</em>. Preview with <code>?wcmmode=disabled</code> and confirm the error message appears for an invalid email.
+      </div>
+
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
+        <ol class="quiz-list">
+          <li><p class="quiz-question">You need to create a new Adaptive Form. Walk through the six steps in order. At which step does a backend developer typically first become involved?</p></li>
+          <li><p class="quiz-question">A Forms Practitioner sets the form's Name to "Customer Registration Form" (with spaces) during creation. What problem does this cause, and how would you advise them?</p></li>
+          <li><p class="quiz-question">Explain the difference between a template and a theme in AEM Forms. Give one reason why keeping them separate is useful in a project with multiple brand variants.</p></li>
+          <li><p class="quiz-question">A fragment is updated by adding a new mandatory field. The practitioner republishes the fragment but the change does not appear in two consuming forms in production. What did they miss?</p></li>
+          <li><p class="quiz-question">A Rule Editor rule references a field named <code>dob</code>. A developer renames the field to <code>dateOfBirth</code> in CRXDE. What breaks and why? What should have been done instead?</p></li>
+          <li><p class="quiz-question">Name all Rule Editor action types covered in this module. Which one requires backend developer involvement to implement correctly for cascade dropdowns?</p></li>
+          <li><p class="quiz-question">What is the minimum JSDoc annotation a Custom Function must have to appear in the Rule Editor? What happens if you add <code>@private</code>?</p></li>
+          <li><p class="quiz-question">A Custom Function clientlib is deployed and shows as Active in <code>/system/console/bundles</code> but does not appear in the Rule Editor. What is the most likely cause?</p></li>
+          <li><p class="quiz-question">What are the five FDM data source types? Why should you prefer REST over JDBC when both are available?</p></li>
+          <li><p class="quiz-question">A form has an FDM bound to it, but fields remain blank after the prefill service fires. You confirm the FDM Read operation returns correct data in the Test Service UI. What should you check next?</p></li>
+        </ol>
+      </div>
+
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="form-fragments">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="22-adaptive-forms.html"><span class="dir">← Previous</span>AEM Forms — Platform &amp; Architecture</a>
+        <a class="next" href="24-forms-implementation.html"><span class="dir">Next →</span>Submission, Embedding &amp; Migration to Core</a>
+      </nav>
     </div>
-
-    <h2>Knowledge Check</h2>
-    <p>Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
-    <ol class="knowledge-check">
-      <li>You need to create a new Adaptive Form. Walk through the six steps in order. At which step does a backend developer typically first become involved?</li>
-      <li>A Forms Practitioner sets the form's Name to "Customer Registration Form" (with spaces) during creation. What problem does this cause, and how would you advise them?</li>
-      <li>Explain the difference between a template and a theme in AEM Forms. Give one reason why keeping them separate is useful in a project with multiple brand variants.</li>
-      <li>A fragment is updated by adding a new mandatory field. The practitioner republishes the fragment but the change does not appear in two consuming forms in production. What did they miss?</li>
-      <li>A Rule Editor rule references a field named <code>dob</code>. A developer renames the field to <code>dateOfBirth</code> in CRXDE. What breaks and why? What should have been done instead?</li>
-      <li>Name all Rule Editor action types covered in this module. Which one requires backend developer involvement to implement correctly for cascade dropdowns?</li>
-      <li>What is the minimum JSDoc annotation a Custom Function must have to appear in the Rule Editor? What happens if you add <code>@private</code>?</li>
-      <li>A Custom Function clientlib is deployed and shows as Active in <code>/system/console/bundles</code> but does not appear in the Rule Editor. What is the most likely cause?</li>
-      <li>What are the five FDM data source types? Why should you prefer REST over JDBC when both are available?</li>
-      <li>A form has an FDM bound to it, but fields remain blank after the prefill service fires. You confirm the FDM Read operation returns correct data in the Test Service UI. What should you check next?</li>
-    </ol>
-
-    <button class="btn-complete" id="completeBtn" onclick="markComplete()">Mark this module as complete</button>
-
-    <nav class="module-nav">
-      <a href="22-adaptive-forms.html" class="nav-prev">← Previous<span>AEM Forms — Platform &amp; Architecture</span></a>
-      <a href="24-forms-implementation.html" class="nav-next">Next →<span>Submission, Embedding &amp; Migration</span></a>
-    </nav>
 
     <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
   </main>
 </div>
 
 <script src="../script.js"></script>
-<script>
-  function markComplete() {
-    const key = 'module-23-form-fragments';
-    localStorage.setItem(key, 'complete');
-    document.getElementById('completeBtn').textContent = '✓ Completed';
-    document.getElementById('completeBtn').classList.add('completed');
-    if (window.updateProgress) updateProgress();
-  }
-  document.addEventListener('DOMContentLoaded', function() {
-    const key = 'module-23-form-fragments';
-    if (localStorage.getItem(key) === 'complete') {
-      document.getElementById('completeBtn').textContent = '✓ Completed';
-      document.getElementById('completeBtn').classList.add('completed');
-    }
-  });
-</script>
 </body>
 </html>
