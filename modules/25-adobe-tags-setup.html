@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>25 Adobe Tags — Setup &amp; Concepts — AEM Backend Training</title>
-<meta name="description" content="What Adobe Experience Platform Tags is, the five core concepts, and how to create a Tag Property.">
+<title>25 Web Analytics &amp; Adobe Analytics — AEM Backend Training</title>
+<meta name="description" content="Web analytics fundamentals, what a datalayer is, the three datalayer types, and how Adobe Analytics sits in the data pipeline.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -64,236 +64,344 @@
 
       <div class="module-meta">
         <span class="tag badge text-bg-secondary">Adobe Analytics</span>
-        <span>35 min read</span>
+        <span>40 min read</span>
       </div>
 
-      <h1 class="page-title">Adobe Tags — Setup &amp; Concepts</h1>
-      <p class="lede">Adobe Experience Platform Tags (formerly Adobe Launch, formerly Adobe DTM) is a tag management system: a platform for deploying and managing marketing JavaScript without a code deploy for every change. For AEM developers it's the standard integration point for Adobe Analytics, Adobe Target, and any third-party tracking.</p>
+      <h1 class="page-title">Web Analytics &amp; Adobe Analytics</h1>
+      <p class="lede">Before you wire a Data Element or fire a beacon, you need to understand <em>why</em> analytics exists, what a datalayer is and why you can't skip it, and where Adobe Analytics sits in the pipeline. This module is the conceptual foundation — module 26 is where you build it.</p>
 
       <div class="learn-box">
         <h3>What you'll learn</h3>
         <ul>
-          <li>What a tag management system is and the problem it solves</li>
-          <li>The five core concepts: Properties, Extensions, Data Elements, Rules, Environments</li>
-          <li>How to create and configure a Tag Property step by step</li>
-          <li>The publishing workflow from Development to Production</li>
-          <li>How AEM Sites integrates Tags via Cloud Services</li>
+          <li>What web analytics is and why it matters to the three teams you'll work with</li>
+          <li>The difference between Channels, Events, and Metrics</li>
+          <li>What a datalayer is and what three properties make one good</li>
+          <li>The three common datalayer types — which one you build on AEM</li>
+          <li>How Adobe Analytics fits into the full data pipeline: click to report</li>
         </ul>
       </div>
 
-      <h2>What problem does Adobe Tags solve?</h2>
-      <pre data-code><span class="filename">before and after tag management</span><code>WITHOUT a TMS:
-  Every tracking script → developer ticket → code deploy → 1-2 day turnaround
-  Config change to Google Analytics → another deploy
-  New A/B test event → back to the developer queue
+      <h2>Why this matters to a backend developer</h2>
+      <p>As an AEM backend developer you own the data that feeds the entire analytics pipeline: your component's HTML, your clientlib JavaScript, and whether the ACDL contains the right values at the right time. If you get it wrong — wrong property name, wrong event timing, missing a field the Analytics team expected — the reports are wrong. Silently. No console error. The data just doesn't match reality.</p>
 
-WITH Adobe Tags:
-  ONE embed script on every page (added once, never changed)
-  Everything else is configured in the Tags UI — no deploys needed
-  Marketing team can add/change tracking in minutes, not days</code></pre>
+      <div class="callout alert alert-primary">
+        <span class="label">Your role in the chain</span>
+        AEM Developers → build components and populate the datalayer correctly. Analytics Engineers → read the datalayer and configure Launch rules. Business / Reporting teams → consume the data in Workspace. All three depend on what you push to the datalayer.
+      </div>
 
+      <h2>Web analytics fundamentals</h2>
+      <p>Web analytics is the measurement, collection, and analysis of website data. The goal: replace assumptions about user behaviour with real evidence, then make better decisions with it.</p>
+      <pre data-code><span class="filename">the three building blocks — Channels, Events, Metrics</span><code>CHANNELS    Where users come from
+  Paid     → Google Ads, LinkedIn Ads, display banners
+  Organic  → unpaid search (Google, Bing) — SEO-driven
+  Social   → LinkedIn, Twitter/X, Facebook referrals
+  Direct   → user typed the URL or used a bookmark
+  Email    → links clicked in marketing emails
+
+  → Developer note: UTM parameters (?utm_source=google&utm_medium=cpc)
+    in landing page URLs are how Analytics attributes channel.
+    AEM redirect rules or rewrite configs that strip query strings
+    silently break channel attribution for every campaign.
+
+EVENTS      What actions users perform on the site
+  Page views     → baseline — every page load
+  Clicks         → CTAs, nav links, downloads, video plays
+  Form submits   → lead gen, checkout, registration
+  Searches       → what users type in site search
+
+  → Developer note: click and form events must be pushed to the
+    datalayer from your component clientlib JS. If the push is
+    missing, the event is never tracked — no error, just absence.
+
+METRICS     Quantitative measures of behaviour
+  Page Views       → total loads (one user, ten loads = 10)
+  Unique Visitors  → distinct people (one user, ten loads = 1)
+  Bounce Rate      → sessions with only one page view (%)
+  Conversion Rate  → sessions that completed a goal (%)
+
+  → Metrics are calculated from events.
+    Wrong events → wrong metrics → wrong business decisions.</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>The core value: <strong>one deploy</strong> by a developer (the embed code), then unlimited changes by the marketing team without touching the site's codebase.</p>
+          <p>This is the shared vocabulary that lets you talk to Analytics Engineers and business stakeholders without a translation layer in the room.</p>
           <ul>
-            <li>The embed code is a small JavaScript snippet loading the Tags library from Adobe's CDN. When a page loads, the Tags library executes all configured rules.</li>
-            <li>For AEM developers: add the embed code once via Cloud Services config, set up the Adobe Client Data Layer — then the implementation team works in the Tags UI from that point forward.</li>
+            <li><strong>Channels and UTM parameters</strong> — <code>utm_source</code>, <code>utm_medium</code>, and <code>utm_campaign</code> are query parameters that Analytics reads from the landing page URL. An AEM developer who adds a redirect rule like <code>RewriteRule (.+) $1? [R=301]</code> (stripping query strings) kills campaign attribution for every paid ad.</li>
+            <li><strong>Events are binary</strong> — either the push happens or it doesn't. There's no partial tracking. A click that fires the datalayer push is counted; one that doesn't is invisible. This makes complete clientlib coverage critical.</li>
+            <li><strong>Metrics are derived</strong> — they're aggregations of events. When a stakeholder says "our form completion rate dropped," they mean a metric. Your job is to trace it back to which event is no longer firing.</li>
           </ul>
         </div>
       </details>
 
-      <h2>The five core concepts</h2>
-      <pre data-code><span class="filename">Adobe Tags terminology — with AEM developer analogies</span><code>PROPERTY
-  Container for everything belonging to one website.
-  ≈ An AEM project: isolated config per site.
+      <h2>What is a datalayer?</h2>
+      <p>A datalayer is a <strong>centralised JavaScript object</strong> that acts as a bridge between user interactions on your site and your MarTech stack — Adobe Analytics, Adobe Target, Adobe Experience Platform, and any third-party tool. Instead of every tracking tool scraping the DOM independently, all tools read from one clean, structured source of truth.</p>
 
-EXTENSIONS
-  Plugins that add capabilities.
-  Examples: Adobe Analytics, Core, Adobe Target, Hotjar, Google Analytics.
-  ≈ OSGi bundles: install/remove independently.
+      <pre data-code><span class="filename">the problem a datalayer solves — before and after</span><code>WITHOUT a datalayer (fragile, common on legacy sites):
+  Tags reads page name from DOM:
+    document.querySelector('h1').innerText
+    ← breaks when a designer adds a hero h1 to the layout
+    document.title
+    ← returns "Netcentric | Banking Dashboard" — wrong format
+    window.location.pathname
+    ← returns "/en/banking/dashboard.html" — not human-readable
 
-DATA ELEMENTS
-  Named variables referencing page data.
-  Example: "Page Name" → document.title
-           "User ID"   → digitalData.user.userId
-  ≈ Sling Model @ValueMapValue: reads data by name.
+  Consequence: every HTML refactor or URL change silently
+  breaks tracking. The Analytics team finds out weeks later.
 
-RULES
-  Event → Condition → Action logic.
-  Example: Page Loaded → (always) → Send Analytics page view
-  ≈ ResourceChangeListener: trigger + condition + action.
+WITH a datalayer (correct):
+  Component pushes on render:
+  adobeDataLayer.push({
+    "page": {
+      "pageInfo": { "pageName": "banking:dashboard" }
+    }
+  });
 
-ENVIRONMENTS
-  Dev / Staging / Production — separate embed codes, separate workflows.
-  ≈ OSGi run-mode config folders: different config per environment.</code></pre>
+  Tags Data Element reads:
+    page.pageInfo.pageName   ← always "banking:dashboard",
+                                regardless of what h1 or URL says
 
+  The contract: developer owns the datalayer.
+  Analytics Engineer owns what Tags does with it.</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>The AEM analogies make the learning curve shorter — the patterns are identical even though the tools are different.</p>
+          <p>This is the core argument for why datalayers exist. DOM scraping works until it doesn't, and when it breaks it breaks silently.</p>
           <ul>
-            <li><strong>Data Elements</strong> are the most important concept to get right. A well-named Data Element ("Page Name") used across 20 Rules is far more maintainable than hardcoding <code>document.title</code> in 20 places.</li>
-            <li><strong>Rules</strong> are evaluated in the order they're listed and can be given a priority number. Order matters when multiple rules fire on the same event.</li>
+            <li><code>document.querySelector('h1').innerText</code> — reads whatever text is in the first h1 on the page. When the design team adds a visually decorative h1 inside an image banner, this suddenly returns "See our rates" instead of "Banking Dashboard." No error, just wrong data in Analytics.</li>
+            <li><code>page.pageInfo.pageName</code> as a datalayer path — a deliberate contract set by the developer. The Analytics Engineer writes one Data Element against this path and it works on every page, forever, regardless of what the UI looks like.</li>
+            <li>This is the same separation-of-concerns principle as Sling Models: the model (datalayer) is the contract; the HTL template (DOM) is the presentation layer that Tags should never depend on.</li>
           </ul>
         </div>
       </details>
 
-      <h2>Creating a Tag Property — step by step</h2>
-      <pre data-code><span class="filename">walkthrough in Adobe Experience Platform Data Collection UI</span><code>1. https://experience.adobe.com/#/data-collection/ → Tags → New Property
-   Name: "Academy Training Site"
-   Platform: Web
-   Domain: academy.netcentric.com
+      <h3>Three properties of a good datalayer</h3>
+      <pre data-code><span class="filename">what separates a good datalayer from a fragile one</span><code>SINGLE SOURCE OF TRUTH
+  Centralised structure storing all customer interaction data.
+  Standardized format shared across ALL tools:
+    Analytics, Target, AEP, Google Analytics, Hotjar — all read here.
+  → All teams use the same values. Discrepancies disappear.
 
-2. Install the Adobe Analytics extension:
-   Extensions → Catalog → "Adobe Analytics" → Install
-   Report Suite ID:  dev-academy-report-suite   ← use a DEV suite, not production
-   Tracking Server:  your-company.sc.omtrdc.net
-   Character Set:    UTF-8
+DECOUPLES TRACKING FROM CODE
+  Separates business logic (what the component does) from
+  tracking logic (what gets measured).
+  → Analytics rules in Launch can be updated without a code deploy.
+  → Front-end refactors don't break tracking as long as the
+    datalayer contract (property names and structure) is kept.
 
-3. Create your first Data Element:
-   Data Elements → Add Data Element
-   Name:            "Page Name"
-   Extension:       Core
-   Data Element Type: JavaScript Variable
-   Variable name:   digitalData.page.pageInfo.pageName</code></pre>
-
+DRIVES CONSISTENCY
+  Standard naming and structure across every user journey.
+  "pageName" always means the same thing, formatted the same way,
+  on every page, in every component.
+  → Reduces data discrepancies and reporting issues between teams.</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>The Tags UI is where all configuration lives — not in AEM. AEM only provides the mechanism to load the embed code.</p>
+          <p>These three properties are not features — they're design disciplines. Projects that violate them end up with unmaintainable analytics implementations.</p>
           <ul>
-            <li><strong>Use a DEV report suite</strong> for the development Tags environment. Development data pollutes production reports — always separate them.</li>
-            <li><strong>Tracking Server</strong> (<code>your-company.sc.omtrdc.net</code>) is the Analytics server receiving beacons. Ask your Analytics admin for the correct value — it's specific to your organisation.</li>
-            <li><code>digitalData.page.pageInfo.pageName</code> references the Adobe Client Data Layer (ACDL) that AEM Core Components populate automatically. Module 26 covers this in detail.</li>
+            <li><strong>Single source of truth</strong> — without it, Adobe Analytics reads <code>document.title</code>, Google Analytics reads a meta tag, and Target reads a custom attribute. Three tools, three values, three reports that never agree, three teams arguing about whose number is right.</li>
+            <li><strong>Decouples tracking from code</strong> — the Analytics Engineer can add a new rule on a Tuesday without a sprint. The developer can refactor a component on Wednesday without breaking existing rules, as long as the datalayer push stays the same.</li>
+            <li><strong>Drives consistency</strong> — naming matters. If the checkout page sends <code>pageName: "checkout"</code> and the product page sends <code>page_name: "Product Detail"</code>, no segment can reliably filter "all users who saw a product page and then checked out." Consistency is the developer's responsibility when writing datalayer pushes.</li>
           </ul>
         </div>
       </details>
 
-      <h2>Creating Rules</h2>
-      <pre data-code><span class="filename">rule: send a page view beacon to Analytics</span><code>RULE NAME: "Send Page View"
+      <h2>The three common datalayer types</h2>
+      <p>You will encounter three patterns across projects. Knowing which one a project uses tells you immediately what Tags Data Elements to build and what naming conventions to follow.</p>
 
-EVENT:
-  Extension: Core
-  Type: Library Loaded (Page Top)
-  → fires when the Tags library loads on every page
-
-CONDITIONS:
-  (none — fires on every page)
-
-ACTIONS:
-  1. Adobe Analytics — Set Variables
-     eVar1   = %Page Name%      ← %...% references a Data Element
-     prop1   = %User Agent%
-     events  = event1
-
-  2. Adobe Analytics — Send Beacon
-     Tracking Type: Page View (s.t())</code></pre>
-
+      <h3>digitalData — W3C standard</h3>
+      <pre data-code><span class="filename">digitalData — static, state-based, legacy enterprise pattern</span><code>window.digitalData = {
+  page: {
+    pageInfo: {
+      pageName: "banking:dashboard",
+      language: "en-GB"
+    }
+  },
+  user: {
+    userProfile: {
+      "loginStatus": "logged in"
+    }
+  }
+};</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>Always: Set Variables first, then Send Beacon. Never merge them — keeping them separate lets you insert conditions between setting and sending.</p>
+          <p><code>window.digitalData</code> is a W3C specification for a standardised analytics object. You'll find it on enterprise sites built 2015–2019, often alongside Tealium or older Adobe Launch setups.</p>
           <ul>
-            <li><code>%Page Name%</code> — the curly-brace syntax resolves a Data Element by name. At runtime, Tags substitutes the Data Element's current value.</li>
-            <li><code>eVar1</code>, <code>prop1</code>, <code>events</code> — Adobe Analytics variables. eVars persist across pages (like a session cookie); props are per-hit only; events are counters for specific actions. Your Analytics admin assigns which variable maps to which data.</li>
-            <li><code>s.t()</code> = page view (increments Page Views metric). <code>s.tl()</code> = link tracking for clicks and custom events that should not be counted as page views.</li>
+            <li><strong>Static / state-based</strong> — set once on page load. If a user logs in via a modal after load, <code>loginStatus</code> won't update unless you manually reassign it. This makes post-load interactions hard to track.</li>
+            <li><code>window.digitalData</code> — globally accessible. Tags Data Elements of type "JavaScript Variable" read it via path like <code>digitalData.page.pageInfo.pageName</code>.</li>
+            <li><strong>When you'll see it</strong>: older Adobe Analytics implementations, Tealium-managed sites, AEM projects that pre-date the ACDL. Work with it; don't replace it mid-engagement.</li>
           </ul>
         </div>
       </details>
 
-      <h2>Environments and publishing workflow</h2>
-      <pre data-code><span class="filename">publishing flow from development to production</span><code>DEVELOPMENT
-  Embed: https://assets.adobedtm.com/...dev.js
-  Changes appear immediately after saving — no publish step needed.
-  Use: local dev, rapid iteration.
-
-STAGING
-  Embed: https://assets.adobedtm.com/...staging.min.js
-  Requires: Submit → Approve → Build to Staging.
-  Use: QA against production content.
-
-PRODUCTION
-  Embed: https://assets.adobedtm.com/...min.js
-  Requires: Promote → Approve → Build to Production.
-  Use: live site only.
-
-AEM maps:
-  Author instance     → Development embed  (via Cloud Services run-mode config)
-  Non-prod publish    → Staging embed
-  Production publish  → Production embed</code></pre>
-
+      <h3>Google DataLayer — push array</h3>
+      <pre data-code><span class="filename">Google DataLayer — event-push driven, GTM and GA4 standard</span><code>window.dataLayer.push({
+  "event": "loginSuccess",
+  "pageName": "banking:dashboard",
+  "language": "en-GB",
+  "loginStatus": "true"
+});</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>Never load the Development embed in production — it's unminified, larger, and may contain in-progress rules not approved for end users.</p>
+          <p>The Google DataLayer is the standard for Google Tag Manager (GTM) and GA4. If a client also uses GTM alongside Adobe Launch, both tools typically read from <code>window.dataLayer</code>.</p>
           <ul>
-            <li>Changing <em>what the embed URL does</em> (adding rules, updating Data Elements) doesn't require an AEM deployment. Changing <em>which embed URL AEM loads</em> (switching from Staging to Production) does — it's an AEM Cloud Services config change.</li>
+            <li><code>window.dataLayer.push({...})</code> — <code>dataLayer</code> is a JavaScript array. GTM's "Data Layer Variable" reads the most recent value pushed for a given key.</li>
+            <li><strong>Flat structure</strong> — unlike ACDL's nested objects, pushes are flat key-value pairs. Simpler, but less expressive for component-level data hierarchies.</li>
+            <li><strong>When you'll see it</strong>: projects using GA4 or GTM as the TMS. ACDL and Google DataLayer can coexist on the same page — both push to their own objects.</li>
           </ul>
         </div>
       </details>
 
-      <h2>AEM Cloud Services integration</h2>
-      <pre data-code><span class="filename">where Tags embed URLs live in AEM</span><code>Tools → Cloud Services → Adobe Experience Platform Launch
-  → Creates config at /conf/&lt;site&gt;/settings/cloudconfigs/launch/jcr:content
-    Properties:
-      production.uri  = "https://assets.adobedtm.com/...launch-prod.min.js"
-      staging.uri     = "https://assets.adobedtm.com/...launch-staging.min.js"
-      development.uri = "https://assets.adobedtm.com/...launch-dev.js"
+      <h3>ACDL — Adobe Client Data Layer</h3>
+      <pre data-code><span class="filename">ACDL — event-driven + state-based, the correct choice for AEM + Adobe Launch</span><code>// Push an event with structured data
+adobeDataLayer.push({
+  "event": "loginSuccess",
+  "page": {
+    "pageInfo": {
+      "pageName": "banking:dashboard",
+      "language": "en-GB"
+    }
+  },
+  "user": {
+    "loginStatus": "logged in"
+  }
+});
 
-AEM Core Components' Page component reads this config and injects:
-  &lt;script src="{correct-uri-for-current-run-mode}"&gt;&lt;/script&gt;
-  in &lt;head&gt; automatically — no template editing required.</code></pre>
+// Read the current merged state at any time
+window.adobeDataLayer.getState();
+// → { page: { pageInfo: { ... } }, user: { ... } }
 
+// Tags listens for events like this (configured in Launch, not your code):
+window.adobeDataLayer.push(function(dl) {
+  dl.addEventListener("loginSuccess", function(event) {
+    // Adobe Launch's ACDL extension handles this automatically
+    console.log("Captured:", event.eventInfo);
+  });
+});</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>This is a Context-Aware Configuration (module 15) — each site in AEM can have a different Tags property. The Page component reads it automatically when it extends Core Components.</p>
+          <p>ACDL is both a push queue and a persistent state store — it combines the event-driven nature of Google DataLayer with the structured state of digitalData. This is why it's the right choice for AEM + Adobe Launch projects.</p>
           <ul>
-            <li>Assign the config to your site by setting <code>sling:configRef</code> on <code>/content/academy</code> pointing to <code>/conf/academy</code>, or via Page Properties → Cloud Services tab on the root page.</li>
+            <li><code>adobeDataLayer.push({...})</code> — unlike a plain array push, the ACDL push method merges the object into persistent state AND notifies all registered event listeners simultaneously. One call does both.</li>
+            <li><code>event: "loginSuccess"</code> — the event name that Adobe Launch Rules listen for via the "ACDL Event Listener" event type. This is how post-load interactions (login, form submit, video play) are tracked without a page reload.</li>
+            <li><strong>Nested structure</strong> (<code>page.pageInfo.pageName</code>) — paths map directly to Tags Data Elements of type "Data Layer Computed State." The same structure AEM Core Components populate automatically when ACDL is enabled.</li>
+            <li><code>getState()</code> — returns the complete merged snapshot. Run this in the browser console to see exactly what Tags has to work with at any moment. Your first debugging step every time.</li>
+            <li><strong>Designed for AEM</strong>: Core Components push to ACDL automatically. Your job is to extend this with additional pushes from custom component clientlibs.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="callout alert alert-warning">
+        <span class="label">The datalayer type is a project decision</span>
+        On Netcentric AEM projects you will use the ACDL. Never switch a project's datalayer type unilaterally — the Analytics Engineer's entire Tags configuration depends on the structure and naming already in place.
+      </div>
+
+      <h2>Adobe Analytics — where your data lands</h2>
+      <p>Adobe Analytics is a digital analytics platform that collects, processes, and stores user interaction data from websites and mobile apps. From a developer's perspective it's the <em>destination</em> at the end of a five-step pipeline.</p>
+      <pre data-code><span class="filename">the complete data pipeline — user interaction to Analytics report</span><code>1. USER INTERACTION
+   A user performs an action on your site:
+   Page view, click, form submit, purchase, search, video play
+
+            ↓
+
+2. DATA LAYER (ACDL)
+   Your component captures the interaction and structures it:
+   adobeDataLayer.push({
+     "event": "formSubmit",
+     "page":  { "pageInfo": { "pageName": "loan-application" } },
+     "form":  { "name": "Loan Application", "step": "complete" }
+   });
+
+            ↓
+
+3. ADOBE LAUNCH
+   Listens for the event, evaluates rules, fires actions:
+   EVENT:   ACDL push with event = "formSubmit"
+   CONDITION: page.pageInfo.pageName contains "loan"
+   ACTION:  Set eVar1 = page.pageInfo.pageName
+            Set event5 (form complete counter)
+            Send Analytics beacon (s.t() or s.tl())
+
+            ↓
+
+4. WebSDK / AppMeasurement
+   The tracking library sends the HTTP request to Adobe's servers:
+   WebSDK (Alloy.js)      → modern, sends to AEP Datastream
+   AppMeasurement.js      → legacy, sends directly to tracking server
+
+            ↓
+
+5. ADOBE ANALYTICS
+   Data is processed, stored, and available for reporting.
+   Analysis Workspace shows the data within 30–90 minutes.
+   Report Suites: always use a separate Dev suite for testing.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This pipeline is the mental model to carry through all analytics work. Every problem can be located to one step in this chain.</p>
+          <ul>
+            <li><strong>Step 1 → 2 is your responsibility</strong>. The component must push to the datalayer with the right structure at the right time. A push that fires before the DOM is ready, or that uses the wrong key name, breaks everything downstream — silently.</li>
+            <li><strong>Step 2 → 3 is the Analytics Engineer's responsibility</strong>. They configure Tags Data Elements and Rules against the datalayer paths you've established. They can only work with data that exists in the datalayer.</li>
+            <li><strong>Step 3 → 4</strong> is handled by the chosen extension (Analytics Extension uses AppMeasurement, Web SDK extension uses Alloy.js). Configured once in the extension setup; it handles serialisation and the HTTP request automatically.</li>
+            <li><strong>Debugging flow</strong>: first check <code>window.adobeDataLayer.getState()</code> (step 2) — is your data there? Then use the AEP Debugger Chrome extension (step 3–4) — did Launch fire? Did the beacon contain the right values?</li>
+          </ul>
+        </div>
+      </details>
+
+      <pre data-code><span class="filename">what Adobe Analytics is used for — the business problems it answers</span><code>UNDERSTAND BEHAVIOUR
+  Online banking:    which dashboard features do users actually use?
+  E-commerce:        where in checkout do people abandon?
+  Content sites:     which articles drive the most return visits?
+
+IDENTIFY PROBLEMS
+  Drop-offs in key journeys:
+    40% of loan applicants exit on step 3 of 5 — is step 3 broken?
+  Friction in login/authentication:
+    Login error rate spiked after Tuesday's deploy — which commit?
+  Low click-through on high-traffic pages:
+    Product page gets 10k visits but CTA click rate is 2%
+
+OPTIMISE
+  A/B test (Adobe Target + Analytics) → does version B convert better?
+  Device analysis → on which device type is bounce rate highest?
+  Feature adoption → which features get used vs. which can be cut?
+
+  The developer connection: you build the components that create
+  these interactions. You write the datalayer pushes that make
+  them measurable. Analytics accuracy starts with your code.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>This makes the connection between your developer work and real business decisions explicit — something that's easy to lose when you're focused on OSGi annotations and Sling Models.</p>
+          <ul>
+            <li><strong>"Which features do users actually use?"</strong> — only answerable if every feature interaction fires a datalayer push. A feature with no tracking is invisible to the business, regardless of how many users interact with it.</li>
+            <li><strong>"Which commit caused the spike?"</strong> — Adobe Analytics timestamps every hit. If error events spiked at 14:32 and your deploy went out at 14:30, that correlation is visible in Workspace within hours. This is why tracking matters even for purely technical releases.</li>
+            <li><strong>Adobe Target + Analytics</strong> — Adobe Target's A/B testing uses Adobe Analytics as its reporting source. If the conversion event is missing from the datalayer, Target can't determine which variant won.</li>
           </ul>
         </div>
       </details>
 
       <div class="try-it alert alert-success">
-        <span class="label">Try it</span>
-        In Adobe Experience Platform Data Collection, create a Tag Property, install the Adobe Analytics extension, and create one Data Element "Page Name" reading <code>document.title</code>. Create a Rule: Library Loaded → Set Variables (eVar1 = %Page Name%) + Send Beacon. Copy the Development embed URL for use in module 26.
+        <span class="label">Try it — inspect a live datalayer</span>
+        Open any AEM site with Core Components and ACDL enabled (or your local instance after enabling via OSGi config). Open the browser console and run <code>window.adobeDataLayer.getState()</code>. Look for <code>page.pageInfo.pageName</code> and <code>page.pageInfo.language</code>. Now click something on the page and run it again — did a new event appear? This is the raw material every Tags rule operates on.
       </div>
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
+        <p class="kc-intro">Ten questions — ask live, check the Trainer Answer Key for full answers.</p>
         <ol class="quiz-list">
-        <li>
-          <p class="quiz-question">What was Adobe Tags called before it was renamed, and what is its full current official name?</p>
-        </li>
-        <li>
-          <p class="quiz-question">In one sentence, explain the core value of a tag management system for a marketing team.</p>
-        </li>
-        <li>
-          <p class="quiz-question">What is a Tag Property, and how many should you create for a single website?</p>
-        </li>
-        <li>
-          <p class="quiz-question">What is an Extension in Adobe Tags — give two examples.</p>
-        </li>
-        <li>
-          <p class="quiz-question">What is a Data Element? Draw an analogy to something from AEM development.</p>
-        </li>
-        <li>
-          <p class="quiz-question">Name the three parts of a Rule in Adobe Tags.</p>
-        </li>
-        <li>
-          <p class="quiz-question">What are the three publishing Environments in Adobe Tags, and why do they matter?</p>
-        </li>
-        <li>
-          <p class="quiz-question">How does AEM Sites include the Tags embed code on every page without template changes?</p>
-        </li>
-        <li>
-          <p class="quiz-question">In a Set Variables action, eVar1 = %Page Name%. What does %Page Name% mean at runtime?</p>
-        </li>
-        <li>
-          <p class="quiz-question">What is the difference between s.t() and s.tl() in Adobe Analytics?</p>
-        </li>
+          <li><p class="quiz-question">An Analytics Engineer says "the page name is wrong in the reports." Where do you look first, and what command do you run in the browser console?</p></li>
+          <li><p class="quiz-question">What is the difference between a Channel, an Event, and a Metric? Give one concrete example of each from a banking application.</p></li>
+          <li><p class="quiz-question">A developer adds an AEM redirect rule that strips query strings from URLs. Which analytics concept breaks, and why?</p></li>
+          <li><p class="quiz-question">Name the three properties of a well-designed datalayer. Give one real consequence of violating each.</p></li>
+          <li><p class="quiz-question">Name the three common datalayer types. Which one do you use on an AEM + Adobe Launch project, and why?</p></li>
+          <li><p class="quiz-question">What is the key technical difference between digitalData (W3C) and the ACDL that makes ACDL better suited for tracking post-load interactions like a login modal?</p></li>
+          <li><p class="quiz-question">In the ACDL push, what does the "event" property do and what consumes it?</p></li>
+          <li><p class="quiz-question">Name the five steps of the Adobe Analytics data pipeline in order.</p></li>
+          <li><p class="quiz-question">At which step in the pipeline is the developer responsible? At which step is the Analytics Engineer responsible?</p></li>
+          <li><p class="quiz-question">What is the difference between WebSDK (Alloy.js) and AppMeasurement.js?</p></li>
         </ol>
       </div>
 
@@ -304,7 +412,7 @@ AEM Core Components' Page component reads this config and injects:
 
       <nav class="pager">
         <a class="prev" href="24-forms-implementation.html"><span class="dir">← Previous</span>Implementing Adaptive Forms</a>
-        <a class="next" href="26-adobe-tags-implement.html"><span class="dir">Next →</span>Implementing Adobe Tags in AEM</a>
+        <a class="next" href="26-adobe-tags-implement.html"><span class="dir">Next →</span>Adobe Launch — Architecture &amp; Rules</a>
       </nav>
     </div>
 

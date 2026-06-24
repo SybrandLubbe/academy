@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>26 Implementing Adobe Tags in AEM — AEM Backend Training</title>
-<meta name="description" content="ACDL setup, Cloud Services config, Data Elements and Rules, custom events, and testing with AEP Debugger.">
+<title>26 Adobe Launch — Architecture &amp; Rules — AEM Backend Training</title>
+<meta name="description" content="Adobe Launch rule-based engine, Data Elements (all 8 types), Rules structure, Extensions, the 6-step architecture flow, and AEM integration.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -64,260 +64,491 @@
 
       <div class="module-meta">
         <span class="tag badge text-bg-secondary">Adobe Analytics</span>
-        <span>40 min read</span>
+        <span>45 min read</span>
       </div>
 
-      <h1 class="page-title">Implementing Adobe Tags in AEM</h1>
-      <p class="lede">The Tag Property is ready. Now it needs real data from your AEM pages. This module wires the Adobe Client Data Layer — built into AEM Core Components — to Tags Data Elements and Rules, covering the complete pipeline from page content to analytics beacon.</p>
+      <h1 class="page-title">Adobe Launch — Architecture &amp; Rules</h1>
+      <p class="lede">Adobe Launch (Tags) is a central platform to manage and deploy marketing and analytics scripts without a code deploy for every change. It listens to user interactions, reads data from the datalayer, and decides when and what data to send to Analytics, Target, and any other destination. This module covers how it actually works — the full architecture from event to destination.</p>
 
       <div class="learn-box">
         <h3>What you'll learn</h3>
         <ul>
-          <li>What the Adobe Client Data Layer (ACDL) is and what Core Components push to it</li>
-          <li>Enabling the ACDL via OSGi config and loading Tags via Cloud Services</li>
-          <li>Data Elements that read from the ACDL</li>
-          <li>Custom event tracking — pushing from component clientlibs</li>
-          <li>Testing with the Adobe Experience Platform Debugger</li>
-          <li>Analytics Extension vs Web SDK — which to choose</li>
+          <li>What Launch is and its three core characteristics</li>
+          <li>The full 6-step architecture: event → datalayer → Launch → rules → actions → destinations</li>
+          <li>Data Elements — all 8 types and when to use each</li>
+          <li>Rules — Events, Conditions, and Actions in detail</li>
+          <li>Extensions — what they are and which ones matter</li>
+          <li>Environments, publishing workflow, and AEM Cloud Services integration</li>
         </ul>
       </div>
 
-      <h2>The Adobe Client Data Layer (ACDL)</h2>
-      <p>The ACDL is a JavaScript object (<code>window.adobeDataLayer</code>) that AEM Core Components populate on every page. Instead of Tags scraping text from the DOM (fragile) or hard-coding values in rules (unmaintainable), Tags reads structured data from the ACDL.</p>
-      <pre data-code><span class="filename">what the ACDL contains — inspect via browser console</span><code>window.adobeDataLayer.getState()
+      <h2>What is Adobe Launch?</h2>
+      <p>Adobe Launch (officially: Adobe Experience Platform Tags) is a tag management system — a JavaScript runtime that loads on every page and acts as a central coordinator for all marketing and analytics scripts. Instead of each tracking tool adding its own script tag to your HTML, Launch loads once and handles everything.</p>
+      <pre data-code><span class="filename">what Launch is and what it gives you</span><code>RULE-BASED ENGINE
+  Executes logic using Event → Condition → Action framework.
+  Example:
+    EVENT:     Page loads (Library Loaded)
+    CONDITION: URL contains "/checkout/"
+    ACTION:    Set eVar5 = "checkout", send Analytics beacon
 
-// Returns:
-{
-  "page": {
-    "pageInfo": {
-      "pageName":      "Academy — Home",
-      "pageID":        "/content/academy/en",
-      "destinationURL":"https://training.netcentric.com/en.html",
-      "language":      "en-GB",
-      "template":      "academy/components/page"
+DECOUPLES TRACKING FROM CODE
+  Analytics and marketing logic managed independently
+  of the website code.
+  → Marketing team adds a new event rule on Tuesday.
+  → Developer doesn't touch a single file.
+  → No deploy. No ticket. No waiting.
+
+FLEXIBLE & SCALABLE DEPLOYMENT
+  Environment-based: Development / Staging / Production
+    Each environment has its own embed code URL.
+    Changes are promoted through environments with approval.
+  Version-controlled publishing workflow:
+    Every published build is versioned and rollback is instant.
+
+KEY BENEFITS
+  ✓ Tag governance and consistency across all pages
+  ✓ No code changes for tag updates
+  ✓ Reusable components (Data Elements used across many Rules)
+  ✓ Powerful rules and conditions
+  ✓ Extensible with 200+ extensions in the catalog</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The three characteristics — rule-based, decoupled, environment-based — are what make Launch different from just adding script tags to a page template.</p>
+          <ul>
+            <li><strong>Rule-based</strong> — without a rule engine, every tracking requirement means a code change. With Launch, the Analytics Engineer writes a Rule; no developer involved. This is the entire value proposition.</li>
+            <li><strong>Decoupled from code</strong> — the embed code is added to AEM's Cloud Services config once and never changes. The Launch library it loads changes constantly as the Analytics team updates Rules and Data Elements — but none of those changes require a developer.</li>
+            <li><strong>Environment-based deployment</strong> — the Dev embed URL loads a library that changes instantly when you save a rule. The Prod embed URL only changes after a formal publish workflow. This means you can develop and test rules without touching production data.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>The full Launch architecture — 6 steps</h2>
+      <p>Every analytics interaction follows this exact sequence. Understanding each step tells you where to look when something isn't working.</p>
+      <pre data-code><span class="filename">Adobe Launch architecture — the complete flow</span><code>STEP 1: EVENT OCCURS
+  User Interaction: Page View, Click, Form Submit, Purchase
+  System/App Event: History Change (SPA navigation), Error, Timer
+
+          ↓
+
+STEP 2: DATA PUSHED TO DATALAYER (ACDL)
+  adobeDataLayer.push({
+    "event": "productView",
+    "pageName": "Product Detail",
+    "product": {
+      "id":       "12345",
+      "name":     "Running Shoes",
+      "price":    129.99,
+      "category": "Footwear"
     },
-    "category": {
-      "siteID":          "academy",
-      "primaryCategory": "Home"
+    "user": {
+      "loggedIn": true,
+      "userId":   "abc123"
     }
-  },
-  "component": {
-    "/content/academy/en/jcr:content/root/hero": {
-      "name":  "Hero Image",
-      "title": "Welcome to Academy Training",
-      "type":  "academy/components/hero"
-    }
-  },
-  "user": { "loginStatus": "anonymous" }
-}</code></pre>
+  });
 
+          ↓
+
+STEP 3: LAUNCH RECEIVES THE EVENT AND LOADS DATA ELEMENTS
+  The ACDL extension fires "productView" event into Launch.
+  Launch evaluates all Rules whose event matches.
+  Data Elements resolve their values from defined sources.
+
+          ↓
+
+STEP 4: RULES EVALUATE EVENT + CONDITIONS
+  RULE: "Track Product Views"
+  EVENT:     ACDL push — event = "productView"
+  CONDITION: pageName equals "Product Detail"
+             AND user.loggedIn equals true
+  → If ALL conditions are met, rule fires.
+
+          ↓
+
+STEP 5: ACTIONS ARE TRIGGERED
+  If matched:
+    Set eVar1  = %Page Name%          (Data Element)
+    Set eVar10 = %Product Name%       (Data Element)
+    Set event2 = product view counter
+    Send Beacon → s.t()
+
+          ↓
+
+STEP 6: EXTENSIONS EXECUTE AND SEND TO DESTINATIONS
+  Adobe Analytics Extension → sends to Report Suite
+  Adobe Target Extension    → personalisation decisions
+  Google Analytics          → GA4 event stream
+  Custom Code               → any custom JavaScript</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>The ACDL is an open specification Adobe contributed to the W3C — not proprietary. Any Core Component or custom component can push to it.</p>
+          <p>This 6-step flow is the complete mental model for debugging any Launch/Analytics issue. Every problem lives at exactly one of these steps.</p>
           <ul>
-            <li><code>window.adobeDataLayer</code> is a JavaScript array with <code>push()</code> and <code>getState()</code> methods. Core Components push their data as inline <code>script</code> blocks during server-side rendering.</li>
-            <li><code>getState()</code> returns the merged state of all pushes so far. Always use this in the browser console to see exactly what data Tags has access to at any point in the page lifecycle.</li>
+            <li><strong>Step 1 → 2</strong>: developer responsibility. The component must push the right data at the right time. If the push is missing or malformed, nothing else in the chain works.</li>
+            <li><strong>Step 3</strong>: Data Elements resolve their values. A Data Element of type "Data Layer Variable" reads <code>product.name</code> from the ACDL state. If it returns undefined, check whether the push happened before or after Launch tried to read it.</li>
+            <li><strong>Step 4 → Conditions</strong>: conditions are AND by default (all must pass). A condition that fails silently stops the rule — no error, no beacon. The AEP Debugger shows exactly which condition failed.</li>
+            <li><strong>Step 5 → Actions</strong>: <code>%Page Name%</code> syntax references a Data Element by name. At execution time Launch substitutes the DE's current value. If the DE returned undefined, eVar1 will be empty.</li>
+            <li><strong>Step 6 → Extensions</strong>: the extension is what sends the actual HTTP request. The Analytics Extension sends an AppMeasurement beacon; the Web SDK extension sends an XDM payload to an AEP Datastream.</li>
           </ul>
         </div>
       </details>
 
-      <h2>Enabling the ACDL</h2>
-      <pre data-code><span class="filename">/aem-academy/ui.config/.../config/com.adobe.cq.wcm.core.components.internal.services.DataLayerConfig.cfg.json <em>(academy.ui.config)</em></span><code>{
-    "enabled": true,
-    "skipDataLayerForInvisibleNodes": true
-}</code></pre>
+      <h2>Data Elements — all 8 types</h2>
+      <p>Data Elements are named variables that retrieve values from various sources. They're the reusable building blocks of your Launch implementation — define a value once, use it in any number of Rules.</p>
+      <pre data-code><span class="filename">all 8 Data Element types — when to use each</span><code>1. DATA LAYER VARIABLE (ACDL)    ← use this most often on AEM
+   Source: Adobe Client Data Layer (window.adobeDataLayer)
+   Path:   page.pageInfo.pageName
+   → Reads from ACDL's computed state. Best option for all
+     values pushed by Core Components and your custom pushes.
 
+2. JAVASCRIPT VARIABLE
+   Source: any global JavaScript variable
+   Path:   window.digitalData.page.pageInfo.pageName
+   → Use for legacy digitalData implementations or any custom
+     global variable. Also useful for debugging:
+     window.adobeDataLayer.getState().page.pageInfo.pageName
+
+3. DOM ELEMENT
+   Source: a CSS selector targeting an element's text or attribute
+   Selector: .product-price
+   Attribute: data-product-id
+   → Avoid where possible — DOM structure changes silently break it.
+     Use only when no datalayer alternative exists.
+
+4. COOKIE
+   Source: a browser cookie by name
+   Cookie Name: session_id
+   → Use for session identifiers, A/B test assignments,
+     or consent state stored in cookies.
+
+5. URL VARIABLE  (protocol / hostname / pathname / query / hash)
+   Source: window.location
+   Component: query parameter
+   Name: utm_source
+   → Use for UTM parameter attribution and URL-based conditions.
+     Reads from the current page URL at rule execution time.
+
+6. CONSTANT
+   Source: a hardcoded value you define in Launch
+   Value: "Netcentric Banking Site"
+   → Use for values that never change per environment: site name,
+     brand ID, or report suite ID (though RSIDs are usually in
+     the Analytics extension config, not a DE).
+
+7. LOCAL STORAGE
+   Source: window.localStorage.getItem(key)
+   Key: user_preference_theme
+   → Use for values persisted across sessions client-side:
+     user preferences, cached profile data, feature flags.
+
+8. LOOKUP TABLE
+   Source: a map of input → output defined in Launch
+   Input Data Element: %Page Template%
+   Lookup Table:
+     "article"   → "Content"
+     "product"   → "Commerce"
+     "home"      → "Navigation"
+   → Use to translate technical values into analytics-friendly labels
+     without touching site code.</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>One OSGi config enables the ACDL globally — the same config pattern from modules 4 and 5.</p>
+          <p>Data Elements are the "read" half of Launch — they define where values come from. Understanding all 8 types means you can always find a way to get the right data without asking a developer to change the site.</p>
           <ul>
-            <li><code>"enabled": true</code> — activates ACDL output in Core Components. With false, no data layer JavaScript is included in component output.</li>
-            <li>Place in <code>config/</code> for all environments, or <code>config.publish/</code> if you only want ACDL active on publish (some teams disable it on author to reduce noise in Tag management tools).</li>
+            <li><strong>Data Layer Variable vs JavaScript Variable</strong> — both read from JavaScript, but Data Layer Variable uses ACDL's <code>getState()</code> which merges all pushes into one consistent snapshot. JavaScript Variable reads directly from whatever the path returns at the moment of evaluation — which might be stale or undefined if the push hasn't happened yet.</li>
+            <li><strong>DOM Element</strong> — listed last for a reason. It's the most fragile type. A class rename, a DOM restructure, or a React re-render can all break it silently. Use it only as a last resort when no datalayer value exists.</li>
+            <li><strong>Lookup Table</strong> — one of the most underused types. Instead of asking a developer to add a new <code>"contentCategory"</code> property to every page's datalayer push, the Analytics Engineer creates a Lookup Table that maps the existing <code>page.pageInfo.template</code> value to a category label. Zero code change.</li>
+            <li><strong>URL Variable</strong> for UTM parameters — this is how channel attribution works. The Data Element reads <code>utm_source</code> from the query string; a rule on Page Load fires and stores it in an eVar for cross-page tracking.</li>
           </ul>
         </div>
       </details>
 
-      <h2>Loading Tags via Cloud Services</h2>
-      <pre data-code><span class="filename">AEM Cloud Services config for Tags embed</span><code>Tools → Cloud Services → Adobe Experience Platform Launch → Create
-  production.uri  = "https://assets.adobedtm.com/...launch-prod.min.js"
-  staging.uri     = "https://assets.adobedtm.com/...launch-staging.min.js"
-  development.uri = "https://assets.adobedtm.com/...launch-dev.js"
-  proxyEnabled    = true   ← serves embed via AEM, avoids ad-blockers
+      <h2>Rules — Events, Conditions, Actions</h2>
+      <p>A Rule is the core unit of Launch logic. It answers: <em>When</em> should something happen? <em>Under what conditions?</em> <em>What should be done?</em> Every tracking requirement maps to at least one Rule.</p>
+      <pre data-code><span class="filename">complete Rule anatomy — page view tracking example</span><code>RULE: "Send Page View to Analytics"
 
-Assign to site:
-  Page Properties → Cloud Services tab → select "academy" config
-  (or sling:configRef on /content/academy → /conf/academy)</code></pre>
+─── EVENT (when does this rule check?) ────────────────────
+Extension:  Core
+Event Type: Library Loaded (Page Top)
+  → fires when the Launch library executes on any page
+  Other common event types:
+    DOM Ready          → after HTML is parsed, before images load
+    Window Loaded      → after all resources (images, scripts) load
+    Click              → on a CSS selector match
+    ACDL Event         → when adobeDataLayer.push({ event: "X" }) fires
+    Custom Event       → any custom JS event dispatched via document
 
+─── CONDITIONS (should this rule fire?) ───────────────────
+Condition type: Value Comparison
+  Left operand:  %Page Template%         (Data Element)
+  Operator:      does not equal
+  Right operand: "error"
+  → don't track 404/500 error pages as page views
+
+Conditions can be:
+  ALL (AND) — every condition must pass (default)
+  ANY (OR)  — at least one condition must pass
+
+─── ACTIONS (what should happen?) ─────────────────────────
+Action 1: Adobe Analytics — Set Variables
+  eVar1  = %Page Name%        (resolved from Data Element)
+  eVar2  = %User Login Status%
+  eVar3  = %Page Template%
+  events = event1             (page view counter)
+
+Action 2: Adobe Analytics — Send Beacon
+  Tracking Type: Page View (s.t())
+  → s.t() increments Page Views metric
+  → s.tl() does NOT increment Page Views (for interactions)</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>This is a Context-Aware Configuration (module 15). The Core Components Page template reads it and injects the correct script tag automatically.</p>
+          <p>The Event → Condition → Action pattern maps directly to the OSGi patterns from earlier modules — and is equally important to understand completely.</p>
           <ul>
-            <li><code>proxyEnabled = true</code> — AEM proxies the Tags JS file. The browser sees a first-party URL, avoiding ad-blocker blocks that would prevent all tracking from firing.</li>
+            <li><strong>Event types matter</strong> — "Library Loaded" fires before the DOM exists (fastest, for page-level data already in the ACDL). "DOM Ready" fires after parsing (use for DOM-dependent Data Elements). "Window Loaded" fires last (use only if you must wait for all resources). Using the wrong event type is a common source of "DE returned undefined" bugs.</li>
+            <li><strong>Conditions are guards</strong> — they prevent Rules from firing in unwanted contexts. A page view rule that fires on error pages counts error views as valid sessions, inflating every metric. Always guard your page view rule against error templates.</li>
+            <li><strong>Set Variables always before Send Beacon</strong> — these must be separate Actions, in this order. Set Variables populates the Analytics object (<code>s.eVar1</code>). Send Beacon then fires. If you merge them or reverse the order, variables aren't set when the beacon sends.</li>
+            <li><code>s.t()</code> vs <code>s.tl()</code> — <code>s.t()</code> is a Page View call: increments the "Page Views" metric, resets visit timeout, and uses the full variable set. <code>s.tl()</code> is a Link Tracking call: does NOT increment Page Views, but records the event. Use <code>s.tl()</code> for clicks, downloads, form submits — any interaction that isn't a new page load.</li>
           </ul>
         </div>
       </details>
 
-      <h2>Data Elements reading the ACDL</h2>
-      <pre data-code><span class="filename">Data Elements in the Tags UI — reading from ACDL paths</span><code>Data Element: "Page Name"
-  Extension:         Adobe Client Data Layer
-  Data Element Type: Data Layer Computed State
-  Path:              page.pageInfo.pageName          → "Academy — Home"
-  Default Value:     "(unknown)"
+      <pre data-code><span class="filename">a second Rule — custom event tracking (click / form submit)</span><code>RULE: "Track CTA Click"
 
-Data Element: "Page Template"
-  Extension:         Adobe Client Data Layer
-  Path:              page.pageInfo.template           → "academy/components/page"
+EVENT:
+  Extension:  Adobe Client Data Layer
+  Event Type: Data Pushed (Event Listener)
+  Event Name: cta:click       ← matches the "event" key in the ACDL push
 
-Data Element: "Login Status"
-  Extension:         Core
-  Type:              JavaScript Variable
-  Variable name:     window.adobeDataLayer.getState().user.loginStatus</code></pre>
-
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>The "Adobe Client Data Layer" extension in Tags reads ACDL state with dot-notation paths — no custom JavaScript required for standard page data.</p>
-          <ul>
-            <li><strong>Data Layer Computed State</strong> type — reads from the ACDL's current merged state at evaluation time. The path mirrors the JSON structure shown above.</li>
-            <li>Always set a <strong>Default Value</strong> — if the path doesn't exist (e.g. a component not present on this page), Data Elements return <code>undefined</code>, which Analytics silently ignores. A default makes missing data visible.</li>
-          </ul>
-        </div>
-      </details>
-
-      <h2>Custom event tracking from component clientlibs</h2>
-      <pre data-code><span class="filename">pushing a download event to the ACDL from a component clientlib</span><code>// /ui.apps/.../clientlib-download/js/download-tracking.js
-(function() {
-    'use strict';
-    document.querySelectorAll('.academy-download-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            window.adobeDataLayer.push({
-                event: 'academy:download',        // custom event name Tags listens for
-                eventInfo: {
-                    path: 'component.download',
-                    value: {
-                        documentTitle: btn.getAttribute('data-doc-title'),
-                        documentPath:  btn.getAttribute('data-doc-path')
-                    }
-                }
-            });
-        });
+  Your component clientlib fires this push on click:
+  document.querySelector('.cta-button').addEventListener('click', () => {
+    window.adobeDataLayer.push({
+      "event": "cta:click",
+      "eventInfo": {
+        "path": "component.hero-cta",
+        "value": {
+          "ctaLabel": "Apply Now",
+          "ctaTarget": "/loan-application"
+        }
+      }
     });
-}());</code></pre>
+  });
 
+CONDITIONS:
+  (none — track all CTA clicks)
+
+ACTIONS:
+  Action 1: Adobe Analytics — Set Variables
+    eVar20 = %CTA Label%        (DE reads eventInfo.value.ctaLabel)
+    eVar21 = %CTA Target%       (DE reads eventInfo.value.ctaTarget)
+    events = event10            (CTA click counter)
+
+  Action 2: Adobe Analytics — Send Beacon
+    Tracking Type: Custom Link (s.tl())
+    Link Name: %CTA Label%</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>Any component can push to the ACDL — this is how Tags learns about user interactions beyond built-in browser events.</p>
+          <p>This is the complete pattern for tracking any user interaction that isn't a page load. The developer writes the ACDL push; the Analytics Engineer writes the Rule. These are separate, independent concerns.</p>
           <ul>
-            <li><code>event: 'academy:download'</code> — a custom event name. In Tags, you create a Rule with event type "ACDL Event Listener" listening for <code>academy:download</code>. When this push executes, that rule fires.</li>
-            <li>A Data Element with type "Event Listener" and path <code>eventInfo.value.documentTitle</code> reads the document title from the push payload inside the Rule's actions.</li>
-            <li>The <code>data-doc-title</code> / <code>data-doc-path</code> attributes are written in the component's HTL template: <code>data-doc-title="${download.title}"</code>. The JS reads them at click time.</li>
+            <li><code>window.adobeDataLayer.push({ "event": "cta:click", ... })</code> — your component clientlib fires this on every CTA button click. This is the entirety of the developer's responsibility for this interaction. You don't call any Analytics functions directly.</li>
+            <li><code>event: "cta:click"</code> — the exact string that the Launch Rule's "ACDL Event Listener" listens for. The Analytics Engineer configures this in Launch; it must match exactly what your push sends (case-sensitive).</li>
+            <li><code>eventInfo.value.ctaLabel</code> — Data Elements of type "Data Layer Variable" read from the pushed object's path. The Analytics Engineer creates a DE "CTA Label" pointing to <code>eventInfo.value.ctaLabel</code>. Your push populates it; their rule reads it.</li>
+            <li><code>s.tl()</code> for clicks — this is a link tracking call, not a page view. It increments event10 (the click counter) but does NOT increment Page Views, which is correct: clicking a button is not a new page view.</li>
           </ul>
         </div>
       </details>
 
-      <h2>Testing with the AEP Debugger</h2>
-      <pre data-code><span class="filename">what to verify in the Debugger</span><code>Install: "Adobe Experience Platform Debugger" Chrome extension.
-Open any page → click the Debugger icon.
+      <h2>Extensions</h2>
+      <p>Extensions are plugins that add capabilities to a Launch Property. They provide the Events, Conditions, Actions, and Data Element types available when building Rules. Without an extension installed, you can't use its capabilities.</p>
+      <pre data-code><span class="filename">the key extensions — what each provides</span><code>CORE (always installed, required)
+  Provides: standard event types (Library Loaded, DOM Ready,
+            Click, Custom Event), basic condition types,
+            and JavaScript Variable DE type.
+  → This is the foundation. Every other extension builds on it.
 
-LAUNCH TAB:
+ADOBE CLIENT DATA LAYER
+  Provides: "Data Layer Variable" DE type (reads from ACDL),
+            "ACDL Event Listener" event type (fires on push events).
+  → Install this on every AEM + Launch project.
+
+ADOBE ANALYTICS
+  Provides: "Set Variables" action, "Send Beacon" action,
+            "Clear Variables" action.
+  Config:   Report Suite ID, Tracking Server, Character Set.
+  → The AppMeasurement.js route. Sends data to Adobe Analytics.
+
+ADOBE EXPERIENCE PLATFORM WEB SDK (Alloy.js)
+  Provides: "Send Event" action (XDM format), "Apply Propositions" (Target).
+  Config:   Datastream ID (configured in AEP, not in Launch).
+  → The modern route. One beacon reaches Analytics + Target + RTCDP.
+  → Use for all greenfield projects.
+
+ADOBE TARGET
+  Provides: "Load Target" action, "Add Params to All Requests".
+  → A/B testing and personalisation. Uses Analytics as its reporting source.
+
+CUSTOM CODE (from Core extension)
+  Provides: run arbitrary JavaScript inside a rule.
+  → Use only when no standard action covers your need.
+    Everything in Custom Code is invisible to Launch's audit log.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Extensions are the reason Launch has 200+ integrations without each one requiring a custom build. Each extension packages one tool's tracking logic into a reusable set of Launch building blocks.</p>
+          <ul>
+            <li><strong>Core extension</strong> — can't be removed. It provides the fundamental event types (Library Loaded, DOM Ready, Click) and the JavaScript Variable DE type. Everything else is optional.</li>
+            <li><strong>ACDL extension</strong> — the bridge between your AEM datalayer and Launch. Without it, the only way to read ACDL data is via a JavaScript Variable DE using <code>window.adobeDataLayer.getState().some.path</code> — which works but loses the reactive event listener capability.</li>
+            <li><strong>Analytics vs Web SDK</strong> — they're mutually exclusive approaches. You either send AppMeasurement beacons (Analytics Extension) OR XDM payloads to a Datastream (Web SDK). Using both creates double-counting in reports.</li>
+            <li><strong>Custom Code</strong> — a trap for the unwary. Code written here is invisible to Launch's change log, can't be referenced as a Data Element, and makes auditing the implementation impossible. Use it only when a standard action genuinely doesn't exist.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Environments and publishing workflow</h2>
+      <pre data-code><span class="filename">environments — the three embed URLs and how publishing flows</span><code>DEVELOPMENT
+  Embed: https://assets.adobedtm.com/...launch-xxx-development.js
+  Behaviour: changes appear immediately after saving — no publish step.
+  Load in: AEM author instance (via Cloud Services run-mode config).
+  Use for: rule development, Data Element iteration, local testing.
+
+STAGING
+  Embed: https://assets.adobedtm.com/...launch-xxx-staging.min.js
+  Behaviour: requires Submit → Approve → Build to Staging workflow.
+  Load in: non-production AEM publish instances.
+  Use for: QA against production content, stakeholder sign-off.
+
+PRODUCTION
+  Embed: https://assets.adobedtm.com/...launch-xxx-min.js
+  Behaviour: requires Promote to Production → Approve → Build workflow.
+  Load in: production AEM publish instances.
+  Use for: the live site — always minified, always approved.
+
+IMPORTANT:
+  Never load Development embed on production — it's unminified,
+  larger, and may contain in-progress rules not fit for end users.
+
+  Changing what the embed URL does (rules, DEs, extensions)
+  → managed entirely in Launch, no AEM deploy needed.
+
+  Changing which embed URL AEM loads (Dev → Staging → Prod)
+  → requires an AEM Cloud Services config update + AEM deploy.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The environment distinction is where most implementation mistakes happen — using the dev embed in production, or not realising that promoting to staging requires an explicit build.</p>
+          <ul>
+            <li><strong>Development "saves immediately"</strong> — this is intentional for iteration speed. You save a rule change in Launch and it's live on the dev embed within seconds. No build, no approval. The trade-off: dev is not suitable for production because it's unsecured and unminified.</li>
+            <li><strong>Staging and Production require builds</strong> — each build creates a versioned, immutable snapshot of your entire Launch library. If a bad rule makes it to production, you roll back to the previous build in one click — no re-deployment of AEM needed.</li>
+            <li><strong>AEM Cloud Services stores the embed URL per run-mode</strong> — AEM's page component reads this config and injects the correct <code>&lt;script&gt;</code> tag. The author instance reads <code>development.uri</code>; the publish instance reads <code>production.uri</code>. A developer changes which URI is loaded by updating the Cloud Services config and deploying AEM — this is the one part that requires a developer.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>AEM Cloud Services integration</h2>
+      <pre data-code><span class="filename">wiring Launch to AEM — what to configure and where</span><code>1. ENABLE THE ACDL (one OSGi config, once per project)
+   File: ui.config/.../config/
+         com.adobe.cq.wcm.core.components.internal.services.DataLayerConfig.cfg.json
+   Content: { "enabled": true }
+   → Core Components will now push page and component data to ACDL.
+
+2. CONFIGURE CLOUD SERVICES (in AEM Author UI)
+   Tools → Cloud Services → Adobe Experience Platform Launch → Create
+   Production:   https://assets.adobedtm.com/...launch-prod.min.js
+   Staging:      https://assets.adobedtm.com/...launch-staging.min.js
+   Development:  https://assets.adobedtm.com/...launch-dev.js
+   proxyEnabled: true  (serves JS through AEM, avoids ad-blockers)
+
+3. ASSIGN TO YOUR SITE
+   Set sling:configRef on /content/your-site → /conf/your-site
+   OR via Page Properties → Cloud Services tab on the root page.
+   → AEM Core Components' Page template reads this config and
+     injects the correct script tag in &lt;head&gt; automatically.
+
+4. VERIFY
+   Open any page in browser → open AEP Debugger extension
+   Launch tab: Container loaded = YES
+   Check which library URL loaded (dev/staging/prod)</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>These four steps are the full developer checklist for wiring Launch to a new AEM project. Steps 1 and 2 are done once; step 3 assigns the config to the content tree.</p>
+          <ul>
+            <li><strong>Step 1 — OSGi config</strong>: without this, Core Components output no ACDL JavaScript at all. The datalayer simply doesn't exist on the page, and all Tags Data Elements of type "Data Layer Variable" return undefined.</li>
+            <li><strong>Step 2 — proxyEnabled</strong>: with this true, AEM serves the Launch library from its own domain instead of <code>assets.adobedtm.com</code>. Browser ad-blockers commonly block third-party marketing scripts but won't block a first-party AEM URL. Essential for accurate tracking in markets with high ad-blocker usage.</li>
+            <li><strong>Step 3 — sling:configRef</strong>: this is the Context-Aware Config mechanism from module 15. The page component reads the nearest CA Config for the current content path. Set it at the root of your content tree (<code>/content/your-site</code>) and every page beneath inherits it.</li>
+            <li><strong>Step 4 — AEP Debugger</strong>: the Chrome extension is the simplest way to verify the integration. If "Container loaded" is YES, the embed code is working. If it's NO, check the Cloud Services config and the proxyEnabled setting.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Testing the full pipeline</h2>
+      <pre data-code><span class="filename">verification checklist — from datalayer to Analytics beacon</span><code>STEP 1: Verify the datalayer
+  Browser console: window.adobeDataLayer.getState()
+  ✓ page.pageInfo.pageName is set and correct
+  ✓ user.loginStatus is present (if expected)
+  ✓ Event-specific data appears after triggering the interaction
+
+STEP 2: Verify Launch loaded
+  AEP Debugger → Launch tab
   ✓ Container loaded: YES
-  ✓ Library: launch-xxx-development.js
-  ✓ Rules fired: ["Send Page View"]
+  ✓ Library URL: matches your expected environment (dev/staging/prod)
+  ✓ Rules fired: list shows "Send Page View" (or your rule name)
+  ✗ If rules didn't fire: expand the rule to see which condition failed
 
-ANALYTICS TAB:
-  ✓ Report Suite: dev-report-suite
-  ✓ eVar1: "Academy — Home"
-  ✓ Events: event1
-  ✓ Beacon: s.t() (page view)
+STEP 3: Verify the Analytics beacon
+  AEP Debugger → Analytics tab
+  ✓ Report Suite: correct ID (not accidentally using prod suite in dev)
+  ✓ eVar1: matches the page name from the datalayer
+  ✓ Events: event1 (or your configured events)
+  ✓ Beacon type: s.t() for page views, s.tl() for interactions
 
-NETWORK TAB (browser DevTools):
-  Filter: "b/ss/" → Analytics server calls
-  Query parameters: your eVars, props, events
-  This is the ground truth if the Debugger gives unexpected results.</code></pre>
-
+STEP 4: Network tab verification (ground truth)
+  Filter: b/ss/
+  → These are the Analytics HTTP requests to the tracking server
+  Query parameters contain all variables in raw form:
+    v1=banking%3Adashboard     ← eVar1
+    events=event1              ← events
+    pageName=banking%3Adashboard</code></pre>
       <details class="code-explain">
         <summary>📖 Why this code?</summary>
         <div class="code-explain-body">
-          <p>The Debugger is the most important tool for Tags/Analytics development. Learn it on day one.</p>
+          <p>This checklist isolates the problem to one step in the chain. Never jump straight to the Analytics interface to debug — by the time data appears there (30–90 min delay), you've lost context.</p>
           <ul>
-            <li>The <strong>Launch tab</strong> shows which Rules fired. Expand a Rule to see which condition failed if it didn't fire.</li>
-            <li>The <strong>Analytics tab</strong> shows a decoded beacon — far more readable than raw query parameters. Check eVars and events here before declaring an implementation correct.</li>
-          </ul>
-        </div>
-      </details>
-
-      <h2>Analytics Extension vs Web SDK</h2>
-      <pre data-code><span class="filename">two integration paths</span><code>Adobe Analytics Extension (AppMeasurement.js)
-  + Mature, well-documented, familiar eVar/prop/event model
-  + Data goes to Adobe Analytics
-  - Only Analytics; not other AEP products
-  → Use for: existing Analytics projects and organisations new to AEP
-
-Adobe Experience Platform Web SDK (Alloy.js)
-  + One beacon for all AEP products (Analytics, Target, RTCDP, CJA)
-  + Smaller library, better performance, first-party cookies by default
-  - Steeper config: XDM schemas, Datastreams, AEP Sandbox setup required
-  → Use for: greenfield projects building on the full AEP platform</code></pre>
-
-      <details class="code-explain">
-        <summary>📖 Why this code?</summary>
-        <div class="code-explain-body">
-          <p>The Web SDK is Adobe's strategic direction — all new AEP features require it. The Analytics Extension is in maintenance mode but fully supported.</p>
-          <ul>
-            <li>For most current AEM projects, the <strong>Analytics Extension</strong> is the correct choice — your admin already knows eVars/props, documentation is excellent.</li>
-            <li>Choose <strong>Web SDK</strong> for new greenfield projects where you're also implementing Target, Offer Decisioning, or Customer Journey Analytics — the unified XDM data model is more efficient than separate beacons per product.</li>
+            <li><strong>Step 1 first</strong> — if <code>getState()</code> doesn't contain what you expect, the problem is in your component's clientlib push. Everything else is irrelevant until step 1 is correct.</li>
+            <li><strong>Step 2 before step 3</strong> — if Launch didn't load (container = NO), no rule will ever fire. Check the Cloud Services config. If Launch loaded but the rule didn't fire, expand it in the Debugger to see the condition that prevented it.</li>
+            <li><strong>Step 3 vs step 4</strong> — the Debugger's Analytics tab decodes the beacon for readability. The Network tab shows the raw URL-encoded query string, which is what Adobe's servers actually received. Use the Network tab when the Debugger gives confusing results.</li>
+            <li><code>b/ss/</code> — the URL path pattern for Analytics beacons. Every hit goes to <code>https://your-company.sc.omtrdc.net/b/ss/report-suite-id/...</code>. Filtering for this pattern in DevTools shows only Analytics traffic, not the hundreds of other network requests on a typical page.</li>
           </ul>
         </div>
       </details>
 
       <div class="try-it alert alert-success">
-        <span class="label">Try it — verify the full pipeline</span>
+        <span class="label">Try it — trace the full pipeline</span>
         <ol style="margin:0;padding-left:1.2em;">
-          <li>Enable the ACDL via OSGi config and deploy to your local instance.</li>
-          <li>Open a page in browser console, run <code>window.adobeDataLayer.getState()</code>. Verify <code>page.pageInfo.pageName</code> is present.</li>
-          <li>In your Tags property, create "Page Name" Data Element (ACDL path: <code>page.pageInfo.pageName</code>).</li>
-          <li>Open AEP Debugger. Does the Tags library load? Does eVar1 in the Analytics tab show the page name?</li>
+          <li>Enable the ACDL (OSGi config) and deploy to your local AEM instance.</li>
+          <li>Open a page → console → <code>window.adobeDataLayer.getState()</code>. Confirm <code>page.pageInfo.pageName</code> exists.</li>
+          <li>In your Launch Property (Development environment), create a Data Element "Page Name" of type Data Layer Variable, path <code>page.pageInfo.pageName</code>.</li>
+          <li>Create a Rule: Library Loaded → Set Variables (eVar1 = %Page Name%) → Send Beacon (s.t()).</li>
+          <li>Open AEP Debugger. Launch tab: container loaded? Analytics tab: eVar1 correct?</li>
+          <li>Network tab: filter <code>b/ss/</code> — does the beacon contain <code>v1=</code> with your page name?</li>
         </ol>
       </div>
 
       <div class="knowledge-check">
         <h2>Knowledge Check</h2>
-        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
+        <p class="kc-intro">Ten questions — ask live, check the Trainer Answer Key for full answers.</p>
         <ol class="quiz-list">
-        <li>
-          <p class="quiz-question">What is the Adobe Client Data Layer (ACDL), and how does it get populated on an AEM Core Components page?</p>
-        </li>
-        <li>
-          <p class="quiz-question">What OSGi config file enables the ACDL, and what is the key property?</p>
-        </li>
-        <li>
-          <p class="quiz-question">What Tags Data Element type reads from the ACDL, and what does the 'path' field contain?</p>
-        </li>
-        <li>
-          <p class="quiz-question">Write the Tags Data Element configuration to read page.pageInfo.pageName from the ACDL.</p>
-        </li>
-        <li>
-          <p class="quiz-question">A developer wants Tags to fire when a download button is clicked. What must they add to the component's clientlib JavaScript?</p>
-        </li>
-        <li>
-          <p class="quiz-question">In an ACDL push, what is the 'event' property used for in Adobe Tags?</p>
-        </li>
-        <li>
-          <p class="quiz-question">Name the two Debugger tabs most useful for verifying a Tags/Analytics implementation.</p>
-        </li>
-        <li>
-          <p class="quiz-question">What does filtering the Network tab by 'b/ss/' show you?</p>
-        </li>
-        <li>
-          <p class="quiz-question">What is the key architectural difference between the Analytics Extension and the Web SDK?</p>
-        </li>
-        <li>
-          <p class="quiz-question">When would you choose the Web SDK over the Analytics Extension for a new project?</p>
-        </li>
+          <li><p class="quiz-question">Name the three core characteristics of Adobe Launch and explain what each one gives a project team.</p></li>
+          <li><p class="quiz-question">Walk through the 6 steps of the Adobe Launch architecture. At which step does the developer's responsibility end?</p></li>
+          <li><p class="quiz-question">Name all 8 Data Element types. Which one should you use most often on an AEM + ACDL project, and why?</p></li>
+          <li><p class="quiz-question">When would you use a DOM Element Data Element, and what is its main risk?</p></li>
+          <li><p class="quiz-question">A Launch Rule has three parts. Name them and explain what each controls.</p></li>
+          <li><p class="quiz-question">In a Rule with two conditions set to ALL (AND), one condition fails. What happens?</p></li>
+          <li><p class="quiz-question">What is the difference between s.t() and s.tl() in the Send Beacon action?</p></li>
+          <li><p class="quiz-question">A developer wants to track CTA button clicks. Describe exactly what they add to the component clientlib and what the Analytics Engineer configures in Launch.</p></li>
+          <li><p class="quiz-question">What does proxyEnabled = true in the AEM Cloud Services config do, and why does it matter?</p></li>
+          <li><p class="quiz-question">An Analytics Engineer says "eVar1 is empty in production but works in development." Walk through the 4-step testing checklist to find where the problem is.</p></li>
         </ol>
       </div>
 
@@ -327,7 +558,7 @@ Adobe Experience Platform Web SDK (Alloy.js)
       </div>
 
       <nav class="pager">
-        <a class="prev" href="25-adobe-tags-setup.html"><span class="dir">← Previous</span>Adobe Tags — Setup &amp; Concepts</a>
+        <a class="prev" href="25-adobe-tags-setup.html"><span class="dir">← Previous</span>Web Analytics &amp; Adobe Analytics</a>
         <a class="next" href="27-analytics-workspaces.html"><span class="dir">Next →</span>Adobe Analytics Workspaces</a>
       </nav>
     </div>
