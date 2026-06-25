@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>29 AEM DevOps — On-Premise vs AEMaaCS — AEM Backend Training</title>
+<meta name="description" content="What DevOps for AEM entails across both deployment models — infrastructure responsibilities, CI/CD pipelines, log access, and step-by-step resolution for eight common production scenarios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 30 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adaptive-forms" href="22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="form-fragments" href="23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="forms-implementation" href="24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="analytics-workspaces" href="27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="site-capstone" href="28-site-capstone.html">28-site-capstone<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="aem-devops" href="29-aem-devops.html">29-aem-devops<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">29-aem-devops</span></p>
+
+      <div class="module-meta">
+        <span class="tag badge text-bg-secondary">DevOps</span>
+        <span>90 min read</span>
+      </div>
+
+      <h1 class="page-title">AEM DevOps — On-Premise vs AEMaaCS</h1>
+      <p class="lede">AEM runs in two fundamentally different operational models. On-premise, your team owns the servers, the JVM, the OS, and every layer of infrastructure between the hardware and the application. With AEM as a Cloud Service (AEMaaCS), Adobe owns all of that — your DevOps role shifts to managing pipelines, configuration-as-code, and cloud-native tooling. This module covers both models in depth: what you control, what you're responsible for, how you deploy, how you debug, and exactly what to do when production breaks.</p>
+
+      <div class="learn-box">
+        <h3>What you'll learn</h3>
+        <ul>
+          <li>What AEM DevOps entails across both deployment models — the full scope of responsibility</li>
+          <li>On-premise: infrastructure topology, JVM tuning, CI/CD pipeline, log analysis, maintenance tasks</li>
+          <li>AEMaaCS: Cloud Manager pipelines, OSGi config-as-code, Dispatcher-as-code, RDE, log access</li>
+          <li>A clear side-by-side comparison of what each model demands from a DevOps engineer</li>
+          <li>Eight real production failure scenarios — symptoms, diagnostic commands, and resolution steps for each</li>
+        </ul>
+      </div>
+
+      <h2>What AEM DevOps actually is</h2>
+      <p>AEM DevOps sits at the intersection of three teams: <strong>Developers</strong> who build components, services, and content structures; <strong>Operations</strong> (or platform engineers) who manage infrastructure, monitoring, and uptime; and the <strong>DevOps engineer</strong> who bridges the two — owning the pipeline that takes code from a developer's laptop to production, and who is on-call when production breaks in ways that aren't purely application bugs.</p>
+      <p>AEM adds complexity that most Java web frameworks don't have: a distributed content repository (the JCR), an OSGi runtime that controls the application's own module system, a separate Dispatcher caching tier, author-publish replication, and (in AEMaaCS) Adobe's own cloud infrastructure layer. Each of these is a failure domain with its own diagnostic tools and runbooks.</p>
+
+      <div class="callout alert alert-primary">
+        <span class="label">The mental model</span>
+        Think of AEM DevOps as owning three pipelines simultaneously: the <strong>code pipeline</strong> (CI/CD — build, test, deploy), the <strong>content pipeline</strong> (replication or distribution — author to publish), and the <strong>infrastructure pipeline</strong> (keeping the platform healthy, patched, and sized correctly). All three can fail independently, and the failure signatures are completely different.
+      </div>
+
+      <h2>Part A — On-Premise AEM DevOps</h2>
+
+      <h3>A1 — Infrastructure topology</h3>
+      <p>A production on-premise AEM deployment has at minimum four layers. Understanding exactly what each layer does is a prerequisite to diagnosing failures when they occur.</p>
+      <pre data-code><span class="filename">standard on-premise AEM production topology</span><code>LOAD BALANCER (hardware or software — HAProxy, F5, AWS ALB)
+  │   Distributes traffic across Dispatcher instances.
+  │   Health-checks Dispatchers and removes failed nodes from rotation.
+  │
+  ├── DISPATCHER 1 (Apache httpd + mod_dispatcher module)
+  │     Serves cached HTML, CSS, JS, images from local disk.
+  │     Forwards cache-miss requests to Publish.
+  │     Handles URL rewriting, security filtering, Varnish-style invalidation.
+  │     Typical paths: /var/www/dispatcher/cache/ (cached content)
+  │                    /etc/httpd/conf.d/       (vhost configs)
+  │                    /etc/httpd/conf.dispatcher.d/ (farm configs)
+  │
+  └── DISPATCHER 2 (active/active — same config, different cache)
+
+  │
+  ├── PUBLISH 1 (AEM publish instance — port 4503)
+  │     Serves rendered page HTML to Dispatcher on cache miss.
+  │     Stores content replicated from Author.
+  │     Run as service user (never root): aem-publish
+  │     JVM: -Xms2048m -Xmx8192m -XX:+UseG1GC
+  │     Repository: /opt/aem/publish/crx-quickstart/repository/
+  │
+  └── PUBLISH 2 (same — scale horizontally for traffic)
+
+  │
+  └── AUTHOR (AEM author instance — port 4502, NOT public-facing)
+        Where content editors work.
+        Sends content to Publish via Replication Agents.
+        Higher memory requirement than Publish (authoring UI is heavier).
+        JVM: -Xms4096m -Xmx16384m
+        NEVER expose Author to the internet — proxy behind VPN or bastion host.
+
+SEPARATE SERVICES (shared):
+  MongoDB / Oak datastore (if using MongoMK — otherwise TarMK is local files)
+  Binary datastore: S3, Azure Blob, or local FileDataStore
+  SMTP relay (for AEM email notifications)
+  LDAP/Active Directory (for author user authentication)</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Understanding this topology is not optional — you cannot diagnose a slow page response without knowing which layer is responsible.</p>
+          <ul>
+            <li><strong>Dispatcher</strong> is the first line of defence for both performance and security. A cache hit never reaches AEM. A misconfigured allow-list means admin paths are publicly accessible. A broken invalidation rule means stale content serves for hours.</li>
+            <li><strong>Author is never public</strong> — exposing <code>localhost:4502</code> to the internet without authentication means anyone can access the Felix console at <code>/system/console</code> and install arbitrary OSGi bundles. This is a catastrophic security failure, and it happens in the wild.</li>
+            <li><strong>TarMK vs MongoMK</strong> — TarMK (the default, file-based segment store) is simpler, faster for single-publish deployments, and requires no external database. MongoMK enables a shared datastore across multiple publish instances but adds MongoDB as a failure point. Most on-premise projects use TarMK with a separate FileDataStore or S3.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>A2 — JVM tuning and startup configuration</h3>
+      <pre data-code><span class="filename">/opt/aem/author/crx-quickstart/bin/start.sh — recommended JVM flags</span><code>#!/bin/bash
+# AEM Author JVM configuration — production baseline
+# Adjust -Xmx based on available RAM: leave 4GB for the OS
+
+JVM_OPTS="\
+  -server \
+  -Xms4096m \
+  -Xmx12288m \
+  -XX:+UseG1GC \
+  -XX:MaxGCPauseMillis=200 \
+  -XX:+HeapDumpOnOutOfMemoryError \
+  -XX:HeapDumpPath=/opt/aem/heapdumps/ \
+  -Xloggc:/opt/aem/author/crx-quickstart/logs/gc.log \
+  -XX:+PrintGCDetails \
+  -XX:+PrintGCDateStamps \
+  -XX:+UseGCLogFileRotation \
+  -XX:NumberOfGCLogFiles=5 \
+  -XX:GCLogFileSize=20m \
+  -Dsling.run.modes=author,prod \
+  -Doak.queryLimitInMemory=500000 \
+  -Doak.queryLimitReads=100000"
+
+# DataStore configuration (S3 example)
+JVM_OPTS="$JVM_OPTS \
+  -Doak.datastore.class=org.apache.jackrabbit.oak.plugins.blob.datastore.S3DataStore \
+  -Doak.datastore.s3.bucket=my-aem-binaries \
+  -Doak.datastore.s3.region=eu-west-1"
+
+java $JVM_OPTS \
+  -jar /opt/aem/author/aem-65-quickstart.jar \
+  -port 4502 \
+  -nofork</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Every flag here prevents a category of production failure.</p>
+          <ul>
+            <li><code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/aem/heapdumps/</code> — when AEM runs out of heap, the JVM writes a heap dump to disk automatically before dying. Without this, you lose all evidence of what caused the OOM and must guess from log messages alone. Make sure the target path has at least 16GB free — a heap dump equals your <code>-Xmx</code> size.</li>
+            <li><code>-XX:+UseG1GC -XX:MaxGCPauseMillis=200</code> — G1GC (Garbage-First) is the correct collector for heaps &gt;4GB. The alternative, CMS, was deprecated in Java 9. Setting <code>MaxGCPauseMillis=200</code> tells G1 to target 200ms max pause; it will sacrifice throughput to hit this target. For AEM authoring (interactive, latency-sensitive), 200ms is a reasonable ceiling.</li>
+            <li><code>-Dsling.run.modes=author,prod</code> — sets the run modes at JVM level. This is what determines which <code>config.author</code> and <code>config.prod</code> OSGi configuration folders are loaded. Getting this wrong means production OSGi configs are silently not applied.</li>
+            <li><code>-Doak.queryLimitInMemory=500000</code> — Oak's query protection. Any query that would load more than 500,000 nodes into memory throws a <code>LimitExceededException</code> instead, preventing a single bad query from OOMing the JVM.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>A3 — On-premise CI/CD pipeline (Jenkins example)</h3>
+      <pre data-code><span class="filename">Jenkinsfile — typical on-premise AEM deployment pipeline</span><code>pipeline {
+    agent any
+
+    environment {
+        AEM_AUTHOR_URL  = 'http://author.internal:4502'
+        AEM_PUBLISH_URL = 'http://publish1.internal:4503'
+        AEM_CREDS       = credentials('aem-deploy-user')  // Jenkins credential
+        MAVEN_OPTS      = '-Xmx2048m'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean install -PautoInstallSinglePackage \
+                      -Daem.host=localhost \
+                      -Daem.port=4502 \
+                      -DskipTests=false'
+            }
+            post {
+                always {
+                    junit 'core/target/surefire-reports/**/*.xml'
+                }
+            }
+        }
+
+        stage('Code Quality') {
+            steps {
+                // SonarQube analysis
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+
+        stage('Deploy to Author') {
+            when { branch 'main' }
+            steps {
+                sh """
+                curl -u ${AEM_CREDS_USR}:${AEM_CREDS_PSW} \
+                  -F file=@all/target/*.zip \
+                  -F name=academy-all \
+                  -F force=true \
+                  -F install=true \
+                  ${AEM_AUTHOR_URL}/crx/packmgr/service.jsp
+                """
+                // Wait for bundle activation
+                sh './scripts/wait-for-bundles.sh ${AEM_AUTHOR_URL}'
+            }
+        }
+
+        stage('Smoke Test Author') {
+            steps {
+                sh "curl -f -u ${AEM_CREDS_USR}:${AEM_CREDS_PSW} \
+                      ${AEM_AUTHOR_URL}/system/console/bundles.json | \
+                      python3 scripts/check-bundles.py"
+            }
+        }
+
+        stage('Deploy to Publish') {
+            when { branch 'main' }
+            steps {
+                sh """
+                curl -u ${AEM_CREDS_USR}:${AEM_CREDS_PSW} \
+                  -F file=@all/target/*.zip \
+                  -F name=academy-all \
+                  -F force=true \
+                  -F install=true \
+                  ${AEM_PUBLISH_URL}/crx/packmgr/service.jsp
+                """
+            }
+        }
+
+        stage('Dispatcher Cache Flush') {
+            steps {
+                sh "curl -H 'CQ-Action: Activate' \
+                         -H 'CQ-Handle: /content' \
+                         -H 'Content-Length: 0' \
+                         http://dispatcher1.internal/dispatcher/invalidate.cache"
+            }
+        }
+    }
+
+    post {
+        failure {
+            mail to: 'devops@netcentric.com',
+                 subject: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "Build failed. See ${env.BUILD_URL}"
+        }
+    }
+}</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>A production on-premise deployment pipeline has distinct stages that can fail independently — knowing which stage failed tells you immediately what category of problem you have.</p>
+          <ul>
+            <li><code>credentials('aem-deploy-user')</code> — Jenkins Credentials Store, not hardcoded passwords. Hardcoded passwords in Jenkinsfiles get committed to Git, where they're visible in the repo history even after deletion. Always use Jenkins credentials or Vault.</li>
+            <li><code>wait-for-bundles.sh</code> — after package installation, AEM's OSGi runtime takes 15–120 seconds to activate all bundles. Deploying to Publish immediately after Author without waiting often results in a partial publish deployment where new bundles on Author call API methods that don't yet exist on Publish.</li>
+            <li><code>Dispatcher Cache Flush</code> stage — deploying new components and templates without flushing the Dispatcher cache means users continue to see the old cached HTML for hours. The <code>CQ-Action: Activate</code> header triggers Dispatcher invalidation for <code>/content</code> and all its descendants.</li>
+            <li><code>when { branch 'main' }</code> — deployment stages only run on the main branch. Feature branches build and test but don't deploy, preventing WIP code from landing on a shared server.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>A4 — On-premise log file locations</h3>
+      <pre data-code><span class="filename">on-premise log locations and what each file contains</span><code># AEM application logs (all under crx-quickstart/logs/)
+/opt/aem/author/crx-quickstart/logs/
+  error.log          ← the primary log — all INFO/WARN/ERROR from Java
+  access.log         ← one line per HTTP request: method, path, status, duration
+  request.log        ← detailed: request params, response time, thread name
+  audit.log          ← content changes: who changed what node at what time
+  gc.log             ← JVM garbage collection events (if configured)
+  upgrade.log        ← output of upgrade/migration operations
+
+# Apache / Dispatcher logs
+/var/log/httpd/
+  access_log         ← Apache access log (before Dispatcher cache check)
+  error_log          ← Apache errors, mod_rewrite debug output
+
+/var/www/dispatcher/
+  logs/dispatcher.log ← cache hits/misses, invalidation events, filter denials
+
+# Useful grep patterns for real incidents
+grep -i "OutOfMemory"    error.log    # OOM events
+grep "500"               access.log   # server errors
+grep "Caused by:"        error.log    # root exception in stack traces
+grep "WARN\|ERROR"       error.log | tail -100   # recent problems
+grep "replication"       error.log | grep -i "fail\|error"  # replication issues
+grep "BundleException"   error.log    # OSGi bundle problems
+
+# Follow live (equivalent of cloud log streaming)
+tail -f /opt/aem/author/crx-quickstart/logs/error.log
+multitail -s 2 error.log request.log  # split-screen view</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Knowing which file to look at before you start grepping saves critical minutes in an incident.</p>
+          <ul>
+            <li><strong><code>error.log</code> first, always</strong> — despite the name, it contains all log levels including INFO. It's where stack traces appear. Every AEM incident investigation starts here.</li>
+            <li><strong><code>access.log</code> for traffic patterns</strong> — a sudden spike in 500s in <code>access.log</code> at a specific time tells you when an error started, independent of what caused it. Correlate timestamps between <code>error.log</code> and <code>access.log</code> to narrow the blast radius.</li>
+            <li><strong><code>dispatcher.log</code> for cache debugging</strong> — if users report stale content, check this log for cache hit/miss ratio and invalidation events. A flush that never fired shows here as an absence of invalidation entries after a publish.</li>
+            <li><code>grep "Caused by:"</code> — in a Java stack trace, the root cause is almost always in the last <code>Caused by:</code> block, not the first exception. Grepping for this jumps straight to what actually went wrong rather than the re-thrown wrapper exceptions.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Part B — AEMaaCS DevOps</h2>
+
+      <h3>B1 — What Adobe manages vs what you manage</h3>
+      <pre data-code><span class="filename">AEMaaCS responsibility split</span><code>ADOBE MANAGES (you have no access or control):
+  ├── Physical/virtual servers and OS (containerised — Kubernetes)
+  ├── JVM version and GC configuration
+  ├── AEM version and Service Pack application
+  ├── Security patching (OS, JVM, AEM core)
+  ├── Horizontal auto-scaling (publish scales on traffic)
+  ├── Global CDN (Fastly — content delivery)
+  ├── Dispatcher infrastructure
+  └── Backup and disaster recovery
+
+YOU MANAGE (your team's responsibility):
+  ├── Code quality (Cloud Manager enforces gates — cannot be bypassed)
+  ├── All custom code (bundles, components, clientlibs)
+  ├── OSGi configuration (in code under ui.config — NOT in Felix console)
+  ├── Dispatcher configuration (in code under dispatcher/src/)
+  ├── Cloud Manager pipeline configuration
+  ├── Content migration (Content Transfer Tool for go-live)
+  ├── Index definitions (under ui.apps as oak:QueryIndexDefinition nodes)
+  └── Monitoring and alerting via Cloud Manager + Adobe I/O Events</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The most common misconception about AEMaaCS is that "Adobe manages it, so DevOps is less work." The work is different, not less — and some new constraints are significantly more strict.</p>
+          <ul>
+            <li><strong>Felix console is read-only in production</strong> — any OSGi config you set manually in the Felix console (<code>/system/console/configMgr</code>) is temporary and will be overwritten the next time a pipeline deploys. All configuration must live in <code>ui.config</code> as <code>.cfg.json</code> files, committed to Git.</li>
+            <li><strong>No SSH access</strong> — you cannot run commands on the container. All diagnostics happen via Cloud Manager log downloads, Adobe I/O Events, or the AEM Developer Console (<code>https://dev-console.adobe.io</code>). This fundamentally changes how you debug production issues.</li>
+            <li><strong>Code quality gates are mandatory</strong> — Cloud Manager runs SonarQube analysis and custom AEM quality rules on every pipeline execution. A critical SonarQube violation (hardcoded password, SQL injection risk) blocks deployment entirely. You cannot skip it for urgency.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>B2 — Cloud Manager pipeline types</h3>
+      <pre data-code><span class="filename">Cloud Manager pipeline types and when each runs</span><code>FULL STACK PIPELINE (the main pipeline)
+  Stages: Build → Code Quality → Deploy to Dev → Deploy to Stage → Deploy to Prod
+  What it deploys: ALL content packages (code + content + dispatcher config)
+  Trigger: manual or on git push to a target branch
+  Duration: typically 45–90 minutes end-to-end
+  Use for: regular sprints, feature releases
+
+FRONT-END PIPELINE (UI-only changes, no Java)
+  Stages: Build → Code Quality → Deploy (to CDN edge — bypasses AEM publish)
+  What it deploys: CSS, JS, fonts, images via /etc.clientlibs/ path
+  Duration: ~10 minutes
+  Use for: CSS/JS-only changes that don't require Java rebuild
+  Constraint: only works if front-end assets are in a dedicated ui.frontend module
+
+CONFIG PIPELINE (OSGi + Dispatcher config changes only)
+  Stages: Validate → Deploy
+  What it deploys: OSGi .cfg.json files and Dispatcher .any/.conf files
+  Duration: ~5 minutes
+  Use for: config tweaks (log levels, cache TTL) without full code deploy
+  Constraint: NO Java code changes allowed — only config files
+
+ENVIRONMENT TYPES:
+  RDE   (Rapid Development Environment)  → push directly via aio CLI, no pipeline
+  DEV   → first pipeline target, auto-deploy on every push
+  STAGE → copy of production config, manual promote from DEV
+  PROD  → requires explicit approval gate before deploy</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Choosing the wrong pipeline type for a change is one of the most common AEMaaCS DevOps inefficiencies — it costs an extra 40–80 minutes per wrong choice.</p>
+          <ul>
+            <li><strong>Config pipeline</strong> is the fastest path to production for OSGi changes. If a log level needs increasing to debug a production issue (a very common need), deploying only a <code>.cfg.json</code> change via the Config pipeline takes 5 minutes vs 90 for a Full Stack pipeline.</li>
+            <li><strong>RDE for developer iteration</strong> — pushing a changed OSGi bundle directly to an RDE via <code>aio aem:rde:deploy</code> takes about 15 seconds. Compare this to the full pipeline's 90 minutes. RDE does not have quality gates — it's for rapid testing only.</li>
+            <li><strong>Front-end pipeline</strong> is for CSS/JS changes <em>deployed to the CDN edge</em>, not to AEM publish. If your change also modifies a Sling Model or HTL template, you need the Full Stack pipeline regardless.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>B3 — OSGi configuration as code</h3>
+      <pre data-code><span class="filename">ui.config folder structure — the correct way to manage all environments</span><code>/aem-academy/ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/
+
+  config/                       ← applies to ALL environments (author + publish)
+    com.day.cq.mailer.DefaultMailService.cfg.json
+    org.apache.sling.commons.log.LogManager.factory.config-academy.cfg.json
+
+  config.author/                ← author instances only (all environments)
+    com.adobe.granite.workflow.core.impl.WorkflowSessionFactory.cfg.json
+
+  config.publish/               ← publish instances only (all environments)
+    com.adobe.cq.cdn.rewriter.impl.CDNConfigServiceImpl.cfg.json
+
+  config.dev/                   ← dev environment only (author + publish)
+    org.apache.sling.commons.log.LogManager.factory.config-debug.cfg.json
+
+  config.author.dev/            ← dev environment, author only
+    com.adobe.granite.ui.clientlibs.impl.HtmlLibraryManagerImpl.cfg.json
+
+  config.stage/                 ← stage environment
+    com.day.cq.replication.impl.ReplicationContentFactoryImpl.cfg.json
+
+  config.prod/                  ← production only
+    com.adobe.granite.toggle.api.impl.ToggleServiceImpl.cfg.json</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>In AEMaaCS, the run-mode folder name IS the environment selector. Getting this wrong is silent — wrong config is loaded and no error appears.</p>
+          <ul>
+            <li>The run-mode resolution order: most specific wins. <code>config.author.dev</code> overrides <code>config.author</code> which overrides <code>config</code>. This means you set safe defaults in <code>config/</code> and override only what differs per environment.</li>
+            <li><strong>Never put secrets in these files</strong> — API keys, passwords, and tokens go in Cloud Manager's Environment Variables feature (marked "Secret"), not in <code>.cfg.json</code> files that will be committed to Git. Reference them in OSGi config as <code>$[secret:MY_API_KEY]</code>.</li>
+            <li><strong>Debug-level logging in <code>config.dev</code></strong> — adding verbose logging only in <code>config.dev</code> prevents performance-killing DEBUG logs from running in production, while still giving developers the detail they need.</li>
+          </ul>
+        </div>
+      </details>
+
+      <pre data-code><span class="filename">example .cfg.json — custom log category for the academy project</span><code>// /apps/academy/osgiconfig/config.dev/
+// org.apache.sling.commons.log.LogManager.factory.config-academy-debug.cfg.json
+// Filename convention: LogManager.factory.config-[your-identifier].cfg.json
+{
+    "org.apache.sling.commons.log.level": "DEBUG",
+    "org.apache.sling.commons.log.file": "logs/academy-debug.log",
+    "org.apache.sling.commons.log.file.number": 5,
+    "org.apache.sling.commons.log.file.size": "10MB",
+    "org.apache.sling.commons.log.names": [
+        "biz.netcentric.academy",
+        "com.day.cq.dam.handler"
+    ],
+    "org.apache.sling.commons.log.pattern": "%d{dd.MM.yyyy HH:mm:ss.SSS} *%level* [%thread] %logger{30} %msg%n"
+}</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <ul>
+            <li>The file name suffix <code>-academy-debug</code> after the factory PID is the instance name — it allows multiple logger configurations from the same factory. Without the suffix, you can only have one custom logger config.</li>
+            <li><code>"org.apache.sling.commons.log.names"</code> is an array — it scopes this log config to only the listed Java package prefixes. Logging <code>biz.netcentric.academy</code> at DEBUG without this scoping would produce hundreds of DEBUG lines per second from the entire AEM runtime.</li>
+            <li>Separate log file (<code>academy-debug.log</code>) instead of writing to <code>error.log</code> — keeps the primary log clean and filterable, and allows the custom log to be downloaded separately from Cloud Manager without noise from the rest of AEM.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>B4 — Dispatcher as code</h3>
+      <pre data-code><span class="filename">Dispatcher configuration folder structure for AEMaaCS</span><code>/aem-academy/dispatcher/src/
+  conf.d/
+    available_vhosts/
+      academy.vhost           ← VirtualHost config for your domain
+      academy-author.vhost    ← separate config for Author (if proxied)
+    enabled_vhosts/
+      academy.vhost -> ../available_vhosts/academy.vhost  ← symlink
+    rewrites/
+      academy_rewrite.rules   ← URL rewriting and redirects
+    variables/
+      custom.vars             ← shared variables (domain name, CDN host)
+
+  conf.dispatcher.d/
+    available_farms/
+      999_ams_publish_farm.any  ← main farm config
+    enabled_farms/
+      999_ams_publish_farm.any -> ../available_farms/999_ams_publish_farm.any
+    cache/
+      rules.any               ← which URLs are cached
+      invalidate.any          ← which invalidation requests are honoured
+      headers.any             ← which response headers to cache
+    filters/
+      filters.any             ← security allow-list (deny all, allow specific)
+    renders/
+      default_renders.any     ← AEM Publish backend address (managed by Adobe)
+    vhosts/
+      default_vhosts.any      ← domain to farm mapping</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Dispatcher-as-code means the Dispatcher configuration is validated, tested, and deployed through the same pipeline as your application code — no manual Apache config changes on a server.</p>
+          <ul>
+            <li><strong>Symlinks in <code>enabled_</code> folders</strong> — the pattern mirrors Apache's own <code>sites-available</code>/<code>sites-enabled</code> convention. You add a vhost to <code>available_vhosts</code>, then symlink it into <code>enabled_vhosts</code> to activate it. This makes enabling and disabling configs declarative.</li>
+            <li><strong>Cloud Manager validates Dispatcher config</strong> before deploying it. Run the same validation locally with: <code>./dispatcher/scripts/validate.sh</code> (included in the SDK). A misconfigured filter that allows <code>/system/console</code> to be publicly accessible will block the pipeline.</li>
+            <li><strong><code>renders/default_renders.any</code></strong> — in AEMaaCS, the backend address (the AEM Publish pod) is managed by Adobe and injected at deploy time. You don't specify a hardcoded hostname here — Adobe's infrastructure replaces the placeholder. This is one of the key differences from on-premise where you specify <code>localhost:4503</code>.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>B5 — Log access on AEMaaCS</h3>
+      <pre data-code><span class="filename">accessing logs on AEMaaCS — the three methods</span><code># METHOD 1: Cloud Manager UI (for recent logs)
+# Cloud Manager → Environments → [your-env] → Logs tab
+# Available log types:
+#   aemerror     = error.log (the primary log)
+#   aemaccess    = access.log
+#   aemrequest   = request.log
+#   dispatcher   = dispatcher.log
+#   httpdaccess  = Apache access log
+#   httpderror   = Apache error log
+# Retention: 7 days rolling. Download as .gz files.
+
+# METHOD 2: Adobe I/O CLI — streaming logs (tail -f equivalent)
+npm install -g @adobe/aio-cli
+aio plugins:install @adobe/aio-cli-plugin-cloudmanager
+
+# Configure
+aio config:set cloudmanager_programid 12345
+aio config:set cloudmanager_environmentid 99887
+
+# Stream logs (works on author or publish, any log type)
+aio cloudmanager:tail-log 12345 99887 author aemerror
+aio cloudmanager:tail-log 12345 99887 publish aemrequest
+
+# METHOD 3: AEM Developer Console (for OSGi + Sling state inspection)
+# URL: https://dev-console.adobe.io/
+# Features:
+#   OSGi → Bundles: see all bundle states (replaces /system/console/bundles)
+#   OSGi → Components: see which components are active/unsatisfied
+#   OSGi → Services: see registered services and their properties
+#   Sling → Adapters: test adaptTo() chains
+#   Repository → browse: limited JCR browsing
+#   Requests: last 20 request logs (like /system/console/requests on-prem)</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>On-premise DevOps <code>SSH + tail -f</code> becomes <code>aio cloudmanager:tail-log</code> in AEMaaCS. The information is the same; the access mechanism is completely different.</p>
+          <ul>
+            <li><strong>7-day retention</strong> — if an incident happened 8 days ago and you didn't download the logs, they're gone. For compliance-sensitive projects, configure log forwarding to Splunk, Datadog, or Azure Monitor via Adobe I/O Events before you go live.</li>
+            <li><strong>AEM Developer Console</strong> replaces the Felix Web Console (<code>/system/console</code>) for read-only inspection. The key difference: Developer Console is read-only — you can <em>see</em> that a bundle is not active but you cannot <em>fix</em> it there. The fix goes in code and deploys through the pipeline.</li>
+            <li><code>aio cloudmanager:tail-log</code> streams in near-real-time but with a 30–60 second delay. It's not instantaneous like <code>tail -f</code> on-premise. For rapid debugging, use the RDE environment where you have more direct interaction.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>B6 — RDE (Rapid Development Environment)</h3>
+      <pre data-code><span class="filename">RDE workflow — the AEMaaCS alternative to a local dev server</span><code># One-time setup
+npm install -g @adobe/aio-cli
+aio plugins:install @adobe/aio-cli-plugin-aem
+aio auth:login
+aio config:set cloudmanager_programid 12345
+
+# Deploy a content package (fastest path for component changes)
+aio aem:rde:deploy \
+  all/target/aem-academy.all-1.0.0-SNAPSHOT.zip \
+  --type content-package
+
+# Deploy just an OSGi bundle (when you only changed Java)
+aio aem:rde:deploy \
+  core/target/aem-academy.core-1.0.0-SNAPSHOT.jar \
+  --type osgi-bundle \
+  --target publish           # or 'author' — default is both
+
+# Deploy a single Dispatcher config file
+aio aem:rde:deploy \
+  dispatcher/src/conf.dispatcher.d/filters/filters.any \
+  --type dispatcher-config
+
+# Check what's currently deployed on the RDE
+aio aem:rde:status
+
+# Stream logs directly from the RDE
+aio aem:rde:logs --target author
+aio aem:rde:logs --target publish --debug biz.netcentric.academy
+
+# Reset the RDE to a clean state (removes all your custom deployments)
+aio aem:rde:reset
+
+# RDE deployment takes ~15 seconds vs ~90 minutes for a full pipeline
+# But: RDE has no quality gates, no promotion to stage/prod
+# Use RDE for development; use the pipeline for anything going to stage/prod</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The RDE is the single biggest productivity improvement for AEMaaCS development compared to on-premise. Understanding its constraints prevents misuse.</p>
+          <ul>
+            <li><code>--type osgi-bundle</code> vs <code>--type content-package</code> — deploying only the bundle when you only changed Java code takes ~15 seconds. Deploying the full content package when you changed a JSon config takes slightly longer but is still under 30 seconds. Choose the smallest artifact that contains your change.</li>
+            <li><strong>RDE vs local AEM SDK</strong> — the AEM SDK (a JAR you run locally) is for offline development with no internet. The RDE is a live cloud environment identical to your DEV environment but with direct deployment capability. Use SDK for offline/disconnected work; use RDE for anything that needs to test against the actual cloud runtime behaviour.</li>
+            <li><code>aio aem:rde:reset</code> — clears the RDE back to its baseline snapshot. Use this when the RDE gets into an inconsistent state from partial deployments. It's fast (2–3 minutes) and non-destructive to the program's other environments.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>On-Premise vs AEMaaCS — side-by-side comparison</h2>
+      <pre data-code><span class="filename">responsibility and capability comparison</span><code>CAPABILITY                    ON-PREMISE             AEMaaCS
+─────────────────────────────────────────────────────────────────
+Infrastructure management     You (IaC team)         Adobe
+OS/JVM patching               You                    Adobe
+AEM Service Pack updates      You (manual process)   Adobe (automatic)
+Auto-scaling publish          You (manual/scripted)  Adobe (automatic)
+SSH access to server          Yes                    No
+JVM flag configuration        Full control           Not possible
+Felix console (write)         Yes                    Read-only in prod
+OSGi config management        Felix console or code  Code only (ci.config)
+Dispatcher config             Manual file changes    Code (dispatcher/src/)
+CI/CD platform                Jenkins/GitLab/custom  Cloud Manager (mandatory)
+Code quality enforcement      Optional               Mandatory (blocks deploy)
+Log access                    SSH + tail -f          Cloud Manager / aio CLI
+Log retention                 Until disk fills       7 days rolling
+Backup / DR                   You                    Adobe
+CDN                           You (Varnish, Fastly)  Adobe (Fastly, built-in)
+Dev iteration speed           mvn deploy (~5 min)    RDE deploy (~15 sec)
+Full deploy time              Jenkins pipeline        Cloud Manager (~90 min)
+Content migration             CRX package transfer   Content Transfer Tool
+Index management              Manual reindex         Automatic on deployment
+Required DevOps skill set     Linux, Java, Apache,   Git, Cloud Manager,
+                              Maven, Jenkins          aio CLI, Dockerfile</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The key insight from this table: AEMaaCS reduces <em>operational</em> work (patching, scaling, backups) but increases <em>process discipline</em> requirements (everything as code, no manual changes, mandatory quality gates).</p>
+          <ul>
+            <li><strong>Code quality enforcement</strong> — on-premise, a team under deadline pressure can skip SonarQube. AEMaaCS doesn't give you that option. A critical code smell blocks the pipeline regardless of how urgent the release is. This is often a culture shock for teams migrating from on-premise.</li>
+            <li><strong>7-day log retention</strong> — on-premise you keep logs until disk space runs out (and then you rotate them). AEMaaCS's 7-day window means you <em>must</em> set up log forwarding to an external SIEM before go-live for any project with audit or incident investigation requirements.</li>
+            <li><strong>Full deploy time</strong> — AEMaaCS's 90-minute pipeline includes deployment to all environments in sequence with manual approval gates between Stage and Production. On-premise Jenkins might be faster for a single environment but has no built-in approval gate or environment promotion workflow.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Failure Scenarios</h2>
+      <p>The following eight scenarios cover the most common production failures in both deployment models. Each follows the same structure: <strong>symptoms</strong> you observe, <strong>diagnostic steps</strong> to isolate the cause, and <strong>resolution steps</strong> to fix it.</p>
+
+      <h2>Scenario 1 — OutOfMemoryError (On-Premise)</h2>
+      <pre data-code><span class="filename">OOM diagnosis and resolution — on-premise</span><code># SYMPTOMS
+# - AEM author/publish stops responding
+# - error.log shows: java.lang.OutOfMemoryError: Java heap space
+# - GC logs show: long GC pauses or "GC overhead limit exceeded"
+# - Users report blank pages or very slow load
+
+# STEP 1: Confirm it's an OOM and find the timestamp
+grep -n "OutOfMemoryError\|GC overhead" \
+  /opt/aem/author/crx-quickstart/logs/error.log | tail -20
+
+# STEP 2: Capture the heap dump BEFORE restarting (if AEM is still alive)
+# Find the AEM process ID:
+AEM_PID=$(ps aux | grep "crx-quickstart" | grep -v grep | awk '{print $2}')
+echo "AEM PID: $AEM_PID"
+
+# Generate heap dump (takes 2-5 minutes for a large heap — system is slow)
+jmap -dump:format=b,file=/opt/aem/heapdumps/heap-$(date +%Y%m%d-%H%M%S).hprof $AEM_PID
+# If jmap hangs: HeapDumpOnOutOfMemoryError flag generates one automatically on next OOM
+
+# STEP 3: Check what consumed the heap (before full analysis)
+jmap -histo:live $AEM_PID | head -30
+# Shows top 30 objects by memory — look for unexpectedly large counts
+
+# STEP 4: Restart AEM gracefully
+/opt/aem/author/crx-quickstart/bin/stop
+# Wait for the process to exit:
+while ps -p $AEM_PID > /dev/null; do echo "Waiting..."; sleep 5; done
+/opt/aem/author/crx-quickstart/bin/start
+
+# STEP 5: Analyze the heap dump offline (using Eclipse MAT)
+# Download: https://www.eclipse.org/mat/
+# Look for: "Leak Suspects" report → identify the object graph root
+
+# STEP 6: Common root causes and fixes
+
+# A) Cache not bounded (most common)
+# Symptom in MAT: large HashMap/ConcurrentHashMap holding Page or Resource objects
+# Fix: add a size limit to custom caches, check OSGi config for
+#      com.adobe.granite.ui.clientlibs.impl.HtmlLibraryManagerImpl
+#      org.apache.sling.models.impl.ModelAdapterFactory
+
+# B) Leaked ResourceResolver
+# Symptom: "Too many open ResourceResolvers" warnings before OOM
+grep "Detecting leaked resource resolver" error.log | wc -l
+# Fix: find code that calls resourceResolver.resolve() without closing it
+# Pattern: always close ResourceResolvers in try-with-resources:
+# try (ResourceResolver rr = factory.getServiceResourceResolver(...)) { ... }
+
+# C) Query returning too many nodes
+grep "Result iteration has consumed more" error.log
+# Fix: add a limit to Oak queries, add an index for the queried properties
+
+# STEP 7: Increase heap if root cause is legitimate growth
+# Edit /opt/aem/author/crx-quickstart/bin/start.sh
+# Change: -Xmx8192m → -Xmx12288m
+# Requires restart</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>OOM is one of the most disruptive AEM failures because it takes the instance down. The diagnostic sequence matters as much as the fix.</p>
+          <ul>
+            <li><strong>Capture before restart</strong> — the heap dump is the entire evidence base for root-cause analysis. Restarting without capturing it means the next OOM will be a mystery too, and you'll be in reactive mode indefinitely.</li>
+            <li><code>jmap -histo:live</code> is less complete than a full heap dump but runs in seconds and gives a quick signal. If you see 50,000 <code>com.day.cq.wcm.core.impl.page.PageImpl</code> objects, you know something is holding references to every page in the repository.</li>
+            <li><strong>Leaked ResourceResolver</strong> is the single most common cause of OOM on AEM on-premise. Every <code>ResourceResolver</code> holds a JCR session, which holds a reference to the Oak node cache. Forgetting to close one in a try-with-resources block in a background thread means it accumulates indefinitely. Always check the log for "Detecting leaked resource resolver" warnings before assuming the heap just needs to be bigger.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Scenario 2 — Disk Full (On-Premise)</h2>
+      <pre data-code><span class="filename">disk space diagnosis and cleanup — on-premise</span><code># SYMPTOMS
+# - AEM stops writing to logs (log files show no new entries)
+# - Content saves fail with "Could not persist changes" errors
+# - error.log: "No space left on device"
+# - OS alert from monitoring (Nagios, Datadog)
+
+# STEP 1: Identify which partition is full
+df -h
+# Output:
+# Filesystem      Size  Used Avail Use%  Mounted on
+# /dev/sda1       500G  498G    2G  99%  /opt        ← /opt is the problem
+
+# STEP 2: Find the biggest consumers
+du -sh /opt/aem/author/crx-quickstart/*/ | sort -rh | head -10
+# Typical output:
+# 240G   repository/      ← Oak segment store — grows with content + versions
+#  48G   logs/            ← if log rotation is misconfigured
+#  12G   datastore/       ← binary assets (renditions, uploads)
+
+# STEP 3: Quick space recovery — clean up logs (if rotation failed)
+find /opt/aem/author/crx-quickstart/logs/ \
+  -name "*.log.*" -mtime +30 -exec rm {} \;
+# NEVER delete error.log, access.log (current files — just the rotated copies)
+
+# STEP 4: Clean up old workflow instances (common culprit)
+# Via Groovy Console (localhost:4502/bin/groovyconsole):
+import com.day.cq.workflow.WorkflowService
+import com.day.cq.workflow.WorkflowSession
+
+def workflowService = getService(WorkflowService.class)
+def workflowSession = workflowService.getWorkflowSession(session)
+def completedInstances = workflowSession.getWorkflows(['COMPLETED'] as String[])
+println "Completed instances: ${completedInstances.length}"
+// Then purge via Tools → Operations → Maintenance → Workflow Purge
+
+# STEP 5: Check version storage
+# How many versions exist?
+curl -u admin:admin http://localhost:4502/bin/querybuilder.json \
+  -d "type=nt:version&amp;p.limit=-1&amp;p.hits=count"
+# If &gt; 100,000 — run Version Purge:
+# Tools → Operations → Maintenance → Version Purge
+
+# STEP 6: Oak segment store compaction (reclaims space from deleted content)
+# REQUIRES AEM STOP — do during maintenance window
+/opt/aem/author/crx-quickstart/bin/stop
+java -Xmx4096m -jar /opt/aem/oak-run-*.jar \
+  compact /opt/aem/author/crx-quickstart/repository/segmentstore
+# Takes 30-120 minutes depending on repository size
+/opt/aem/author/crx-quickstart/bin/start
+
+# STEP 7: Prevention — add monitoring thresholds
+# Alert at 80% disk → investigate
+# Alert at 90% disk → page on-call
+# Schedule: Tools → Operations → Maintenance → Daily Maintenance Window
+#   Version Purge (keep last 3 versions, max age 90 days)
+#   Workflow Purge (purge COMPLETED instances older than 30 days)
+#   Audit Log Purge (keep 30 days)</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Disk full is a preventable failure that becomes a production incident when monitoring thresholds aren't set. Every item in this runbook should be a scheduled maintenance task, not a reactive fire-drill.</p>
+          <ul>
+            <li><strong>Oak compaction is offline</strong> — you cannot run <code>oak-run compact</code> against a live repository. AEM must be stopped first. This means it requires a maintenance window. Online compaction is available via <code>Tools → Operations → Maintenance → Revision Cleanup</code> but reclaims less space. For severe disk pressure, offline compaction is the more thorough option.</li>
+            <li><strong>Version purge is the highest-ROI routine maintenance</strong> — every time an author saves a page, AEM creates a new JCR version node. Without purging, a busy site can accumulate millions of version nodes. Each one takes space. "Keep last 3 versions, max 90 days" is a safe default that preserves meaningful history while keeping the repository lean.</li>
+            <li><code>du -sh</code> before <code>df -h</code> — <code>df -h</code> tells you a partition is full. <code>du -sh</code> tells you which directory caused it. Without the second command you don't know where to clean.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Scenario 3 — Replication Queue Stuck (On-Premise)</h2>
+      <pre data-code><span class="filename">stuck replication queue — diagnosis and recovery</span><code># SYMPTOMS
+# - Authors publish pages but end users don't see changes
+# - Replication agent shows queue depth &gt; 0 and growing
+# - Author error.log: "Could not replicate to agent publish: Connection refused"
+
+# STEP 1: Check the replication queue status
+curl -s -u admin:admin \
+  "http://localhost:4502/etc/replication/agents.author.json" \
+  | python3 -c "import sys,json; d=json.load(sys.stdin);
+    [print(k, d[k].get('jcr:content',{}).get('enabled','?'),
+                d[k].get('jcr:content',{}).get('queueNumEntries','?'))
+     for k in d if 'publish' in k.lower()]"
+
+# STEP 2: Test if the Publish instance is reachable from Author
+curl -v -u replication-service:password \
+  "http://localhost:4503/bin/receive?sling:authRequestLogin=1"
+# Expected: HTTP 200
+# If 401: replication service user password changed or account locked
+# If connection refused: Publish is down or firewall blocking
+
+# STEP 3: Check the Publish instance is running
+ssh deploy@publish1.internal 'systemctl status aem-publish'
+# Or: check monitoring dashboard
+
+# STEP 4: Check what's blocked in the queue
+curl -u admin:admin \
+  "http://localhost:4502/etc/replication/agents.author/publish/_jcr_content.json" \
+  | python3 -c "import sys,json; d=json.load(sys.stdin);
+    print('Queue:', d.get('queueNumEntries',0), 'entries');
+    print('Last error:', d.get('queueLastProcessed','none'))"
+
+# STEP 5: If Publish is healthy but queue is jammed — retry the agent
+curl -u admin:admin -X POST \
+  "http://localhost:4502/libs/replication/treeactivation.html" \
+  -d "cmd=Activate&amp;path=/content/academy"
+
+# STEP 6: If a specific item in the queue is corrupted — clear and retry
+# Via UI: Author → Tools → Replication → Agents on Author → [agent] → Test
+# Via API: clear the queue (CAUTION: loses queued items)
+curl -u admin:admin -X POST \
+  "http://localhost:4502/etc/replication/agents.author/publish/_jcr_content" \
+  -d "cmd=Clear"
+# Then re-publish affected content using tree activation from the content root
+
+# STEP 7: For persistent replication failures — check the replication service user
+# The replication agent connects to Publish as a service user
+# Verify in Publish: localhost:4503/system/console/users
+# Ensure 'replication-service' user exists and has correct permissions under /content</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Replication failures are visible to content authors (publish button appears to succeed, nothing changes on the live site) but the symptom — stale content — looks like a cache issue. Always check the replication queue before flushing the Dispatcher cache.</p>
+          <ul>
+            <li><strong>Test the agent first</strong> — the "Test" button on the replication agent UI sends a test request to the configured Publish URL. A failure here pinpoints a network/authentication problem rather than a content problem, and saves you from unnecessary cache flushes.</li>
+            <li><strong>Clearing the queue loses items</strong> — if you clear a queue with 500 items, those 500 unpublished changes are lost. You must re-publish all the content manually or via tree activation. Only clear the queue when you're certain the blocked item is corrupted or the queue is stuck on an item that no longer exists.</li>
+            <li><strong>Replication service user password change</strong> is a common cause of sudden replication failure after a security audit. The replication agent on Author has a hardcoded password for the service user on Publish. If the Publish service user's password is rotated without updating the replication agent config, all replication silently fails.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Scenario 4 — OSGi Bundle Not Starting (Both Models)</h2>
+      <pre data-code><span class="filename">bundle startup failure — diagnosis on both on-premise and AEMaaCS</span><code># SYMPTOMS
+# - After deployment, a feature is broken
+# - Felix console shows bundle in "Installed" or "Resolved" state (not "Active")
+# - error.log: "Bundle biz.netcentric.academy.core ... cannot be resolved"
+# - AEMaaCS: Developer Console shows bundle not Active
+
+# ON-PREMISE — STEP 1: Identify all non-Active bundles
+curl -s -u admin:admin http://localhost:4502/system/console/bundles.json \
+  | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+for b in d['data']:
+    if b['state'] not in ('Active', 'Fragment'):
+        print(f\"{b['state']:12} {b['name']} {b['version']}\")
+"
+
+# STEP 2: Get unsatisfied requirements for your bundle
+curl -s -u admin:admin \
+  "http://localhost:4502/system/console/bundles/biz.netcentric.academy.core.json" \
+  | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+print('State:', d['data'][0]['state'])
+for r in d['data'][0].get('props', []):
+    if 'Unsatisfied' in r.get('key','') or 'Import' in r.get('key',''):
+        print(r['key'], ':', r['value'])
+"
+
+# STEP 3: Common causes and fixes
+
+# CAUSE A: Missing OSGi import — you use a class that's not exported by any bundle
+# Symptom: "Unresolved constraint: Import-Package: com.example.missing;version=[1,2)"
+# Fix: add the providing bundle as a Maven dependency with correct scope
+#   <dependency>
+#     <groupId>com.example</groupId>
+#     <artifactId>missing-bundle</artifactId>
+#     <scope>provided</scope>  &lt;!-- provided = already in AEM, don't bundle --&gt;
+#   </dependency>
+
+# CAUSE B: Version mismatch — the bundle needs version 2.x but only 1.x is available
+# Symptom: "Unresolved constraint: Import-Package: org.osgi.service.foo;version=[2,3)"
+# Fix: update the Maven dependency to match the available version, or
+#      use a broader version range in bnd plugin config:
+#   Import-Package: org.osgi.service.foo;version="[1,3)"
+
+# CAUSE C: An @Reference field has no active provider
+# Symptom: bundle reaches "Registered" but not "Active"
+# Fix: find which @Reference is unsatisfied
+curl -u admin:admin http://localhost:4502/system/console/components.json \
+  | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+for c in d['data']:
+    if c.get('state') in ('unsatisfied', 'disabled'):
+        print(c['name'], '-', c.get('state'), '-', c.get('unsatisfiedReferences',''))
+"
+
+# AEMaaCS — same diagnosis via Developer Console:
+# https://dev-console.adobe.io → OSGi → Bundles → filter by state != Active
+# https://dev-console.adobe.io → OSGi → Components → filter unsatisfied
+
+# CAUSE D: AEMaaCS-specific — class loaded by wrong classloader
+# Symptom: ClassCastException when calling a service
+# Context: AEMaaCS containers may restart between deployments; classloader
+#          state resets. Objects cached across container restarts cause CCE.
+# Fix: do not store objects in static fields across request scope;
+#      always re-adapt from the current request/resource</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Bundle startup failures are silent on the feature level — the component simply doesn't work, and the error is only visible in the OSGi console, not in the page output.</p>
+          <ul>
+            <li><strong>Installed → Resolved → Active</strong> is the correct progression. A bundle stuck at "Installed" means package-level dependencies (Import-Package in the manifest) aren't satisfied. A bundle stuck at "Resolved" means all packages are available but an <code>@Reference</code> field has no active provider. These are different problems with different solutions.</li>
+            <li><code>&lt;scope&gt;provided&lt;/scope&gt;</code> is the key fix for the most common cause — a package that AEM already provides being accidentally bundled into your JAR creates two copies of the class, and OSGi's classloader isolation means <code>instanceof</code> checks between the two copies return false even though they're bytecode-identical.</li>
+            <li><strong>AEMaaCS ClassCastException</strong> from container restart is subtle — on-premise, the JVM runs continuously and static caches accumulate. In AEMaaCS containers restart regularly (for patching, scaling). Static caches from the previous container instance don't exist in the new one, but code that holds references to objects from the previous instance will throw <code>ClassCastException</code> when those references are used after restart.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Scenario 5 — Cloud Manager Pipeline Failure (AEMaaCS)</h2>
+      <pre data-code><span class="filename">Cloud Manager pipeline failure — triage by stage</span><code># A Cloud Manager pipeline fails at one of four stages:
+# BUILD → CODE QUALITY → DEPLOY TO DEV → DEPLOY TO STAGE/PROD
+
+# ── STAGE: BUILD FAILURE ───────────────────────────────────────────────────
+# Symptoms: "Build Failed" in Cloud Manager. Red X on Build stage.
+# Download build log from Cloud Manager → Environments → [env] → Logs → Build
+
+# Common causes:
+# 1. Maven compile error
+grep "BUILD FAILURE\|ERROR\|COMPILATION ERROR" build.log | head -30
+
+# 2. Unit test failure
+grep "Tests run:.*FAILURE\|Tests run:.*ERROR" build.log
+
+# 3. Content package structure error
+# AEMaaCS enforces strict package content structure
+grep "Invalid content package\|Package validation failed" build.log
+# Fix: ensure no content under /apps/[project]/install/ in ui.apps
+# AEMaaCS forbids installing OSGi bundles via content package install paths
+
+# Local pre-flight before push:
+mvn clean package -PautoInstallSinglePackage 2&gt;&amp;1 | grep -E "ERROR|FAILURE|BUILD"
+
+# ── STAGE: CODE QUALITY FAILURE ────────────────────────────────────────────
+# Symptoms: "Code Quality" stage fails. Download Code Quality log.
+# Cloud Manager runs: SonarQube + custom AEM quality rules
+
+# See the full report in Cloud Manager → Pipelines → [run] → Code Quality
+# Critical violations BLOCK the pipeline (cannot be skipped):
+#   - Hardcoded credentials / passwords
+#   - SQL injection risk
+#   - Unsynchronized access to shared mutable state
+
+# Major violations accumulate score — too many blocks deployment
+
+# Run locally (requires SonarQube token):
+mvn sonar:sonar \
+  -Dsonar.host.url=https://your-sonar.company.com \
+  -Dsonar.login=$SONAR_TOKEN
+
+# ── STAGE: DEPLOY TO DEV FAILURE ───────────────────────────────────────────
+# Symptoms: Build passes, Deploy fails. Red X on Deploy stage.
+# Download: Environment Logs → aemerror for author and publish
+
+aio cloudmanager:tail-log $PROGRAM_ID $ENV_ID author aemerror &gt; author-deploy.log
+grep "ERROR\|WARN\|Exception\|BundleException" author-deploy.log | tail -50
+
+# Common causes in deploy phase:
+# 1. Dispatcher configuration validation fails
+grep "dispatcher-validator\|Invalid config" deploy.log
+# Run validator locally:
+#   Download AEM SDK, extract tools/dispatcher-tools/
+#   ./bin/validate.sh ./dispatcher/src
+
+# 2. OSGi bundle fails to start after deploy (see Scenario 4)
+grep "BundleException\|not activated\|Cannot resolve" author-deploy.log
+
+# 3. Content package install failure
+grep "PackageException\|Failed to install" author-deploy.log
+
+# ── STAGE: PRODUCTION APPROVAL GATE ───────────────────────────────────────
+# The pipeline pauses here — a named approver must click "Approve" in Cloud Manager
+# Set approvers: Cloud Manager → Program Settings → Pipelines → [pipeline] → Edit
+# SLA: if no approval within 14 days, the pipeline auto-cancels
+# Who should be an approver: Product Owner, Release Manager — NOT the deploying dev</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The most important skill for AEMaaCS pipeline failures is knowing which stage failed and what category of problem each stage can produce — without this, you spend 30 minutes looking at the wrong log.</p>
+          <ul>
+            <li><strong>Dispatcher validator locally</strong> is non-negotiable for any project with custom Dispatcher configuration. The validator runs the same checks Cloud Manager runs — catching a misconfigured filter rule locally takes 10 seconds; discovering it after a 45-minute pipeline run takes 45 minutes (plus the time to fix and re-run).</li>
+            <li><strong>Package structure violations</strong> are AEMaaCS-specific — the platform enforces stricter package content paths than on-premise. Specifically, <code>/apps/[project]/install/</code> paths (used on-premise to auto-install bundles) are forbidden. All bundles must come from your core Maven module, not from a content package install path.</li>
+            <li><strong>Approval gate</strong> — the human in the loop between Stage and Production. This gate exists not as a bureaucratic hurdle but as a forcing function: someone with product authority must consciously decide "yes, what was tested on Stage should now go to Production." The 14-day auto-cancel is Cloud Manager's way of preventing perpetually-pending approvals from blocking the pipeline indefinitely.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Scenario 6 — Sling Content Distribution Failure (AEMaaCS)</h2>
+      <pre data-code><span class="filename">content distribution failure — AEMaaCS equivalent of replication</span><code># SYMPTOMS
+# - Author publishes content but Publish doesn't reflect the change
+# - AEM Developer Console shows distribution queue backed up
+# - error.log on author: "DistributionException: Failed to distribute..."
+
+# NOTE: AEMaaCS does NOT use the classic replication agent.
+# It uses Sling Content Distribution (SCD) via a message queue.
+# The queue is an Adobe-managed service — you cannot clear it manually.
+
+# STEP 1: Check distribution queue status via Developer Console
+# https://dev-console.adobe.io → Distribution → Author Queue
+# Look for: queue depth, error rate, last error message
+
+# STEP 2: Check author error log for the distribution error
+aio cloudmanager:tail-log $PROGRAM_ID $ENV_ID author aemerror \
+  | grep -i "distribution\|DistributionException"
+
+# STEP 3: Common causes
+
+# CAUSE A: Content size limit exceeded
+# AEMaaCS limits content packages in distribution to 100MB
+# Symptom: "Content package exceeds maximum size"
+# Fix: split the activation into smaller batches, or use the Content Transfer Tool
+#      for large content migrations
+
+# CAUSE B: Circular reference in content structure
+# Symptom: distribution succeeds on Author but Publish shows old content
+# Fix: check for sling:redirect or jcr:mixinTypes creating cycles
+aio cloudmanager:tail-log $PROGRAM_ID $ENV_ID publish aemerror \
+  | grep "org.apache.sling.distribution\|ContentDistribution"
+
+# CAUSE C: Transient network error between distribution services
+# These resolve automatically — Adobe's queue has a retry mechanism
+# If a path has been failing for &gt;30 minutes: raise a Priority 1 ticket with Adobe
+
+# STEP 4: Trigger a re-publish from Author side
+# Via AEM Author UI: navigate to the content path, Manage Publication → Publish
+# Or via Groovy Console on Author:
+import com.day.cq.replication.ReplicationActionType
+import com.day.cq.replication.Replicator
+def replicator = getService(Replicator.class)
+replicator.replicate(session, ReplicationActionType.ACTIVATE, "/content/academy/en/home")
+println "Triggered distribution for /content/academy/en/home"
+
+# STEP 5: Verify on Publish (allow 30-60 seconds for distribution)
+# AEMaaCS Publish response via CDN URL, not localhost:4503
+# Use: curl -I https://publish-pXXXX-eXXXX.adobeaemcloud.com/content/academy/en/home.html
+# Check: Last-Modified header should reflect the new publish time</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Content distribution in AEMaaCS is fundamentally different from on-premise replication — it goes through Adobe's message queue infrastructure, not a direct HTTP call from Author to Publish.</p>
+          <ul>
+            <li><strong>No direct queue access</strong> — on-premise you can clear, pause, and retry the replication queue via the Felix console. In AEMaaCS the distribution queue is Adobe-managed infrastructure. If it's stuck, your options are: wait (transient errors self-heal), re-trigger the publish from Author, or raise a support ticket. You cannot SSH in and restart the distribution service.</li>
+            <li><strong>100MB content package limit</strong> — this surprises teams migrating from on-premise where large tree activations of 2GB+ were normal (slow but worked). In AEMaaCS, use the Content Transfer Tool for large content migrations and keep routine page publishes well under the limit.</li>
+            <li><strong>Distribution delay is normal</strong> — AEMaaCS Publish is not synchronous. A published page typically appears on Publish within 5–30 seconds. If you're testing immediately after publish and see old content, wait 30 seconds before concluding distribution has failed.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Scenario 7 — Dispatcher Cache Serving Stale Content (Both)</h2>
+      <pre data-code><span class="filename">stale Dispatcher cache — diagnosis and flush</span><code># SYMPTOMS
+# - Page published successfully on Author
+# - Live site still shows old content
+# - Replication/distribution succeeded (confirm first — see Scenario 3/6)
+
+# ── ON-PREMISE ──────────────────────────────────────────────────────────────
+
+# STEP 1: Confirm the page is correct on Publish (bypassing Dispatcher)
+curl -s -u replication:password http://localhost:4503/content/academy/en/home.html \
+  | grep "&lt;title&gt;"
+# If correct here but wrong in browser → Dispatcher cache issue
+
+# STEP 2: Find the cached file on the Dispatcher filesystem
+# Default cache root (check /etc/httpd/conf.dispatcher.d/cache/rules.any for yours)
+ls -la /var/www/dispatcher/cache/content/academy/en/home.html
+stat /var/www/dispatcher/cache/content/academy/en/home.html
+
+# STEP 3: Manual flush of a specific page
+curl -s \
+  -H "CQ-Action: Delete" \
+  -H "CQ-Handle: /content/academy/en/home" \
+  -H "CQ-Path: /content/academy/en/home" \
+  -H "Content-Length: 0" \
+  http://dispatcher1.internal/dispatcher/invalidate.cache
+
+# STEP 4: Flush the entire cache for a content tree
+curl -s \
+  -H "CQ-Action: Activate" \
+  -H "CQ-Handle: /content/academy" \
+  -H "Content-Length: 0" \
+  http://dispatcher1.internal/dispatcher/invalidate.cache
+
+# STEP 5: Verify the .stat file was updated (invalidation mechanism)
+# Dispatcher uses .stat files to mark stale sections of the cache
+ls -la /var/www/dispatcher/cache/content/academy/.stat
+# The .stat file mtime must be NEWER than the cached .html files
+
+# STEP 6: Check the Dispatcher filter — is the invalidation request being blocked?
+tail -f /var/www/dispatcher/logs/dispatcher.log | grep "invalidat"
+# If "Filter denied: ..." → the invalidate request is blocked by /filter rules
+# Fix: ensure 127.0.0.1 (Publish instance IP) is allowed in /invalidate section
+
+# ── AEMaaCS ─────────────────────────────────────────────────────────────────
+
+# AEMaaCS uses CDN (Fastly) as the top-level cache. Dispatcher sits behind CDN.
+# Most "stale cache" issues on AEMaaCS are CDN caching, not Dispatcher caching.
+
+# STEP 1: Bypass CDN (check if Publish has the correct content)
+# Use the Publish pod URL (bypasses CDN but still goes through Dispatcher):
+curl -I "https://publish-pXXXX-eXXXX.adobeaemcloud.com/content/academy/en/home.html"
+# Check X-Cache header: "HIT" = CDN has it, "MISS" = CDN fetched from origin
+
+# STEP 2: Purge CDN cache via AEM (happens automatically on publish, but can be manual)
+# AEM Author → Tools → Cloud Services → CDN Cache Configurations → [Purge]
+# Or: use Adobe I/O Events to trigger programmatic purge
+
+# STEP 3: Check Cache-Control headers — is AEM telling CDN to cache too long?
+curl -I https://your-live-site.com/content/academy/en/home.html
+# Look for: Cache-Control: max-age=86400  (24 hours — very long for changing content)
+# Configure in: dispatcher/src/conf.dispatcher.d/cache/headers.any</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Cache staleness has two completely different root causes depending on where in the stack you look — and the fix for each is different.</p>
+          <ul>
+            <li><strong>Always verify Publish first</strong> — before touching the Dispatcher or CDN, confirm Publish has the correct content. If Publish is wrong (replication/distribution failure), flushing the cache will just re-serve the wrong content after the first miss. Fix the pipeline first, then flush cache.</li>
+            <li><strong>.stat file mechanism</strong> — Dispatcher doesn't invalidate cached files immediately when a flush request arrives. Instead it updates a <code>.stat</code> file at the flush path level. The next request for any cached file in that tree checks whether the cached file is older than <code>.stat</code> — if it is, it fetches fresh from AEM. This means a flush is instant (<code>.stat</code> update) but cache rebuilding happens lazily on the next user request for each page.</li>
+            <li><strong>CDN vs Dispatcher</strong> in AEMaaCS — there are two cache layers. The CDN (Fastly) sits in front of the Dispatcher. A CDN cache hit never reaches the Dispatcher. The <code>X-Cache: HIT</code> header tells you the CDN served the response; <code>X-Cache: MISS</code> means the CDN fetched from the Dispatcher (which may itself be a cache hit). Stale content at the CDN level requires a CDN purge, not a Dispatcher flush.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2>Scenario 8 — Slow Performance and Indexing Issues (Both)</h2>
+      <pre data-code><span class="filename">performance diagnosis — slow pages, slow search, high CPU</span><code># SYMPTOMS
+# - Page load times &gt; 5 seconds
+# - AEM request.log shows long-running requests
+# - error.log: "Query result size is too large"
+# - error.log: "Traversed X nodes, limit is Y"
+# - CPU at 90%+ on AEM instances
+
+# STEP 1: Find slow requests in request.log (requests over 3000ms)
+grep " [3-9][0-9][0-9][0-9] " /opt/aem/author/crx-quickstart/logs/request.log \
+  | awk '{print $NF, $0}' | sort -rn | head -20
+
+# STEP 2: Find queries that are doing full traversal (no index)
+grep "Traversed\|traversal" error.log | tail -20
+# Output example:
+# WARN  org.apache.jackrabbit.oak.query.QueryImpl Traversed 50247 nodes
+# This means a query ran without an appropriate index — ALWAYS a code bug
+
+# STEP 3: Identify which query is traversing (requires QueryBuilder debugging)
+# Enable DEBUG logging for: org.apache.jackrabbit.oak.query
+# Then trigger the slow request and look for the query in the log
+
+# STEP 4: Explain the query
+curl -u admin:admin \
+  "http://localhost:4502/bin/querybuilder.json?type=cq:Page&amp;path=/content&amp;p.guessTotal=true&amp;p.explain=true" \
+  | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('explain','no explain'))"
+# Look for "traversal" in the explain output vs "index" — you want "index"
+
+# STEP 5: Add an Oak index for the query
+# Create index definition under /oak:index in ui.apps:
+# /aem-academy/ui.apps/src/main/content/jcr_root/_oak_index/academy-cq-page/
+# .content.xml:
+cat &lt;&lt;'INDEXXML'
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    xmlns:oak="http://jackrabbit.apache.org/oak/ns/1.0"
+    jcr:primaryType="oak:QueryIndexDefinition"
+    type="lucene"
+    async="async"
+    evaluatePathRestrictions="{Boolean}true"&gt;
+  &lt;indexRules jcr:primaryType="nt:unstructured"&gt;
+    &lt;cq:Page jcr:primaryType="nt:unstructured"&gt;
+      &lt;properties jcr:primaryType="nt:unstructured"&gt;
+        &lt;jcr:title jcr:primaryType="nt:unstructured"
+            name="jcr:content/jcr:title"
+            propertyIndex="{Boolean}true"/&gt;
+        &lt;cq:template jcr:primaryType="nt:unstructured"
+            name="jcr:content/cq:template"
+            propertyIndex="{Boolean}true"/&gt;
+      &lt;/properties&gt;
+    &lt;/cq:Page&gt;
+  &lt;/indexRules&gt;
+&lt;/jcr:root&gt;
+INDEXXML
+
+# ON-PREMISE: After deploying the index, trigger reindexing:
+curl -u admin:admin -X POST \
+  "http://localhost:4502/oak:index/academy-cq-page" \
+  -d "reindex=true"
+# Watch progress: grep "org.apache.jackrabbit.oak.plugins.index" error.log
+
+# AEMaaCS: Index deployment triggers automatic reindexing as part of the pipeline.
+# DO NOT manually trigger reindex on AEMaaCS — it's handled by the platform.
+
+# STEP 6: Check thread dump for long-running threads (on-premise only)
+AEM_PID=$(ps aux | grep "crx-quickstart" | grep -v grep | awk '{print $2}')
+jstack $AEM_PID &gt; /tmp/threaddump-$(date +%Y%m%d-%H%M%S).txt
+grep -A 20 "BLOCKED\|waiting on" /tmp/threaddump-*.txt | head -60
+# Blocked threads = deadlock or contention on a shared resource</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Slow AEM performance has two primary root causes in practice — unindexed queries and memory pressure — and the diagnostic approach is completely different for each.</p>
+          <ul>
+            <li><strong>"Traversed X nodes"</strong> in the log is never acceptable in production. It means a query is reading every node under a path one by one looking for matches, like doing a <code>SELECT * FROM table</code> full table scan in SQL. With tens of millions of nodes in a production repository, one traversing query can bring CPU to 100% and make AEM unresponsive for all other requests.</li>
+            <li><code>p.explain=true</code> on a QueryBuilder request returns Oak's query execution plan. The key output is whether the plan shows <code>Filter(IndexScan)</code> (uses an index — good) or <code>Filter(TraversalScan)</code> (no index — bad). This is the equivalent of <code>EXPLAIN SELECT...</code> in SQL.</li>
+            <li><strong>AEMaaCS handles reindexing automatically</strong> — when you deploy a new or modified index definition through the pipeline, the platform triggers asynchronous reindexing. Manually calling <code>reindex=true</code> on AEMaaCS blocks the pipeline deploy and can cause content inconsistencies. Let the platform do it.</li>
+            <li><strong>Thread dump for blocked threads</strong> — if CPU is high but no specific slow requests appear in the log, the problem may be thread contention rather than query traversal. A thread dump shows exactly which threads are blocked and what they're waiting for. Two threads both trying to acquire a <code>synchronized</code> lock on the same object produce 100% CPU with zero useful work.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="try-it alert alert-success">
+        <span class="label">DevOps practice tasks</span>
+        <ol style="margin:0;padding-left:1.2em;">
+          <li><strong>Simulate a bundle failure</strong> — in your local AEM, go to <code>/system/console/bundles</code>, select any non-critical bundle, and click "Stop." Observe the state change and find the component that stops working. Then start it again. This teaches the bundle state machine.</li>
+          <li><strong>Find your slowest queries</strong> — enable DEBUG logging for <code>org.apache.jackrabbit.oak.query</code> in your local Felix console. Browse several pages. Then search the log for "Traversed" — any traversal is a query that needs an index.</li>
+          <li><strong>Inspect the replication queue</strong> — publish a page, then immediately go to <code>localhost:4502/etc/replication/agents.author.html</code> and watch the queue depth go to 0. Then stop the Publish instance, publish another page, and watch the queue depth grow. Start Publish — the queue drains automatically.</li>
+          <li><strong>AEMaaCS: set up the aio CLI</strong> — install the Adobe I/O CLI, configure your Cloud Manager credentials, and run <code>aio cloudmanager:tail-log</code> against your DEV environment. Compare what you see to the Felix console on your local AEM.</li>
+        </ol>
+      </div>
+
+      <div class="knowledge-check">
+        <h2>Knowledge Check</h2>
+        <p class="kc-intro">Ten questions for this module — ask them live, then check the Trainer Answer Key for the full answers.</p>
+        <ol class="quiz-list">
+          <li><p class="quiz-question">What is the key infrastructure responsibility difference between on-premise and AEMaaCS — name three things Adobe manages in AEMaaCS that your team would manage on-premise.</p></li>
+          <li><p class="quiz-question">On on-premise AEM, your author instance has an OutOfMemoryError. In what order do you perform these three actions: restart AEM, generate a heap dump, check the error log for the OOM timestamp? Why does order matter?</p></li>
+          <li><p class="quiz-question">What JVM flag automatically generates a heap dump when an OutOfMemoryError occurs, and where should the dump be written?</p></li>
+          <li><p class="quiz-question">What does "Traversed 50,247 nodes" in error.log tell you about a query, and what is the correct fix?</p></li>
+          <li><p class="quiz-question">On AEMaaCS you cannot edit OSGi configuration in the Felix console and have it persist. Where must all OSGi configuration live, and how does AEM select the correct configuration per environment?</p></li>
+          <li><p class="quiz-question">Name the four Cloud Manager pipeline types. Which one is fastest and what does it deploy?</p></li>
+          <li><p class="quiz-question">A replication queue on on-premise has 500 pending items. Before clearing the queue, what three things must you verify?</p></li>
+          <li><p class="quiz-question">On AEMaaCS, you need to access the error.log in near-real-time. What CLI command do you run?</p></li>
+          <li><p class="quiz-question">A Dispatcher cache is serving stale content. Describe in order: how you confirm Publish has the correct content, how you flush the Dispatcher cache on on-premise, and what additional cache layer AEMaaCS adds above Dispatcher.</p></li>
+          <li><p class="quiz-question">What is an RDE in AEMaaCS, what is the aio CLI command to deploy a content package to it, and what is its key limitation compared to a regular DEV environment?</p></li>
+        </ol>
+      </div>
+
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="aem-devops">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="28-site-capstone.html"><span class="dir">← Previous</span>Capstone — Mini Site, Live Copy &amp; Navigation</a>
+        <a class="next" href="../index.html"><span class="dir">Back to</span>Curriculum overview</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

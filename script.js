@@ -32,7 +32,8 @@
     "adobe-tags-setup",
     "adobe-tags-implement",
     "analytics-workspaces",
-    "site-capstone"
+    "site-capstone",
+    "aem-devops"
   ];
 
   function getProgress() {
