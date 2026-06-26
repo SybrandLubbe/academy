@@ -33,7 +33,8 @@
     "adobe-tags-implement",
     "analytics-workspaces",
     "site-capstone",
-    "aem-devops"
+    "aem-devops",
+    "side-fun"
   ];
 
   function getProgress() {

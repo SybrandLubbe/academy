@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30 Side Fun — Author Interface Enhancements — AEM Backend Training</title>
+<meta name="description" content="Add colour-coded page status dots to the Sites console and a floating environment banner to the AEM authoring interface — full Java, clientlib, CSS, and JavaScript.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-toggle btn btn-outline-secondary" data-menu-toggle aria-label="Toggle navigation">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 5h14M2 9h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <span class="brand"><span class="node-icon">◆</span> /content/training</span>
+  <span class="progress-pill" data-progress-pill>0 / 31 modules</span>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Curriculum">
+    <p class="tree-root">/content/training</p>
+    <ul class="tree-list">
+      <li><a class="tree-node" href="../index.html">jcr:content <span class="prop">[home]</span></a></li>
+      <li><a class="tree-node" data-module-id="java-primer" href="00-java-primer.html">00-java-primer<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="arch-overview" href="01-architecture-overview.html">01-architecture-overview<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="jcr-repository" href="02-jcr-repository.html">02-jcr-repository<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-framework" href="03-sling-framework.html">03-sling-framework<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services" href="04-osgi-services.html">04-osgi-services<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="osgi-services-config" href="05-osgi-services-config.html">05-osgi-services-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models" href="06-sling-models.html">06-sling-models<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-models-advanced" href="07-sling-models-advanced.html">07-sling-models-advanced<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="model-composition" href="08-model-composition.html">08-model-composition<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="htl-templating" href="09-htl-templating.html">09-htl-templating<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="servlets-apis" href="10-servlets-apis.html">10-servlets-apis<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dialogs-components" href="11-dialogs-components.html">11-dialogs-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="custom-components" href="12-custom-components.html">12-custom-components<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="java-pitfalls" href="13-java-pitfalls.html">13-java-pitfalls<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="unit-testing" href="14-unit-testing.html">14-unit-testing<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="context-aware-config" href="15-context-aware-config.html">15-context-aware-config<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflows-events" href="16-workflows-events.html">16-workflows-events<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="workflow-design" href="17-workflow-design.html">17-workflow-design<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="sling-jobs" href="18-sling-jobs.html">18-sling-jobs<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="dispatcher-deployment" href="19-dispatcher-deployment.html">19-dispatcher-deployment<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="groovy-console" href="20-groovy-console.html">20-groovy-console<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="acs-commons" href="21-acs-commons.html">21-acs-commons<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adaptive-forms" href="22-adaptive-forms.html">22-adaptive-forms<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="form-fragments" href="23-form-fragments.html">23-form-fragments<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="forms-implementation" href="24-forms-implementation.html">24-forms-implementation<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-setup" href="25-adobe-tags-setup.html">25-adobe-tags-setup<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="adobe-tags-implement" href="26-adobe-tags-implement.html">26-adobe-tags-implement<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="analytics-workspaces" href="27-analytics-workspaces.html">27-analytics-workspaces<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="site-capstone" href="28-site-capstone.html">28-site-capstone<span class="check"></span></a></li>
+      <li><a class="tree-node" data-module-id="aem-devops" href="29-aem-devops.html">29-aem-devops<span class="check"></span></a></li>
+      <li><a class="tree-node active" data-module-id="side-fun" href="30-side-fun.html">30-side-fun<span class="check"></span></a></li>
+    </ul>
+    <p class="legend">Filled circle = module marked complete.</p>
+  </nav>
+
+  <main class="main">
+    <div class="content">
+      <p class="breadcrumb"><span class="seg">/content</span> / <span class="seg">training</span> / <span class="seg current">30-side-fun</span></p>
+
+      <div class="module-meta">
+        <span class="tag badge text-bg-secondary">Author Tools</span>
+        <span>60 min build</span>
+      </div>
+
+      <h1 class="page-title">Side Fun — Author Interface Enhancements</h1>
+      <p class="lede">Two small but high-value additions to the AEM authoring experience that every content team asks for eventually: <strong>colour-coded page status dots</strong> in the Sites console so authors can see at a glance which pages are published, modified, deactivated, or never activated — and a <strong>floating environment banner</strong> so nobody ever wonders which server they're working on. Both are built with techniques covered in this training: a Sling Servlet for the data, a clientlib for the UI, and OSGi config for environment-specific values.</p>
+
+      <div class="learn-box">
+        <h3>What you're building</h3>
+        <ul>
+          <li><strong>Part 1 — Page Status Dots:</strong> a coloured dot appears on every page card and list row in <code>/sites.html</code>, reading live replication metadata from the JCR</li>
+          <li><strong>Part 2 — Environment Banner:</strong> a persistent floating pill in the corner of every author screen shows the current environment name and colour-coded by severity (green = dev, orange = stage, red = production)</li>
+          <li>A Sling Servlet for each feature, one clientlib per feature, OSGi configs per run mode, and a short MutationObserver-based JavaScript that works across all three Sites console view modes (card, list, column)</li>
+        </ul>
+      </div>
+
+      <div class="callout alert alert-primary">
+        <span class="label">Why clientlib category matters</span>
+        The Sites console at <code>/sites.html</code> is a Granite UI single-page app. It automatically loads all clientlibs registered under the category <code>cq.wcm.admin.sites</code>. The page editor loads <code>cq.authoring.editor.hook</code>. Registering your clientlib under these categories is the only change needed to inject custom JS and CSS into those UIs — no overlay, no HTL modification required.
+      </div>
+
+      <hr style="margin:2.5rem 0 2rem;border-top:2px solid #e5e7eb;">
+
+      <h2>Part 1 — Page Status Indicator Dots</h2>
+
+      <h3>How AEM stores page publication status</h3>
+      <p>Every AEM page's <code>jcr:content</code> node carries three replication properties that together describe its status. Understanding these is the foundation of the entire feature.</p>
+      <pre data-code><span class="filename">replication metadata on jcr:content — what determines status</span><code>PROPERTY                    TYPE        MEANING
+cq:lastReplicated           Calendar    Timestamp of the last replication event.
+                                        NULL means the page has NEVER been published.
+
+cq:lastReplicationAction    String      "Activate" or "Deactivate" — what happened last.
+
+cq:lastModified             Calendar    When an author last saved a change to the page.
+
+STATUS DETERMINATION (in priority order):
+  cq:lastReplicated is null
+      → NEVER PUBLISHED (gray)   Page exists but was never activated.
+
+  cq:lastReplicationAction = "Deactivate"
+      → DEACTIVATED (red)        Was published, then taken offline.
+
+  cq:lastReplicationAction = "Activate"
+  AND cq:lastModified &gt; cq:lastReplicated
+      → MODIFIED (blue)          Published but has unsaved-to-live changes since.
+
+  cq:lastReplicationAction = "Activate"
+  AND (cq:lastModified is null OR cq:lastModified &lt;= cq:lastReplicated)
+      → ACTIVATED (green)        Live and up to date. Clean publish.
+
+ADDITIONAL STATUS (edge case):
+  Page node exists but jcr:content is missing or has no cq:template
+      → UNKNOWN (dark gray)      Structural anomaly or damaged page.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>These properties are written by AEM's replication agent every time an author clicks Publish or Unpublish. They're plain JCR properties on the <code>jcr:content</code> node — no special API needed to read them.</p>
+          <ul>
+            <li><strong>The Modified (blue) state</strong> is the most actionable — it tells an author "this page is live, but what's live doesn't match what you're looking at in the editor." This is the status authors most often miss without visual indicators, because the page looks fine in the editor but the live site is serving an older version.</li>
+            <li><strong>Comparing Calendars</strong> — <code>cq:lastModified &gt; cq:lastReplicated</code> means the author saved changes <em>after</em> the last publication. Java's <code>Calendar.after()</code> handles this comparison cleanly.</li>
+            <li><strong>Never Published (gray) vs Deactivated (red)</strong> — different situations, different author actions needed. Gray means "never activated — use Quick Publish." Red means "was active, now offline — check if this was intentional before re-activating."</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 1 — PageStatusServlet</h3>
+      <p>A path-based Sling Servlet (module 10 pattern) that accepts one or more page paths, reads the replication metadata from each page's <code>jcr:content</code>, and returns a JSON map of <code>{path: status}</code>. The JavaScript calls this in a single batched request for all visible pages.</p>
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/core/servlets/PageStatusServlet.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.core.servlets;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.osgi.service.component.annotations.Component;
+
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.Calendar;
+
+/**
+ * Returns JSON publication status for a batch of page paths.
+ * GET /bin/academy/pagestatus?paths=/content/a&amp;paths=/content/b
+ * Response: { "/content/a": "activated", "/content/b": "modified" }
+ */
+@Component(service = Servlet.class,
+           property = {
+               "sling.servlet.paths=/bin/academy/pagestatus",
+               "sling.servlet.methods=GET"
+           })
+public class PageStatusServlet extends SlingSafeMethodsServlet {
+
+    private static final String PROP_REPLICATED = "cq:lastReplicated";
+    private static final String PROP_ACTION      = "cq:lastReplicationAction";
+    private static final String PROP_MODIFIED    = "cq:lastModified";
+
+    @Override
+    protected void doGet(SlingHttpServletRequest request,
+                         SlingHttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Access-Control-Allow-Origin", "same-origin");
+
+        String[] paths = request.getParameterValues("paths");
+        if (paths == null || paths.length == 0) {
+            response.getWriter().write("{}");
+            return;
+        }
+
+        JsonObjectBuilder result = Json.createObjectBuilder();
+
+        for (String path : paths) {
+            if (path == null || !path.startsWith("/content")) {
+                continue;   // never expose non-content paths
+            }
+            // Read jcr:content directly — avoids PageManager overhead for batch calls
+            Resource content = request.getResourceResolver()
+                                      .getResource(path + "/jcr:content");
+            if (content == null) {
+                result.add(path, "unknown");
+                continue;
+            }
+            result.add(path, determineStatus(content.getValueMap()));
+        }
+
+        response.getWriter().write(result.build().toString());
+    }
+
+    /**
+     * Determine the publication status string from the page's jcr:content ValueMap.
+     * Priority: never-published → deactivated → modified → activated → unknown.
+     */
+    private String determineStatus(ValueMap props) {
+        Calendar lastReplicated = props.get(PROP_REPLICATED, Calendar.class);
+        String   action         = props.get(PROP_ACTION,     String.class);
+        Calendar lastModified   = props.get(PROP_MODIFIED,   Calendar.class);
+
+        if (lastReplicated == null) {
+            return "draft";         // cq:lastReplicated absent = never published
+        }
+
+        if ("Deactivate".equalsIgnoreCase(action)) {
+            return "deactivated";   // explicitly taken offline
+        }
+
+        if ("Activate".equalsIgnoreCase(action)) {
+            if (lastModified != null &amp;&amp; lastModified.after(lastReplicated)) {
+                return "modified";  // live but has pending author changes
+            }
+            return "activated";     // live and up to date
+        }
+
+        return "unknown";           // structural anomaly
+    }
+}</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The Servlet follows the exact pattern from module 10 — path-based, GET only, JSON response. The batch design (multiple <code>paths</code> params) is what makes it performant for a Sites console folder with 50 pages.</p>
+          <ul>
+            <li><code>request.getParameterValues("paths")</code> — reads all values of the repeated <code>?paths=X&amp;paths=Y</code> query string as a String array. This is more efficient than multiple separate requests — one round trip for the entire visible page set.</li>
+            <li><code>path.startsWith("/content")</code> — the security guard. Without it, a malicious call to <code>?paths=/etc/passwd</code> could probe for content at arbitrary JCR paths. Only <code>/content</code> subtree paths are ever resolved.</li>
+            <li><code>resource.getResource(path + "/jcr:content")</code> directly instead of <code>PageManager.getPage(path).getContentResource()</code> — avoids the overhead of constructing a full <code>Page</code> object for each path. For a batch of 50 pages this is ~3× faster.</li>
+            <li><code>"Deactivate".equalsIgnoreCase(action)</code> — using <code>equalsIgnoreCase</code> defensively. The value is written by AEM's replication framework and should always be "Activate" or "Deactivate" in title case, but consistency across AEM versions isn't guaranteed.</li>
+            <li><code>lastModified.after(lastReplicated)</code> — Java's <code>Calendar.after()</code> handles timezone-aware comparison correctly. Comparing raw milliseconds (<code>getTimeInMillis()</code>) would also work but is less readable.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 2 — Clientlib definition</h3>
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/clientlibs/sites-status/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    jcr:primaryType="cq:ClientLibraryFolder"
+    categories="[cq.wcm.admin.sites]"
+    allowProxy="{Boolean}true"/&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <ul>
+            <li><code>categories="[cq.wcm.admin.sites]"</code> — this is the exact category the Sites console (<code>/sites.html</code>) loads automatically. No overlay, no HTL change needed. Registering here is sufficient to inject CSS and JS into the Sites admin interface.</li>
+            <li>The Sites console is a Granite UI SPA. AEM collects all clientlibs registered under <code>cq.wcm.admin.sites</code> and bundles them into the page's <code>&lt;head&gt;</code> during server render. Your JS runs as soon as the console initialises.</li>
+            <li><code>allowProxy="{Boolean}true"</code> — serves the files at <code>/etc.clientlibs/</code> on publish. Even though the Sites console is author-only in practice, this is still required to satisfy AEM's content security policy on some installations.</li>
+          </ul>
+        </div>
+      </details>
+
+      <pre data-code><span class="filename">/apps/academy/clientlibs/sites-status/css.txt</span><code>#base=css
+sites-status.css</code></pre>
+
+      <pre data-code><span class="filename">/apps/academy/clientlibs/sites-status/js.txt</span><code>#base=js
+sites-status.js</code></pre>
+
+      <h3>Step 3 — CSS: the dots and the legend</h3>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/sites-status/css/sites-status.css</span><code>/* ═══════════════════════════════════════════════════════════════════════
+   Academy — Sites Console Page Status Dots
+   Injected via clientlib category: cq.wcm.admin.sites
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Status dot ─────────────────────────────────────────────────────── */
+.academy-status-dot {
+  display  : inline-block;
+  width    : 10px;
+  height   : 10px;
+  border-radius: 50%;
+  border   : 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+  cursor   : help;          /* shows tooltip on hover */
+  transition: transform .15s;
+}
+.academy-status-dot:hover { transform: scale(1.4); }
+
+/* ── Colour palette ─────────────────────────────────────────────────── */
+.academy-status--activated   { background: #2e9b51; } /* green  — live &amp; clean  */
+.academy-status--modified    { background: #2680eb; } /* blue   — live, pending  */
+.academy-status--deactivated { background: #e34850; } /* red    — taken offline  */
+.academy-status--draft       { background: #b3b3b3; } /* gray   — never published*/
+.academy-status--unknown     { background: #6e6e6e; } /* dark   — structural err */
+
+/* ── Dot wrapper inside a card (card view &amp; column view) ────────────── */
+.academy-status-badge {
+  position: absolute;
+  bottom  : 10px;
+  right   : 10px;
+  z-index : 50;
+  display : flex;
+  align-items: center;
+  gap     : 5px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 20px;
+  padding : 3px 7px 3px 5px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  font-size: 10px;
+  font-weight: 600;
+  color   : #505050;
+  pointer-events: none; /* let clicks pass through to the card */
+}
+.academy-status-badge .academy-status-dot { border-color: transparent; }
+
+/* ── Row badge (list / table view) ─────────────────────────────────── */
+.academy-status-cell {
+  display : flex;
+  align-items: center;
+  gap     : 6px;
+  font-size: 11px;
+  color   : #505050;
+  white-space: nowrap;
+}
+
+/* ── Floating legend ────────────────────────────────────────────────── */
+.academy-status-legend {
+  position: fixed;
+  bottom  : 24px;
+  left    : 24px;
+  z-index : 9999;
+  background: rgba(255, 255, 255, 0.96);
+  border  : 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding : 10px 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  font-size: 11px;
+  font-family: 'Adobe Clean', adobe-clean, 'Source Sans Pro', ui-sans-serif, sans-serif;
+  backdrop-filter: blur(6px);
+  display : flex;
+  flex-direction: column;
+  gap     : 6px;
+  min-width: 170px;
+  opacity : 0;
+  transition: opacity .25s;
+  pointer-events: none;
+}
+.academy-status-legend.is-visible {
+  opacity : 1;
+  pointer-events: auto;
+}
+.academy-status-legend__title {
+  font-weight: 700;
+  font-size  : 10px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color      : #888;
+  margin-bottom: 2px;
+}
+.academy-status-legend__row {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  color      : #333;
+  font-weight: 500;
+}
+
+/* ── Legend toggle button ────────────────────────────────────────────── */
+.academy-legend-toggle {
+  position: fixed;
+  bottom  : 24px;
+  left    : 24px;
+  z-index : 10000;
+  background: #fff;
+  border  : 1px solid #d0d0d0;
+  border-radius: 50%;
+  width   : 32px;
+  height  : 32px;
+  display : flex;
+  align-items: center;
+  justify-content: center;
+  cursor  : pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  font-size: 14px;
+  line-height: 1;
+  color   : #505050;
+  transition: background .15s, transform .15s;
+}
+.academy-legend-toggle:hover { background: #f5f5f5; transform: scale(1.1); }
+.academy-legend-toggle.is-open { background: #2680eb; color: #fff; border-color: #2680eb; }</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The CSS covers three rendering contexts: card view (absolute-positioned badge), list/table view (inline cell content), and a collapsible legend for authors who need a colour key.</p>
+          <ul>
+            <li><strong>Card view badge</strong> (<code>.academy-status-badge</code>) — <code>position: absolute</code> places the badge over the bottom-right corner of the card. The semi-transparent white pill with <code>backdrop-filter: blur</code> ensures readability against any thumbnail colour. <code>pointer-events: none</code> is critical — without it the badge absorbs click events intended for the card itself, preventing authors from opening pages.</li>
+            <li><strong>Five colours, deliberate choices</strong> — green and red are the most recognisable traffic-light signals (live vs offline). Blue for "modified" is neutral (not alarming) but different from gray. Gray for "never published" is the least alarming — the page just doesn't exist on the live site yet, not an error state.</li>
+            <li><strong>Legend starts <code>opacity: 0</code></strong> — the legend is in the DOM but invisible until the toggle button is clicked, adding the <code>is-visible</code> class. Toggling CSS classes for show/hide (rather than <code>display: none / block</code>) allows the CSS <code>transition: opacity .25s</code> fade animation to work. <code>display</code> changes are not animatable; <code>opacity</code> is.</li>
+            <li><code>.academy-legend-toggle.is-open { background: #2680eb }</code> — visual feedback that the toggle is active, using Adobe's primary blue to match the Coral UI design system the Sites console uses.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 4 — JavaScript: MutationObserver + fetch + DOM injection</h3>
+      <p>The Sites console is a dynamic SPA — navigating between folders replaces content in the DOM without a full page reload. A <code>MutationObserver</code> watches for these DOM changes and re-queries the status servlet whenever new page items appear, keeping the dots current as the author browses.</p>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/sites-status/js/sites-status.js</span><code>(function () {
+  'use strict';
+
+  var STATUS_URL = '/bin/academy/pagestatus';
+
+  // Map status strings → { CSS class, display label }
+  var STATUS_MAP = {
+    activated  : { cls: 'academy-status--activated',   label: 'Published'           },
+    modified   : { cls: 'academy-status--modified',    label: 'Modified (unpublished changes)' },
+    deactivated: { cls: 'academy-status--deactivated', label: 'Deactivated'          },
+    draft      : { cls: 'academy-status--draft',       label: 'Never Published'      },
+    unknown    : { cls: 'academy-status--unknown',     label: 'Unknown'              }
+  };
+
+  // ── Inject the floating legend ─────────────────────────────────────────
+  function injectLegend() {
+    if (document.querySelector('.academy-legend-toggle')) return; // already present
+
+    // Toggle button (the ● icon)
+    var btn = document.createElement('button');
+    btn.className = 'academy-legend-toggle';
+    btn.title     = 'Page status legend';
+    btn.innerHTML = '&#9679;'; // filled circle
+    btn.setAttribute('aria-label', 'Toggle page status legend');
+
+    // Legend panel
+    var legend = document.createElement('div');
+    legend.className = 'academy-status-legend';
+    legend.innerHTML =
+      '&lt;div class="academy-status-legend__title"&gt;Page Status&lt;/div&gt;' +
+      Object.keys(STATUS_MAP).map(function (key) {
+        var s = STATUS_MAP[key];
+        return '&lt;div class="academy-status-legend__row"&gt;' +
+               '&lt;span class="academy-status-dot ' + s.cls + '"&gt;&lt;/span&gt;' +
+               '&lt;span&gt;' + s.label + '&lt;/span&gt;' +
+               '&lt;/div&gt;';
+      }).join('');
+
+    // Toggle open/close
+    btn.addEventListener('click', function () {
+      var open = legend.classList.toggle('is-visible');
+      btn.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+
+    document.body.appendChild(btn);
+    document.body.appendChild(legend);
+  }
+
+  // ── Collect all /content page paths currently in the DOM ──────────────
+  function getVisiblePaths() {
+    var paths = [];
+    var seen  = {};
+    // The attribute [data-foundation-collection-item-id] is present on
+    // card, column-view item, AND table rows — works in all three view modes.
+    document.querySelectorAll('[data-foundation-collection-item-id]').forEach(function (el) {
+      var path = el.getAttribute('data-foundation-collection-item-id');
+      if (path &amp;&amp; path.startsWith('/content') &amp;&amp; !seen[path]) {
+        paths.push(path);
+        seen[path] = true;
+      }
+    });
+    return paths;
+  }
+
+  // ── Build and attach a status badge to a single collection item ────────
+  function attachBadge(element, status) {
+    var meta = STATUS_MAP[status] || STATUS_MAP['unknown'];
+
+    // Remove any previously attached badge (handles re-renders)
+    var old = element.querySelector('.academy-status-badge');
+    if (old) old.remove();
+
+    var badge = document.createElement('div');
+    badge.className = 'academy-status-badge';
+    badge.setAttribute('aria-label', 'Status: ' + meta.label);
+
+    var dot = document.createElement('span');
+    dot.className = 'academy-status-dot ' + meta.cls;
+    dot.title     = meta.label;
+
+    var label = document.createElement('span');
+    label.textContent = meta.label;
+
+    badge.appendChild(dot);
+    badge.appendChild(label);
+
+    // Ensure the parent has position:relative so our absolute badge works
+    var style = window.getComputedStyle(element);
+    if (style.position === 'static') {
+      element.style.position = 'relative';
+    }
+    element.appendChild(badge);
+  }
+
+  // ── Fetch statuses for all visible paths and apply badges ──────────────
+  function updateStatuses() {
+    var paths = getVisiblePaths();
+    if (!paths.length) return;
+
+    // Build query string: ?paths=/content/a&amp;paths=/content/b&amp;...
+    var qs = paths.map(function (p) {
+      return 'paths=' + encodeURIComponent(p);
+    }).join('&amp;');
+
+    fetch(STATUS_URL + '?' + qs, { credentials: 'same-origin' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (statusMap) {
+        Object.keys(statusMap).forEach(function (path) {
+          var status  = statusMap[path];
+          // Select ALL elements for this path (card view may have duplicates)
+          document.querySelectorAll(
+            '[data-foundation-collection-item-id="' + CSS.escape(path) + '"]'
+          ).forEach(function (el) {
+            attachBadge(el, status);
+          });
+        });
+      })
+      .catch(function (err) {
+        console.warn('[Academy Status] Fetch failed:', err);
+      });
+  }
+
+  // ── Debounced MutationObserver: re-run when DOM content changes ────────
+  var debounceTimer = null;
+
+  var observer = new MutationObserver(function (mutations) {
+    // Only care about childList changes that add nodes (navigation events)
+    var relevant = mutations.some(function (m) {
+      return m.type === 'childList' &amp;&amp; m.addedNodes.length &gt; 0;
+    });
+    if (!relevant) return;
+
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(updateStatuses, 350); // 350ms debounce
+  });
+
+  // ── Initialise ─────────────────────────────────────────────────────────
+  function init() {
+    // Only run on the Sites console — skip page editor and other tools
+    if (!window.location.pathname.startsWith('/sites.html') &amp;&amp;
+        !window.location.pathname.startsWith('/mnt/overlay/dam/gui')) {
+      return;
+    }
+
+    injectLegend();
+    updateStatuses();
+
+    // Watch the entire body for DOM changes (SPA navigation)
+    observer.observe(document.body, {
+      childList: true,
+      subtree  : true
+    });
+  }
+
+  // Wait for Coral UI to boot before initialising
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}());</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The MutationObserver is the critical pattern — without it the dots would only appear on the initial page load and disappear whenever the author navigates between folders.</p>
+          <ul>
+            <li><strong><code>MutationObserver</code></strong> — watches the DOM for structural changes (<code>childList: true, subtree: true</code>). When the Sites console SPA navigates to a child folder, it replaces the collection items in the DOM. The Observer fires, the debounce timer resets, and after 350ms <code>updateStatuses()</code> runs for the new set of pages. Without this, dots only appear once on initial load.</li>
+            <li><strong>350ms debounce</strong> — the SPA navigation causes many rapid DOM mutations (items are removed, then added, then attributes are updated). Without debouncing, <code>updateStatuses()</code> would fire 20–50 times per navigation event, hammering the servlet. The 350ms window lets the DOM settle before making one clean request.</li>
+            <li><code>[data-foundation-collection-item-id]</code> — the universal selector that works in all three view modes. Card view, column view, and list view all write the page path to this attribute. Using it as the hook means the JavaScript handles all view modes with zero conditional logic.</li>
+            <li><code>CSS.escape(path)</code> — page paths can contain characters like <code>[</code> and <code>]</code> that have special meaning in CSS selectors. <code>CSS.escape()</code> makes the path safe to embed in a <code>querySelectorAll</code> attribute selector. Without it, a path like <code>/content/dam/[2024]/image</code> would throw a syntax error.</li>
+            <li><strong>Path guard <code>window.location.pathname.startsWith('/sites.html')</code></strong> — the clientlib category <code>cq.wcm.admin.sites</code> is also loaded on some related admin pages. This guard prevents the MutationObserver from running unnecessarily on pages where it serves no purpose, reducing memory pressure.</li>
+          </ul>
+        </div>
+      </details>
+
+      <hr style="margin:3rem 0 2.5rem;border-top:2px solid #e5e7eb;">
+
+      <h2>Part 2 — Floating Environment Banner</h2>
+      <p>Authors working across multiple AEM environments (local, dev, stage, production) occasionally make changes in the wrong environment — an easy mistake when four browser tabs all look identical. A small, always-visible banner in the corner of every author screen solves this: the name and colour of the current environment are impossible to miss.</p>
+
+      <h3>How the environment name is determined</h3>
+      <pre data-code><span class="filename">how environment is communicated to the browser</span><code>APPROACH: OSGi config per run mode + Servlet endpoint
+
+AUTHOR instance knows its environment from sling.run.modes:
+  local instance:  sling.run.modes = author,local
+  dev server:      sling.run.modes = author,dev
+  stage server:    sling.run.modes = author,stage
+  prod server:     sling.run.modes = author,prod
+
+Each run mode has its own OSGi config file (module 05 pattern):
+  ui.config/.../osgiconfig/config.local/  → "Local" + blue
+  ui.config/.../osgiconfig/config.dev/    → "Development" + green
+  ui.config/.../osgiconfig/config.stage/  → "Staging" + orange
+  ui.config/.../osgiconfig/config.prod/   → "PRODUCTION" + red
+
+A Servlet at /bin/academy/envinfo reads the active config and returns:
+  { "label": "PRODUCTION", "colour": "#e34850", "tier": "Author" }
+
+The clientlib JS fetches this endpoint once on load and renders the banner.
+
+WHY a Servlet and not a hardcoded value in JS?
+  The clientlib is deployed the same way to all environments.
+  The Servlet is what differs per environment via OSGi config.
+  A hardcoded banner label in JS would require different clientlib
+  builds per environment — violating the "same artifact everywhere" rule.</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Using OSGi config per run mode is the exact same pattern from module 5 — the config changes per environment, the code doesn't.</p>
+          <ul>
+            <li><strong>"Same artifact everywhere"</strong> — your Maven build produces one <code>all.zip</code>. That zip deploys to dev, stage, and prod without modification. Environment differences come from OSGi config, not from different builds. If you hardcoded "PRODUCTION" in the JavaScript, you'd need a different artifact per environment.</li>
+            <li>The Servlet reads the environment label from an injected OSGi config. On local, the <code>config.local</code> folder is active, so the config reads "Local". On prod, the <code>config.prod</code> folder is active, reading "PRODUCTION". Same Servlet, different config, different output.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 1 — OSGi config annotation type</h3>
+      <pre data-code><span class="filename">/aem-academy/core/src/main/java/biz/netcentric/academy/core/servlets/EnvironmentBannerServlet.java <em>(academy.core)</em></span><code>package biz.netcentric.academy.core.servlets;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+
+import javax.json.Json;
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import java.io.IOException;
+
+/**
+ * Returns the current environment label and colour for the floating banner.
+ * GET /bin/academy/envinfo
+ * Response: { "label": "PRODUCTION", "colour": "#e34850", "tier": "Author" }
+ *
+ * Configure per environment via OSGi run-mode config files (ui.config module).
+ */
+@Component(service = Servlet.class,
+           property = {
+               "sling.servlet.paths=/bin/academy/envinfo",
+               "sling.servlet.methods=GET"
+           })
+@Designate(ocd = EnvironmentBannerServlet.Config.class)
+public class EnvironmentBannerServlet extends SlingSafeMethodsServlet {
+
+    // ── @ObjectClassDefinition drives the Felix console form ──────────────
+    @ObjectClassDefinition(
+        name        = "Academy — Environment Banner Configuration",
+        description = "Controls the floating environment banner shown in the AEM author UI."
+    )
+    public @interface Config {
+
+        @AttributeDefinition(
+            name        = "Environment Label",
+            description = "Short name displayed on the banner. e.g. Local, Development, Staging, PRODUCTION"
+        )
+        String environmentLabel() default "Local";
+
+        @AttributeDefinition(
+            name        = "Banner Colour",
+            description = "CSS hex colour for the banner background. Use red for production!"
+        )
+        String bannerColour() default "#2680eb";
+
+        @AttributeDefinition(
+            name        = "Show Banner",
+            description = "Set to false to hide the banner entirely (e.g. to disable on production if preferred)."
+        )
+        boolean showBanner() default true;
+    }
+
+    // ── OSGi-injected config values (stored as fields after @Activate) ────
+    private String  environmentLabel;
+    private String  bannerColour;
+    private boolean showBanner;
+
+    @Activate
+    @Modified
+    protected void activate(Config config) {
+        this.environmentLabel = config.environmentLabel();
+        this.bannerColour     = config.bannerColour();
+        this.showBanner       = config.showBanner();
+    }
+
+    @Override
+    protected void doGet(SlingHttpServletRequest request,
+                         SlingHttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
+
+        response.getWriter().write(
+            Json.createObjectBuilder()
+                .add("label",      environmentLabel)
+                .add("colour",     bannerColour)
+                .add("showBanner", showBanner)
+                .build()
+                .toString()
+        );
+    }
+}</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The Servlet and its config annotation type are in the same file — a clean pattern for small servlets where the config is tightly coupled to the component.</p>
+          <ul>
+            <li><code>@Designate(ocd = EnvironmentBannerServlet.Config.class)</code> — links the Servlet OSGi component to its configuration schema. The <code>Config</code> inner <code>@interface</code> is the schema; <code>@Designate</code> is what connects them. Without <code>@Designate</code>, the config class exists but is never loaded into the Servlet.</li>
+            <li><code>@Activate @Modified</code> on the same method — both annotations on <code>activate()</code> means the same method runs both when the component first starts AND when its config is updated in the Felix console (or when a new <code>.cfg.json</code> is deployed). This is the standard pattern — without <code>@Modified</code>, live config changes via the Felix console require a bundle restart to take effect.</li>
+            <li><code>showBanner() default true</code> — the ability to disable the banner via config is important. Some teams want the banner visible only in non-production environments, not on the live production author instance. Setting <code>showBanner = false</code> in <code>config.prod</code> achieves this without code changes.</li>
+            <li>The Servlet stores config values as <strong>plain fields</strong> assigned in <code>@Activate</code> — not reading from config on every request. This is the module 04 pattern: read once at activation, serve fast on every request.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 2 — OSGi config files per environment</h3>
+      <pre data-code><span class="filename">/aem-academy/ui.config/src/main/content/jcr_root/apps/academy/osgiconfig/config.local/biz.netcentric.academy.core.servlets.EnvironmentBannerServlet.cfg.json <em>(academy.ui.config)</em></span><code>{
+    "environmentLabel": "Local",
+    "bannerColour"    : "#2680eb",
+    "showBanner"      : true
+}</code></pre>
+
+      <pre data-code><span class="filename">/apps/academy/osgiconfig/config.dev/biz.netcentric.academy.core.servlets.EnvironmentBannerServlet.cfg.json</span><code>{
+    "environmentLabel": "Development",
+    "bannerColour"    : "#2e9b51",
+    "showBanner"      : true
+}</code></pre>
+
+      <pre data-code><span class="filename">/apps/academy/osgiconfig/config.stage/biz.netcentric.academy.core.servlets.EnvironmentBannerServlet.cfg.json</span><code>{
+    "environmentLabel": "Staging",
+    "bannerColour"    : "#e68619",
+    "showBanner"      : true
+}</code></pre>
+
+      <pre data-code><span class="filename">/apps/academy/osgiconfig/config.prod/biz.netcentric.academy.core.servlets.EnvironmentBannerServlet.cfg.json</span><code>{
+    "environmentLabel": "PRODUCTION",
+    "bannerColour"    : "#e34850",
+    "showBanner"      : true
+}</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Four files, four environments, zero code differences. The run-mode folder name is the entire environment-selection mechanism.</p>
+          <ul>
+            <li><strong>Filename = fully qualified class name</strong> — OSGi finds the right config by matching the file name to the <code>@Component</code> class name. Typos in the filename result in silent failure — the config is ignored and the Servlet uses its <code>default</code> values. Always copy-paste the class name rather than typing it.</li>
+            <li><strong>Red for PRODUCTION</strong> — the colour choice is intentional and important. Authors who accidentally open a production tab alongside a dev tab need an instant visual signal, not a subtle difference. Red creates appropriate caution.</li>
+            <li><strong>AEMaaCS note</strong> — on AEM as a Cloud Service, the run modes are <code>author.dev</code>, <code>author.stage</code>, <code>author.prod</code> (combined with tier). Use <code>config.author.dev/</code>, <code>config.author.stage/</code>, and <code>config.author.prod/</code> as the folder names for AEMaaCS deployments.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 3 — Environment banner clientlib</h3>
+      <pre data-code><span class="filename">/aem-academy/ui.apps/src/main/content/jcr_root/apps/academy/clientlibs/env-banner/.content.xml <em>(academy.ui.apps)</em></span><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    jcr:primaryType="cq:ClientLibraryFolder"
+    categories="[cq.wcm.admin.sites, cq.authoring.editor.hook]"
+    allowProxy="{Boolean}true"/&gt;</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <ul>
+            <li><code>categories="[cq.wcm.admin.sites, cq.authoring.editor.hook]"</code> — two categories in one clientlib. <code>cq.wcm.admin.sites</code> loads the banner on the Sites console. <code>cq.authoring.editor.hook</code> loads it inside the page editor. Together they cover the two primary author interfaces. The banner appears on both without duplicating the clientlib files.</li>
+            <li>To extend coverage to other AEM admin tools (DAM Asset editor, Experience Fragment editor), add their corresponding categories: <code>dam.gui.actions.coral</code> for the Assets console, <code>cq.authoring.page</code> for the page editor shell.</li>
+          </ul>
+        </div>
+      </details>
+
+      <pre data-code><span class="filename">/apps/academy/clientlibs/env-banner/css.txt</span><code>#base=css
+env-banner.css</code></pre>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/env-banner/js.txt</span><code>#base=js
+env-banner.js</code></pre>
+
+      <h3>Step 4 — Banner CSS</h3>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/env-banner/css/env-banner.css</span><code>/* ═══════════════════════════════════════════════════════════════════════
+   Academy — Floating Environment Banner
+   Injected via: cq.wcm.admin.sites + cq.authoring.editor.hook
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.academy-env-banner {
+  position  : fixed;
+  top       : 12px;
+  right     : 16px;
+  z-index   : 999999;       /* above all AEM UI chrome */
+  display   : flex;
+  align-items: center;
+  gap       : 7px;
+
+  padding   : 5px 13px 5px 9px;
+  border-radius: 20px;
+  font-family: 'Adobe Clean', adobe-clean, 'Source Sans Pro', ui-sans-serif, sans-serif;
+  font-size : 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color     : #fff;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  cursor    : default;
+  user-select: none;
+
+  /* Start hidden — JS will fade it in after config is fetched */
+  opacity   : 0;
+  transform : translateY(-6px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+.academy-env-banner.is-visible {
+  opacity   : 1;
+  transform : translateY(0);
+}
+
+/* Pulsing dot inside the banner */
+.academy-env-banner__dot {
+  width     : 8px;
+  height    : 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+  animation : academy-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes academy-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%       { opacity: 0.5; transform: scale(0.75); }
+}
+
+/* Suppress the pulse on green and blue (non-critical environments) */
+.academy-env-banner[data-env="local"] .academy-env-banner__dot,
+.academy-env-banner[data-env="development"] .academy-env-banner__dot {
+  animation: none;
+  opacity  : 0.6;
+}
+
+/* Tooltip on hover showing the full environment name */
+.academy-env-banner__text {
+  white-space: nowrap;
+}
+
+/* Close / dismiss button (authors can hide it temporarily) */
+.academy-env-banner__close {
+  background: none;
+  border    : none;
+  color     : rgba(255, 255, 255, 0.7);
+  cursor    : pointer;
+  font-size : 14px;
+  line-height: 1;
+  padding   : 0 0 0 4px;
+  transition: color .15s;
+}
+.academy-env-banner__close:hover { color: #fff; }
+
+/* Minimised state — click the dot to restore */
+.academy-env-banner.is-minimised {
+  padding   : 5px 8px;
+  border-radius: 50%;
+  width     : 26px;
+  height    : 26px;
+}
+.academy-env-banner.is-minimised .academy-env-banner__text,
+.academy-env-banner.is-minimised .academy-env-banner__close {
+  display: none;
+}
+.academy-env-banner.is-minimised .academy-env-banner__dot {
+  margin: 0;
+}</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <ul>
+            <li><code>z-index: 999999</code> — the AEM page editor uses its own high z-index values for overlays and sidebars (typically in the 9000–90000 range). Using 999999 ensures the banner sits above all AEM chrome. If it ever disappears behind an AEM toolbar, increase this value.</li>
+            <li><strong>Pulsing animation for production</strong> — <code>@keyframes academy-pulse</code> creates a subtle heartbeat on the dot. For non-critical environments (local, dev), the animation is disabled — <code>animation: none</code>. For staging and production the pulse draws the eye, reinforcing that this environment requires care. A purely visual choice with a real UX benefit.</li>
+            <li><code>opacity: 0; transform: translateY(-6px)</code> on the banner — the banner starts invisible and slightly above its final position. When JS adds <code>is-visible</code>, the CSS transition animates it into place. This prevents a flash of unstyled content and gives a polished reveal once the server config is fetched.</li>
+            <li><strong>Minimised state</strong> — authors who find the banner distracting can minimise it to a single coloured dot by clicking the × button. The colour still communicates the environment; the text is hidden. The dot is clickable to restore. This respects authors' workflow while maintaining the safety signal.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 5 — Banner JavaScript</h3>
+      <pre data-code><span class="filename">/apps/academy/clientlibs/env-banner/js/env-banner.js</span><code>(function () {
+  'use strict';
+
+  var ENV_URL       = '/bin/academy/envinfo';
+  var STORAGE_KEY   = 'academy.envBannerMinimised';
+  var BANNER_ID     = 'academy-env-banner';
+
+  // ── Create and mount the banner element ───────────────────────────────
+  function createBanner(label, colour) {
+    var existing = document.getElementById(BANNER_ID);
+    if (existing) existing.remove();
+
+    var banner = document.createElement('div');
+    banner.id            = BANNER_ID;
+    banner.className     = 'academy-env-banner';
+    banner.style.background = colour;
+    banner.setAttribute('data-env', label.toLowerCase());
+    banner.setAttribute('role',     'status');
+    banner.setAttribute('aria-label', 'Current environment: ' + label);
+
+    // Pulsing dot
+    var dot = document.createElement('span');
+    dot.className = 'academy-env-banner__dot';
+
+    // Label text
+    var text = document.createElement('span');
+    text.className   = 'academy-env-banner__text';
+    text.textContent = label;
+
+    // Dismiss/minimise button
+    var closeBtn = document.createElement('button');
+    closeBtn.className   = 'academy-env-banner__close';
+    closeBtn.innerHTML   = '&times;';
+    closeBtn.title       = 'Minimise banner';
+    closeBtn.setAttribute('aria-label', 'Minimise environment banner');
+
+    banner.appendChild(dot);
+    banner.appendChild(text);
+    banner.appendChild(closeBtn);
+    document.body.appendChild(banner);
+
+    // ── Minimise / restore behaviour ────────────────────────────────────
+    var minimised = sessionStorage.getItem(STORAGE_KEY) === 'true';
+
+    function applyMinimisedState() {
+      if (minimised) {
+        banner.classList.add('is-minimised');
+        banner.title = 'Click to restore environment banner (' + label + ')';
+      } else {
+        banner.classList.remove('is-minimised');
+        banner.title = '';
+      }
+    }
+
+    closeBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      minimised = true;
+      sessionStorage.setItem(STORAGE_KEY, 'true');
+      applyMinimisedState();
+    });
+
+    banner.addEventListener('click', function () {
+      if (!minimised) return;
+      minimised = false;
+      sessionStorage.removeItem(STORAGE_KEY);
+      applyMinimisedState();
+    });
+
+    applyMinimisedState();
+
+    // Animate in after a brief tick (allows CSS transitions to work)
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        banner.classList.add('is-visible');
+      });
+    });
+  }
+
+  // ── Fetch config from the servlet and render ───────────────────────────
+  function init() {
+    fetch(ENV_URL, { credentials: 'same-origin' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        if (data.showBanner === false) return; // disabled in OSGi config
+        createBanner(data.label || 'Author', data.colour || '#505050');
+      })
+      .catch(function (err) {
+        // Banner is a nice-to-have — never log to console on prod
+        // Uncomment the next line during development:
+        // console.warn('[Academy EnvBanner] Could not load config:', err);
+      });
+  }
+
+  // Run after DOM is available
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}());</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The banner JavaScript is deliberately minimal — fetch config, render DOM, handle two user interactions. It deliberately avoids any framework dependency.</p>
+          <ul>
+            <li><code>sessionStorage.getItem(STORAGE_KEY)</code> — stores the minimised state for the current browser session only. <code>sessionStorage</code> is cleared when the tab closes, so the banner is always fully visible when an author opens a fresh tab. Using <code>localStorage</code> would persist the minimised state across sessions and logins, which could leave authors permanently without the banner — exactly the risk the feature was built to prevent.</li>
+            <li><code>requestAnimationFrame(function() { requestAnimationFrame(function() { ... }) })</code> — the double RAF is the canonical trick for triggering CSS transitions on elements added to the DOM. A single RAF fires before the browser has painted the initial state, so the transition has nothing to animate from. Two RAFs guarantee one paint cycle has completed, giving the transition a start state (<code>opacity: 0</code>) to animate from.</li>
+            <li><code>e.stopPropagation()</code> on the close button — without this, clicking × also fires the banner's own click handler (which would immediately restore the minimised state the × just set). <code>stopPropagation</code> prevents the event from bubbling up from button to banner.</li>
+            <li><strong>Silent catch block</strong> — the commented-out <code>console.warn</code> is intentional. On production, logging every failed auth request (if the <code>/bin/academy/envinfo</code> path is blocked by Dispatcher for anonymous users) would pollute the browser console. Enable the log only during development.</li>
+            <li><code>data.showBanner === false</code> — strict equality check. If the servlet returns anything other than the exact JSON boolean <code>false</code> (including the string <code>"false"</code>), the banner renders. This means a misconfigured or empty response still shows a banner rather than silently hiding it.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 6 — Full folder structure summary</h3>
+      <pre data-code><span class="filename">complete file structure for both features</span><code>/aem-academy/
+├── core/src/main/java/biz/netcentric/academy/core/servlets/
+│   ├── PageStatusServlet.java         ← returns page status JSON (Part 1)
+│   └── EnvironmentBannerServlet.java  ← returns env label + colour (Part 2)
+│
+└── ui.apps/src/main/content/jcr_root/
+    └── apps/academy/
+        ├── clientlibs/
+        │   ├── sites-status/           ← Page status dots (Part 1)
+        │   │   ├── .content.xml         category: cq.wcm.admin.sites
+        │   │   ├── css.txt
+        │   │   ├── js.txt
+        │   │   ├── css/sites-status.css
+        │   │   └── js/sites-status.js
+        │   │
+        │   └── env-banner/             ← Environment banner (Part 2)
+        │       ├── .content.xml         category: [cq.wcm.admin.sites,
+        │       ├── css.txt                          cq.authoring.editor.hook]
+        │       ├── js.txt
+        │       ├── css/env-banner.css
+        │       └── js/env-banner.js
+        │
+        └── osgiconfig/
+            ├── config/           (fallback — applies everywhere)
+            │   └── EnvironmentBannerServlet.cfg.json  { "environmentLabel":"Author" }
+            ├── config.local/     → "Local" + blue
+            ├── config.dev/       → "Development" + green
+            ├── config.stage/     → "Staging" + orange
+            └── config.prod/      → "PRODUCTION" + red</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>The full layout shows where each file lands in the Maven project. Knowing this prevents the most common mistake — putting a clientlib under the wrong path and wondering why the category isn't found.</p>
+          <ul>
+            <li>The <code>config/</code> fallback config (without a run-mode suffix) ensures the banner shows something even if a server somehow has no matching run-mode config. "Author" is a neutral, non-alarming default.</li>
+            <li>Both clientlibs live under <code>clientlibs/</code> directly inside <code>/apps/academy/</code> — parallel to <code>components/</code>. This mirrors the standard project structure and makes them easy to find.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Step 7 — Build, deploy, and verify both features</h3>
+      <pre data-code><span class="filename">terminal — build and deploy</span><code>cd /aem-academy
+mvn clean install -PautoInstallSinglePackage
+
+# After deploy, confirm the Servlets are registered:
+curl -u admin:admin http://localhost:4502/system/console/servlets \
+  | grep "academy"
+# Expected output includes:
+#   /bin/academy/pagestatus
+#   /bin/academy/envinfo
+
+# Test PageStatusServlet with a real page path:
+curl -u admin:admin \
+  "http://localhost:4502/bin/academy/pagestatus?paths=/content/academy/en/home"
+# Expected: {"\/content\/academy\/en\/home":"activated"}
+
+# Test EnvironmentBannerServlet:
+curl -u admin:admin http://localhost:4502/bin/academy/envinfo
+# Expected (with config.local active):
+# {"label":"Local","colour":"#2680eb","showBanner":true}
+
+# Verify clientlibs are loaded by the Sites console:
+curl -s -u admin:admin http://localhost:4502/sites.html \
+  | grep "academy"
+# Should find: sites-status and env-banner in the bundled JS/CSS
+
+# Manual test:
+# Open http://localhost:4502/sites.html in a browser
+# Dots should appear on page cards within 1-2 seconds
+# Blue pill "Local" should appear in the top-right corner</code></pre>
+      <details class="code-explain">
+        <summary>📖 Why this code?</summary>
+        <div class="code-explain-body">
+          <p>Verifying the Servlet endpoints directly with curl before opening the browser is always faster than debugging why a feature doesn't appear visually.</p>
+          <ul>
+            <li>If the Servlet returns 404, the <code>@Component(service = Servlet.class)</code> path property is wrong, or the bundle hasn't activated yet. Check <code>/system/console/bundles</code> first.</li>
+            <li>If the Servlet returns 401, the path isn't accessible to the author. Check Dispatcher rules on a non-local environment, or ensure the Sling authenticator doesn't require full admin for this path.</li>
+            <li>If dots don't appear in the UI but the Servlet responds correctly, open Browser DevTools → Network tab and check for the <code>/bin/academy/pagestatus</code> request. If it's not there, the clientlib category is wrong. If it's there but dots are missing, check the Console tab for JavaScript errors.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="try-it alert alert-success">
+        <span class="label">Try it — test all five status states</span>
+        <ol style="margin:0;padding-left:1.2em;">
+          <li><strong>Gray dot (Never Published)</strong> — create a new page, don't publish it. Open the Sites console. The page should show a gray "Never Published" dot immediately.</li>
+          <li><strong>Green dot (Activated)</strong> — publish the page via Quick Publish. Refresh the Sites console. The dot should change from gray to green within 1–2 seconds (one MutationObserver cycle after the page reloads).</li>
+          <li><strong>Blue dot (Modified)</strong> — open the published page in the editor, change its title, and save without republishing. Go back to Sites console. The dot should change to blue — the live page is now out of date.</li>
+          <li><strong>Red dot (Deactivated)</strong> — right-click the page → Manage Publication → Unpublish. The dot becomes red. This confirms that <code>cq:lastReplicationAction = "Deactivate"</code> is correctly detected.</li>
+          <li><strong>Legend toggle</strong> — click the ● button in the bottom-left of the Sites console. The colour legend should appear with all five status descriptions. Click again to dismiss it.</li>
+          <li><strong>Environment banner</strong> — the blue "Local" pill should be in the top-right of the screen. Click the × to minimise it to a dot. Click the dot to restore it. Open a new tab — the banner should be fully visible again (sessionStorage cleared).</li>
+        </ol>
+      </div>
+
+      <div class="complete-row form-check">
+        <input type="checkbox" id="complete" class="form-check-input" data-complete-checkbox="side-fun">
+        <label for="complete" class="form-check-label">Mark this module as complete</label>
+      </div>
+
+      <nav class="pager">
+        <a class="prev" href="29-aem-devops.html"><span class="dir">← Previous</span>AEM DevOps — On-Premise vs AEMaaCS</a>
+        <a class="next" href="../index.html"><span class="dir">Back to</span>Curriculum overview</a>
+      </nav>
+    </div>
+
+    <footer class="site-footer">/apps/training-site · built for internal onboarding</footer>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>
